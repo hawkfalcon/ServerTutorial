@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

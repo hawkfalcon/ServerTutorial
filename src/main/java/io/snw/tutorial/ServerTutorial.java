@@ -1,9 +1,11 @@
 package io.snw.tutorial;
 
 
+import io.snw.tutorial.enums.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
+    private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     private int totalViews = 0;
 
@@ -56,6 +59,8 @@ public class ServerTutorial extends JavaPlugin {
         }
         String name = player.getName();
         this.startLoc.put(name, player.getLocation());
+        this.addInventory(name, player.getInventory().getContents());
+        player.getInventory().clear();
         this.initializeCurrentView(name);
         this.addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
@@ -114,6 +119,18 @@ public class ServerTutorial extends JavaPlugin {
 
     public void cleanFirstLoc(String name) {
         this.startLoc.remove(name);
+    }
+
+    public ItemStack[] getInventory(String name) {
+        return this.inventories.get(name);
+    }
+
+    public void addInventory(String name, ItemStack[] items) {
+        this.inventories.put(name, items);
+    }
+
+    public void cleanInventory(String name) {
+        this.inventories.remove(name);
     }
 
     public TutorialUtils getTutorialUtils() {

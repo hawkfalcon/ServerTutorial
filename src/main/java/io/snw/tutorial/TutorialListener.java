@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -83,7 +84,9 @@ public class TutorialListener implements Listener {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("endmessage", "&7Woo")));
         plugin.removeFromTutorial(name);
         player.closeInventory();
-        player.getInventory().remove(new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick"))));
+        player.getInventory().clear();
+        player.getInventory().setContents(plugin.getInventory(name));
+        plugin.cleanInventory(name);
         player.teleport(plugin.getFirstLoc(name));
         plugin.cleanFirstLoc(name);
         new BukkitRunnable() {

@@ -1,6 +1,6 @@
 package io.snw.tutorial;
 
-import org.bukkit.Bukkit;
+import io.snw.tutorial.enums.MessageType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
