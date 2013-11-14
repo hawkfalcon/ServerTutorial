@@ -84,7 +84,8 @@ public class TutorialListener implements Listener {
         plugin.removeFromTutorial(name);
         player.closeInventory();
         player.getInventory().remove(new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick"))));
-        player.teleport(player.getWorld().getSpawnLocation());
+        player.teleport(plugin.getFirstLoc(name));
+        plugin.cleanFirstLoc(name);
         new BukkitRunnable() {
 
             @Override

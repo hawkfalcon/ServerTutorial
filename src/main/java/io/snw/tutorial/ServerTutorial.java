@@ -2,6 +2,7 @@ package io.snw.tutorial;
 
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +13,7 @@ public class ServerTutorial extends JavaPlugin {
 
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
+    private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     private int totalViews = 0;
 
@@ -53,6 +55,7 @@ public class ServerTutorial extends JavaPlugin {
             return;
         }
         String name = player.getName();
+        this.startLoc.put(name, player.getLocation());
         this.initializeCurrentView(name);
         this.addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
@@ -103,6 +106,14 @@ public class ServerTutorial extends JavaPlugin {
 
     public int getTotalViews() {
         return this.totalViews;
+    }
+
+    public Location getFirstLoc(String name) {
+       return this.startLoc.get(name);
+    }
+
+    public void cleanFirstLoc(String name) {
+        this.startLoc.remove(name);
     }
 
     public TutorialUtils getTutorialUtils() {
