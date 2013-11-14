@@ -7,11 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialListener implements Listener {
@@ -29,15 +30,21 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (plugin.isInTutorial(name)) {
-            if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (player.getItemInHand().getType() == Material.matchMaterial(plugin.getConfig().getString("material", "stick"))) {
                     if (this.plugin.getTotalViews() == this.plugin.getCurrentView(name)) {
                         endTutorial(player);
                     } else {
+                        this.plugin.incrementCurrentView(name);
                         if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                            player.getInventory().clear();
+                            ItemStack i = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick")));
+                            ItemMeta data = i.getItemMeta();
+                            data.setDisplayName(" ");
+                            i.setItemMeta(data);
+                            player.setItemInHand(i);
                             player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
                         }
-                        this.plugin.incrementCurrentView(name);
                         player.teleport(plugin.getTutorialView(name).getLocation());
                     }
                 }
@@ -49,8 +56,9 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
-            event.setTo(event.getFrom());
+        Player player = event.getPlayer();
+        if (plugin.isInTutorial(player.getName())) {
+            player.teleport(plugin.getTutorialView(player.getName()).getLocation());
         }
     }
 
@@ -58,6 +66,34 @@ public class TutorialListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         if (plugin.isInTutorial(event.getPlayer().getName())) {
             plugin.removeFromTutorial(event.getPlayer().getName());
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent event) {
+        if (plugin.isInTutorial(event.getPlayer().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent event) {
+        if (plugin.isInTutorial(event.getPlayer().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPickup(PlayerPickupItemEvent event) {
+        if (plugin.isInTutorial(event.getPlayer().getName())) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlace(PlayerDropItemEvent event) {
+        if (plugin.isInTutorial(event.getPlayer().getName())) {
+            event.setCancelled(true);
         }
     }
 
@@ -81,13 +117,14 @@ public class TutorialListener implements Listener {
     }
 
     public void endTutorial(final Player player) {
-        String name = player.getName();
+        final String name = player.getName();
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getConfig().getString("endmessage", "&7Woo")));
         plugin.removeFromTutorial(name);
         player.closeInventory();
         player.getInventory().clear();
-        player.getInventory().setContents(plugin.getInventory(name));
-        plugin.cleanInventory(name);
+        player.setAllowFlight(plugin.getFlight(name));
+        player.setFlying(plugin.getFlight(name));
+        plugin.removeFlight(name);
         player.teleport(plugin.getFirstLoc(name));
         plugin.cleanFirstLoc(name);
         new BukkitRunnable() {
@@ -98,8 +135,10 @@ public class TutorialListener implements Listener {
                     online.showPlayer(player);
                     player.showPlayer(online);
                 }
+                player.getInventory().setContents(plugin.getInventory(name));
+                plugin.cleanInventory(name);
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskLater(plugin, 20L);
     }
 
     public String tACC(String message) {

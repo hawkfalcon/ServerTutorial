@@ -57,10 +57,10 @@ public class TutorialCommands implements CommandExecutor {
 
                         sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "View " + viewID + " was successfully saved.");
                     }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Try /tutorial");
                 }
             }
-        } else {
-            sender.sendMessage(ChatColor.RED + "Try /tutorial");
         }
         return true;
     }

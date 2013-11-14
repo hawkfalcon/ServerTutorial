@@ -4,6 +4,7 @@ package io.snw.tutorial;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +19,7 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
+    private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     private int totalViews;
     private ViewType viewType;
@@ -64,7 +66,10 @@ public class ServerTutorial extends JavaPlugin {
         String name = player.getName();
         this.startLoc.put(name, player.getLocation());
         this.addInventory(name, player.getInventory().getContents());
+        this.addFlight(name, player.getAllowFlight());
         player.getInventory().clear();
+        player.setAllowFlight(true);
+        player.setFlying(true);
         this.initializeCurrentView(name);
         this.addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
@@ -109,6 +114,10 @@ public class ServerTutorial extends JavaPlugin {
         return this.tutorialViews.get(this.getCurrentView(name));
     }
 
+    public TutorialView getTutorialView(int viewID) {
+        return this.tutorialViews.get(viewID);
+    }
+
     public void incrementTotalViews() {
         this.totalViews++;
     }
@@ -135,6 +144,18 @@ public class ServerTutorial extends JavaPlugin {
 
     public void cleanInventory(String name) {
         this.inventories.remove(name);
+    }
+
+    public boolean getFlight(String name) {
+        return this.flight.get(name);
+    }
+
+    public void addFlight(String name, boolean flight) {
+        this.flight.put(name, flight);
+    }
+
+    public void removeFlight(String name) {
+        this.flight.remove(name);
     }
 
     public TutorialUtils getTutorialUtils() {
