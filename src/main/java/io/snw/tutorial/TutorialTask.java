@@ -52,7 +52,6 @@ public class TutorialTask {
             alt = "";
             reset = true;
         }
-        Bukkit.getLogger().info(tACC(plugin.getTutorialView(player.getName()).getMessage()) + alt);
         data.setDisplayName(tACC(plugin.getTutorialView(player.getName()).getMessage()) + alt);
 
         i.setItemMeta(data);

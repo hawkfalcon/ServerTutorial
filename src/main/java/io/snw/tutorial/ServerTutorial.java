@@ -48,6 +48,10 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void startTutorial(Player player) {
+        if (this.getConfig().getString("views") == null) {
+            player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
+            return;
+        }
         String name = player.getName();
         this.initializeCurrentView(name);
         this.addToTutorial(name);
