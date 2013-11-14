@@ -1,0 +1,14 @@
+name: ServerTutorial
+main: io.snw.tutorial.ServerTutorial
+version: maven-version-number
+description: Tutorial plugin
+author: hawkfalcon
+website: snw.io
+commands:
+    tutorial:
+        description: tutorial
+permissions:
+    tutorial.create:
+        default: OP
+    tutorial.use:
+        default: true
