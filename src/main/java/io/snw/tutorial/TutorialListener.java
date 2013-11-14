@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialListener implements Listener {
@@ -30,18 +29,20 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (plugin.isInTutorial(name)) {
-            if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-                if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                    endTutorial(player);
+            if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                if (player.getItemInHand().getType() == Material.matchMaterial(plugin.getConfig().getString("material", "stick"))) {
+                    if (this.plugin.getTotalViews() == this.plugin.getCurrentView(name)) {
+                        endTutorial(player);
+                    } else {
+                        if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                            player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
+                        }
+                        this.plugin.incrementCurrentView(name);
+                        player.teleport(plugin.getTutorialView(name).getLocation());
+                    }
                 }
-            } else if (this.plugin.getTotalViews() == this.plugin.getCurrentView(name)) {
+            } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 endTutorial(player);
-            } else {
-                if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                    player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
-                }
-                this.plugin.incrementCurrentView(name);
-                player.teleport(plugin.getTutorialView(name).getLocation());
             }
         }
     }

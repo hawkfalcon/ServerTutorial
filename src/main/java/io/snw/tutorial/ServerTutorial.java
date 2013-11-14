@@ -2,6 +2,7 @@ package io.snw.tutorial;
 
 
 import io.snw.tutorial.enums.MessageType;
+import io.snw.tutorial.enums.ViewType;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -18,7 +19,8 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
-    private int totalViews = 0;
+    private int totalViews;
+    private ViewType viewType;
 
     private TutorialUtils tutorialUtils;
     private TutorialTask tutorialTask;
@@ -42,6 +44,8 @@ public class ServerTutorial extends JavaPlugin {
      * Setup all views from config
      */
     public void casheViewData() {
+        totalViews = 0;
+        viewType = ViewType.valueOf(this.getConfig().getString("viewtype", "CLICK"));
         if (this.getConfig().getString("views") == null) return;
         for (String vID : this.getConfig().getConfigurationSection("views").getKeys(false)) {
             int viewID = Integer.parseInt(vID);
