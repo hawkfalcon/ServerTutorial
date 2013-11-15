@@ -1,8 +1,10 @@
 package io.snw.tutorial;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
+import io.snw.tutorial.enums.MessageType;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class TutorialUtils {
     ServerTutorial plugin;
@@ -29,5 +31,21 @@ public class TutorialUtils {
         return location;
     }
 
+    public void textUtils(Player player) {
+        String name = player.getName();
+        if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+            player.getInventory().clear();
+            ItemStack i = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick")));
+            ItemMeta data = i.getItemMeta();
+            data.setDisplayName(" ");
+            i.setItemMeta(data);
+            player.setItemInHand(i);
+            player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
+        }
+    }
+
+    public String tACC(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
 
 }

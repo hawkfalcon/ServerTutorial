@@ -36,15 +36,7 @@ public class TutorialListener implements Listener {
                         endTutorial(player);
                     } else {
                         this.plugin.incrementCurrentView(name);
-                        if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                            player.getInventory().clear();
-                            ItemStack i = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick")));
-                            ItemMeta data = i.getItemMeta();
-                            data.setDisplayName(" ");
-                            i.setItemMeta(data);
-                            player.setItemInHand(i);
-                            player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
-                        }
+                        plugin.getTutorialUtils().textUtils(player);
                         player.teleport(plugin.getTutorialView(name).getLocation());
                     }
                 }
@@ -139,9 +131,5 @@ public class TutorialListener implements Listener {
                 plugin.cleanInventory(name);
             }
         }.runTaskLater(plugin, 20L);
-    }
-
-    public String tACC(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }

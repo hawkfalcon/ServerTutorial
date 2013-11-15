@@ -77,9 +77,8 @@ public class ServerTutorial extends JavaPlugin {
             player.hidePlayer(online);
         }
         this.getServer().getPlayerExact(name).teleport(this.getTutorialView(name).getLocation());
-        if (getTutorialView(name).getMessageType() == MessageType.TEXT) {
-            player.sendMessage(tACC(getTutorialView(player.getName()).getMessage()));
-        }
+        this.getTutorialUtils().textUtils(player);
+
     }
 
     public void addToTutorial(String name) {
@@ -112,10 +111,6 @@ public class ServerTutorial extends JavaPlugin {
 
     public TutorialView getTutorialView(String name) {
         return this.tutorialViews.get(this.getCurrentView(name));
-    }
-
-    public TutorialView getTutorialView(int viewID) {
-        return this.tutorialViews.get(viewID);
     }
 
     public void incrementTotalViews() {
