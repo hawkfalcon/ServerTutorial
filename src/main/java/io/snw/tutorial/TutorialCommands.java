@@ -35,6 +35,11 @@ public class TutorialCommands implements CommandExecutor {
                 return true;
             }
             
+            if(args[1] != "META" || args[1] != "TEXT"){
+                sender.sendMessage(ChatColor.RED + "Must specify META or TEXT");
+                return true;
+            }
+            
             if (args.length > 2) {
                 if (args[0].equalsIgnoreCase("create")) {
                     if (sender.hasPermission("tutorial.create")) {
