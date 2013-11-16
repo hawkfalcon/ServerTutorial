@@ -4,7 +4,6 @@ package io.snw.tutorial;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +27,7 @@ public class ServerTutorial extends JavaPlugin {
     private TutorialTask tutorialTask;
 
 
+    @Override
     public void onEnable() {
         tutorialUtils = new TutorialUtils(this);
         tutorialTask = new TutorialTask(this);
