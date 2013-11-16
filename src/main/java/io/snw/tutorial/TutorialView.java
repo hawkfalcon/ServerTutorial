@@ -4,10 +4,10 @@ import io.snw.tutorial.enums.MessageType;
 import org.bukkit.Location;
 
 public class TutorialView {
-    private int viewId;
-    private String message;
-    private Location location;
-    private MessageType messageType;
+    private final int viewId;
+    private final String message;
+    private final Location location;
+    private final MessageType messageType;
 
     public TutorialView(int viewId, String message, Location location, MessageType messageType) {
         this.viewId = viewId;
