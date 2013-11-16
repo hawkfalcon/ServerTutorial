@@ -56,7 +56,7 @@ public class TutorialCommands implements CommandExecutor {
                         Location loc = ((Player) sender).getLocation();
                         this.plugin.getTutorialUtils().saveLoc(viewID, loc);
                         this.plugin.getConfig().set("views." + viewID + ".message", message);
-                        this.plugin.getConfig().set("views." + viewID + ".type", args[1]);
+                        this.plugin.getConfig().set("views." + viewID + ".type", args[1].toUpperCase());
                         this.plugin.saveConfig();
                         this.plugin.incrementTotalViews();
                         TutorialView view = new TutorialView(viewID, message, loc, MessageType.META);
