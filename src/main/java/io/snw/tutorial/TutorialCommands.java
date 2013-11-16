@@ -24,11 +24,18 @@ public class TutorialCommands implements CommandExecutor {
                     this.plugin.startTutorial((Player) sender);
                 }
             }
-            if (args.length == 1) {
+            
+            if (args.length == 1){
+                sender.sendMessage(ChatColor.RED + "You must Specify TEXT or META!");
+                return true;
+            }
+            
+            if (args.length == 2) {
                 sender.sendMessage(ChatColor.RED + "You must supply a message!");
                 return true;
             }
-            if (args.length > 1) {
+            
+            if (args.length > 2) {
                 if (args[0].equalsIgnoreCase("create")) {
                     if (sender.hasPermission("tutorial.create")) {
                         String message = "";
@@ -49,7 +56,7 @@ public class TutorialCommands implements CommandExecutor {
                         Location loc = ((Player) sender).getLocation();
                         this.plugin.getTutorialUtils().saveLoc(viewID, loc);
                         this.plugin.getConfig().set("views." + viewID + ".message", message);
-                        this.plugin.getConfig().set("views." + viewID + ".type", "META");
+                        this.plugin.getConfig().set("views." + viewID + ".type", args[1]);
                         this.plugin.saveConfig();
                         this.plugin.incrementTotalViews();
                         TutorialView view = new TutorialView(viewID, message, loc, MessageType.META);
