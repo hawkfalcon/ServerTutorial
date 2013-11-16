@@ -16,6 +16,7 @@ public class TutorialCommands implements CommandExecutor {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (!(sender instanceof Player)) return false;
         if (cmd.getName().equalsIgnoreCase("tutorial")) {
@@ -49,7 +50,7 @@ public class TutorialCommands implements CommandExecutor {
                             if (skip) {
                                 skip = false;
                             } else {
-                                if (message != "")
+                                if (!"".equals(message))
                                     message += " ";
                                 message += part;
                             }
