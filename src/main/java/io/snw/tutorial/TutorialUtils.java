@@ -1,7 +1,10 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -13,14 +16,14 @@ public class TutorialUtils {
         this.plugin = plugin;
     }
 
-    public void saveLoc(int viewID, Location loc) {
+    public void saveLoc(String tutorialName, int viewID, Location loc) {
         String location = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
-        plugin.getConfig().set("views." + viewID + ".location", location);
+        plugin.getConfig().set("tutorials." + tutorialName + ".views." + viewID + ".location", location);
         plugin.saveConfig();
     }
 
-    public Location getLocation(int viewID) {
-        String[] loc = plugin.getConfig().getString("views." + viewID + ".location").split("\\,");
+    public Location getLocation(String tutorialName, int viewID) {
+        String[] loc = plugin.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split("\\,");
         World w = Bukkit.getWorld(loc[0]);
         Double x = Double.parseDouble(loc[1]);
         Double y = Double.parseDouble(loc[2]);
@@ -35,17 +38,16 @@ public class TutorialUtils {
         String name = player.getName();
         if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
             player.getInventory().clear();
-            ItemStack i = new ItemStack(Material.matchMaterial(plugin.getConfig().getString("material", "stick")));
+            ItemStack i = new ItemStack(plugin.getCurrentTutorial(name).getItem());
             ItemMeta data = i.getItemMeta();
             data.setDisplayName(" ");
             i.setItemMeta(data);
             player.setItemInHand(i);
-            player.sendMessage(tACC(plugin.getTutorialView(player.getName()).getMessage()));
+            player.sendMessage(tACC(plugin.getTutorialView(name).getMessage()));
         }
     }
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-
 }

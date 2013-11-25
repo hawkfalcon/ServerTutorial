@@ -1,8 +1,8 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,19 +10,18 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialTask {
     ServerTutorial plugin;
-    public Material mat;
 
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
     }
 
     public void tutorialTask() {
-        mat = Material.matchMaterial(plugin.getConfig().getString("material", "stick"));
         new BukkitRunnable() {
 
             @Override
             public void run() {
                 for (String name : plugin.getAllInTutorial()) {
+
                     Player player = plugin.getServer().getPlayerExact(name);
                     if (!player.isDead()) {
                         player.closeInventory();
@@ -32,7 +31,7 @@ public class TutorialTask {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0L, 1L);
+        }.runTaskTimer(plugin, 0L, 5L);
     }
 
     public String tACC(String message) {
@@ -43,7 +42,8 @@ public class TutorialTask {
     String alt;
 
     public void setPlayerItemName(Player player) {
-        ItemStack i = new ItemStack(mat);
+        Bukkit.getLogger().info(plugin.getCurrentTutorial(player.getName()).getName());
+        ItemStack i = new ItemStack(plugin.getCurrentTutorial(player.getName()).getItem());
         ItemMeta data = i.getItemMeta();
         if (reset) {
             alt = "" + ChatColor.RESET;

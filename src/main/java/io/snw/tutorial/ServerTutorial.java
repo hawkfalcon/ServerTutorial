@@ -3,8 +3,10 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,53 +16,91 @@ import java.util.HashMap;
 
 public class ServerTutorial extends JavaPlugin {
 
+    //player name, id
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
-    private HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
+    //player name, tutorial name
+    private HashMap<String, String> currentTutorial = new HashMap<String, String>();
+    //tutorial name, tutorial object
+    private HashMap<String, Tutorial> tutorials = new HashMap<String, Tutorial>();
+    private ArrayList<String> tutorialNames = new ArrayList<String>();
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
-    private int totalViews;
-    private ViewType viewType;
 
     private TutorialUtils tutorialUtils;
     private TutorialTask tutorialTask;
+    private CreateTutorial createTutorial;
+    private ViewConversation viewConversation;
 
 
     @Override
     public void onEnable() {
         tutorialUtils = new TutorialUtils(this);
         tutorialTask = new TutorialTask(this);
+        createTutorial = new CreateTutorial(this);
+        viewConversation = new ViewConversation(this);
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
-        this.casheViewData();
+        this.casheAllData();
         this.getTutorialTask().tutorialTask();
     }
 
-    public void addTutorialView(int viewID, TutorialView view) {
-        this.tutorialViews.put(viewID, view);
+    public void addTutorial(String tutorialName, Tutorial tutorial) {
+        this.tutorials.put(tutorialName, tutorial);
+    }
+
+    public ArrayList<String> getAllTutorials() {
+        return this.tutorialNames;
+    }
+
+    public Tutorial getCurrentTutorial(String name) {
+        return this.tutorials.get(this.currentTutorial.get(name));
+    }
+
+    public void addCurrentTutorial(String name, String tutorialName) {
+        this.currentTutorial.put(name, tutorialName);
     }
 
     /**
      * Setup all views from config
      */
-    public void casheViewData() {
-        totalViews = 0;
-        viewType = ViewType.valueOf(this.getConfig().getString("viewtype", "CLICK"));
-        if (this.getConfig().getString("views") == null) return;
-        for (String vID : this.getConfig().getConfigurationSection("views").getKeys(false)) {
-            int viewID = Integer.parseInt(vID);
-            MessageType messageType = MessageType.valueOf(this.getConfig().getString("views." + viewID + ".type", "META"));
-            TutorialView view = new TutorialView(viewID, this.getConfig().getString("views." + viewID + ".message"), this.getTutorialUtils().getLocation(viewID), messageType);
-            this.addTutorialView(viewID, view);
-            this.totalViews = tutorialViews.size();
+    public void casheAllData() {
+        if (this.getConfig().getString("tutorials") == null) return;
+        for (String tutorialName : this.getConfig().getConfigurationSection("tutorials").getKeys(false)) {
+            this.tutorialNames.add(tutorialName);
+            HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
+            for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+                int viewID = Integer.parseInt(vID);
+                MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
+                TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message writte"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                tutorialViews.put(viewID, view);
+            }
+            ViewType viewType = ViewType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
+            Bukkit.getLogger().info(viewType + " " + endMessage + " " + item.toString());
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, endMessage, item);
+            this.addTutorial(tutorialName, tutorial);
         }
+
     }
 
-    public void startTutorial(Player player) {
-        if (this.getConfig().getString("views") == null) {
+    public void reCasheTutorials() {
+        this.tutorials.clear();
+        this.tutorialNames.clear();
+        casheAllData();
+    }
+
+
+    public void startTutorial(String tutorialName, Player player) {
+        if (this.getConfig().getString("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
+            return;
+        }
+        if (this.getTutorial(tutorialName) == null) {
+            player.sendMessage("Invalid tutorial");
             return;
         }
         String name = player.getName();
@@ -71,14 +111,20 @@ public class ServerTutorial extends JavaPlugin {
         player.setAllowFlight(true);
         player.setFlying(true);
         this.initializeCurrentView(name);
+        Bukkit.getLogger().info(this.getCurrentView(name) + " " + getTutorialView(tutorialName, name).getMessage());
+        this.addCurrentTutorial(name, tutorialName);
         this.addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
             player.hidePlayer(online);
         }
-        this.getServer().getPlayerExact(name).teleport(this.getTutorialView(name).getLocation());
+        this.getServer().getPlayerExact(name).teleport(this.getTutorialView(tutorialName, name).getLocation());
         this.getTutorialUtils().textUtils(player);
 
+    }
+
+    private Tutorial getTutorial(String tutorialName) {
+        return this.tutorials.get(tutorialName);
     }
 
     public void addToTutorial(String name) {
@@ -109,20 +155,16 @@ public class ServerTutorial extends JavaPlugin {
         return this.currentTutorialView.get(name);
     }
 
+    public TutorialView getTutorialView(String tutorialName, String name) {
+        return this.tutorials.get(tutorialName).getView(getCurrentView(name));
+    }
+
     public TutorialView getTutorialView(String name) {
-        return this.tutorialViews.get(this.getCurrentView(name));
-    }
-
-    public void incrementTotalViews() {
-        this.totalViews++;
-    }
-
-    public int getTotalViews() {
-        return this.totalViews;
+        return this.tutorials.get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
     }
 
     public Location getFirstLoc(String name) {
-       return this.startLoc.get(name);
+        return this.startLoc.get(name);
     }
 
     public void cleanFirstLoc(String name) {
@@ -163,5 +205,13 @@ public class ServerTutorial extends JavaPlugin {
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public CreateTutorial getCreateTutorial() {
+        return createTutorial;
+    }
+
+    public ViewConversation getViewConversation() {
+        return viewConversation;
     }
 }
