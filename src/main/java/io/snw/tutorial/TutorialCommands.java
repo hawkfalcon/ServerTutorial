@@ -42,6 +42,10 @@ public class TutorialCommands implements CommandExecutor {
                         plugin.getCreateTutorial().createNewTutorial(player, args[1]);
                         sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "Tutorial " + args[1] + " was successfully saved.");
                     } else if (args[0].equalsIgnoreCase("addview")) {
+                        if (!plugin.getAllTutorials().contains(args[1])) {
+                            sender.sendMessage(ChatColor.RED + "You must create this tutorial first! /server create <name>");
+                            return false;
+                        }
                         plugin.getViewConversation().createNewView(player, args[1]);
                         sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "View was successfully saved.");
                     }

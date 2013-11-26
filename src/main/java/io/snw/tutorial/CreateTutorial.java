@@ -63,11 +63,11 @@ public class CreateTutorial {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             context.setSessionData("endmessage", input);
-            return new Finish();
+            return new FinishMessage();
         }
     }
 
-    private class Finish extends MessagePrompt {
+    private class FinishMessage extends MessagePrompt {
         public String getPromptText(ConversationContext context) {
             return "The Tutorial " + name + " has been successfully created as a " + context.getSessionData("viewtype").toString() + " based tutorial with end message " + context.getSessionData("endmessage").toString() + "!";
         }

@@ -71,11 +71,13 @@ public class ServerTutorial extends JavaPlugin {
         for (String tutorialName : this.getConfig().getConfigurationSection("tutorials").getKeys(false)) {
             this.tutorialNames.add(tutorialName);
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
-            for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
-                int viewID = Integer.parseInt(vID);
-                MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
-                TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message writte"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
-                tutorialViews.put(viewID, view);
+            if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
+                for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+                    int viewID = Integer.parseInt(vID);
+                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
+                    TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message writte"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    tutorialViews.put(viewID, view);
+                }
             }
             ViewType viewType = ViewType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
@@ -99,6 +101,10 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
+        if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
+            player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
+            return;
+        }
         if (this.getTutorial(tutorialName) == null) {
             player.sendMessage("Invalid tutorial");
             return;
@@ -111,7 +117,6 @@ public class ServerTutorial extends JavaPlugin {
         player.setAllowFlight(true);
         player.setFlying(true);
         this.initializeCurrentView(name);
-        Bukkit.getLogger().info(this.getCurrentView(name) + " " + getTutorialView(tutorialName, name).getMessage());
         this.addCurrentTutorial(name, tutorialName);
         this.addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
