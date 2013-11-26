@@ -1,6 +1,5 @@
 package io.snw.tutorial;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
@@ -76,7 +75,7 @@ public class ViewConversation {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewView(((Player)context.getForWhom()).getName(), context.getSessionData("name").toString(), context.getSessionData("messageType").toString(), context.getSessionData("message").toString());
+            writeNewView(((Player) context.getForWhom()).getName(), context.getSessionData("name").toString(), context.getSessionData("messageType").toString(), context.getSessionData("message").toString());
             return Prompt.END_OF_CONVERSATION;
         }
     }
