@@ -65,11 +65,11 @@ public class ViewConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             context.setSessionData("message", input);
-            return new Finish();
+            return new FinishMessage();
         }
     }
 
-    private class Finish extends MessagePrompt {
+    private class FinishMessage extends MessagePrompt {
         public String getPromptText(ConversationContext context) {
             return "The view for tutorial " + context.getSessionData("name").toString() + " has been successfully created as a " + context.getSessionData("messagetype").toString() + " based view with message " + context.getSessionData("message").toString() + "!";
         }
