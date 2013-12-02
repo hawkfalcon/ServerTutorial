@@ -16,7 +16,9 @@ public class TutorialCommands implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        if (!(sender instanceof Player)) return false;
+        if (!(sender instanceof Player)) {
+            return false;
+        }
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("tutorial")) {
             if (args.length == 0) {
@@ -31,10 +33,12 @@ public class TutorialCommands implements CommandExecutor {
                     }
                     player.sendMessage(sb.toString());
                 }
+                return true;
             }
 
             if (args.length == 1) {
                 this.plugin.startTutorial(args[0], player);
+                return true;
             }
             if (args.length > 1) {
                 if (sender.hasPermission("tutorial.create")) {
@@ -44,16 +48,18 @@ public class TutorialCommands implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("addview")) {
                         if (!plugin.getAllTutorials().contains(args[1])) {
                             sender.sendMessage(ChatColor.RED + "You must create this tutorial first! /server create <name>");
-                            return false;
+                            return true;
                         }
                         plugin.getViewConversation().createNewView(player, args[1]);
                         sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "View was successfully saved.");
                     }
+                    return true;
                 } else {
                     sender.sendMessage(ChatColor.RED + "Try /tutorial");
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 }

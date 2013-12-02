@@ -3,6 +3,8 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,9 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -28,18 +27,13 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
 
-    private TutorialUtils tutorialUtils;
-    private TutorialTask tutorialTask;
-    private CreateTutorial createTutorial;
-    private ViewConversation viewConversation;
-
+    private TutorialUtils tutorialUtils = new TutorialUtils(this);
+    private TutorialTask tutorialTask = new TutorialTask(this);
+    private CreateTutorial createTutorial = new CreateTutorial(this);
+    private ViewConversation viewConversation = new ViewConversation(this);
 
     @Override
     public void onEnable() {
-        tutorialUtils = new TutorialUtils(this);
-        tutorialTask = new TutorialTask(this);
-        createTutorial = new CreateTutorial(this);
-        viewConversation = new ViewConversation(this);
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
@@ -67,7 +61,9 @@ public class ServerTutorial extends JavaPlugin {
      * Setup all views from config
      */
     public void casheAllData() {
-        if (this.getConfig().getString("tutorials") == null) return;
+        if (this.getConfig().getString("tutorials") == null) {
+            return;
+        }
         for (String tutorialName : this.getConfig().getConfigurationSection("tutorials").getKeys(false)) {
             this.tutorialNames.add(tutorialName);
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
