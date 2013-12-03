@@ -1,7 +1,5 @@
 package io.snw.tutorial;
 
-import java.io.IOException;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -82,8 +80,6 @@ public class ViewConversation {
     private class FinishMessage extends MessagePrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            //Player player = (Player)context.getForWhom();
-            //String location = plugin.getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getX() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getY() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getZ() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getPitch();
             return "The view for tutorial " + name + " has been successfully created as a " + context.getSessionData("messagetype").toString() + " based view with message " + context.getSessionData("message").toString() + "!";
         }
 
