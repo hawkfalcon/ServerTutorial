@@ -86,7 +86,7 @@ public class CreateTutorial {
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
             writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString());
-            return Prompt.END_OF_CONVERSATION;
+            return END_OF_CONVERSATION;
         }
     }
 

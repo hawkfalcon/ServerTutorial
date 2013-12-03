@@ -1,5 +1,7 @@
 package io.snw.tutorial;
 
+import java.io.IOException;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -37,7 +39,6 @@ public class ViewConversation {
         @Override
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
-            context.setSessionData("player", context.getForWhom());
             return "This will guide you through creating a new View for the tutorial " + name;
         }
 
@@ -81,14 +82,31 @@ public class ViewConversation {
     private class FinishMessage extends MessagePrompt {
         @Override
         public String getPromptText(ConversationContext context) {
+            //Player player = (Player)context.getForWhom();
+            //String location = plugin.getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getX() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getY() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getZ() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getPitch();
             return "The view for tutorial " + name + " has been successfully created as a " + context.getSessionData("messagetype").toString() + " based view with message " + context.getSessionData("message").toString() + "!";
         }
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            //Player player = (Player)context.getForWhom();
-            //context.getSessionData("player").toString();
-            writeNewView(context.getSessionData("player").toString(), name, context.getSessionData("messageType").toString(), context.getSessionData("message").toString());
+            Player player = (Player)context.getForWhom();
+            String location = plugin.getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getX() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getY() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getZ() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getPitch();
+            String message = context.getSessionData("message").toString();
+            String messageType = context.getSessionData("messagetype").toString();
+            String name = context.getSessionData("name").toString();
+            int viewID = 1;
+            while(plugin.getConfig().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null){
+                viewID++;
+            }
+            try{
+                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".message", message);
+                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
+                plugin.getConfig().set("tutorials." + name + ".views" + viewID + ".location", location);
+                plugin.saveConfig();
+                plugin.reCasheTutorials();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return END_OF_CONVERSATION;
         }
     }
@@ -99,18 +117,5 @@ public class ViewConversation {
         public String getPrefix(ConversationContext context) {
             return ChatColor.AQUA + "[" + ChatColor.GRAY + "Tutorial" + ChatColor.AQUA + "] " + ChatColor.WHITE;
         }
-    }
-
-    public void writeNewView(String playername, String name, String messageType, String message) {
-        int viewID = 1;
-        while (this.plugin.getConfig().get("tutorials." + name + ".views." + viewID) != null) {
-            viewID++;
-        }
-
-        plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".message", message);
-        plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".type", messageType);
-        plugin.getTutorialUtils().saveLoc(name, viewID, plugin.getServer().getPlayerExact(playername).getLocation());
-        plugin.saveConfig();
-        plugin.reCasheTutorials();
     }
 }

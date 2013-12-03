@@ -16,12 +16,6 @@ public class TutorialUtils {
         this.plugin = plugin;
     }
 
-    public void saveLoc(String tutorialName, int viewID, Location loc) {
-        String location = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getYaw() + "," + loc.getPitch();
-        plugin.getConfig().set("tutorials." + tutorialName + ".views." + viewID + ".location", location);
-        plugin.saveConfig();
-    }
-
     public Location getLocation(String tutorialName, int viewID) {
         String[] loc = plugin.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split("\\,");
         World w = Bukkit.getWorld(loc[0]);
