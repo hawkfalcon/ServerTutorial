@@ -93,7 +93,7 @@ public class ServerTutorial extends JavaPlugin {
 
 
     public void startTutorial(String tutorialName, Player player) {
-        if (this.getConfig().getString("tutorials") == null) {
+        if (this.getConfig().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
