@@ -1,20 +1,14 @@
 package io.snw.tutorial;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.ConversationPrefix;
-import org.bukkit.conversations.FixedSetPrompt;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 public class ViewConversation {
 
     ServerTutorial plugin;
     String name;
-    
+
     public ViewConversation(ServerTutorial plugin) {
         this.plugin = plugin;
     }
@@ -85,16 +79,16 @@ public class ViewConversation {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            Player player = (Player)context.getForWhom();
+            Player player = (Player) context.getForWhom();
             String location = plugin.getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getX() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getY() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getZ() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getPitch();
             String message = context.getSessionData("message").toString();
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
             int viewID = 1;
-            while(plugin.getConfig().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null){
+            while (plugin.getConfig().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
                 viewID++;
             }
-            try{
+            try {
                 plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".message", message);
                 plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
                 plugin.getConfig().set("tutorials." + name + ".views" + viewID + ".location", location);

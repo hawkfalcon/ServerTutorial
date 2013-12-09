@@ -24,8 +24,7 @@ public class TutorialUtils {
         Double z = Double.parseDouble(loc[3]);
         float yaw = Float.parseFloat(loc[4]);
         float pitch = Float.parseFloat(loc[5]);
-        Location location = new Location(w, x, y, z, yaw, pitch);
-        return location;
+        return new Location(w, x, y, z, yaw, pitch);
     }
 
     public void textUtils(Player player) {

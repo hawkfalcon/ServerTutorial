@@ -1,13 +1,7 @@
 package io.snw.tutorial;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.ConversationContext;
-import org.bukkit.conversations.ConversationFactory;
-import org.bukkit.conversations.ConversationPrefix;
-import org.bukkit.conversations.FixedSetPrompt;
-import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.Prompt;
-import org.bukkit.conversations.StringPrompt;
+import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 
 public class CreateTutorial {
@@ -59,6 +53,24 @@ public class CreateTutorial {
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, String input) {
             context.setSessionData("viewtype", input);
+            if (input.equalsIgnoreCase("time")) {
+                return new TimeLength();
+            } else {
+                return new EndMessage();
+            }
+        }
+    }
+
+    private class TimeLength extends NumericPrompt {
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return "How long should each view last?";
+
+        }
+
+        @Override
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            context.setSessionData("timelength", input);
             return new EndMessage();
         }
     }
@@ -85,7 +97,8 @@ public class CreateTutorial {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString());
+            int timeLength = Integer.parseInt(context.getSessionData("timelength").toString(), 0);
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), timeLength);
             return END_OF_CONVERSATION;
         }
     }
@@ -98,8 +111,11 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, int timeLength) {
         plugin.getConfig().set("tutorials." + name + ".viewtype", viewType);
+        if (timeLength != 0) {
+            plugin.getConfig().set("tutorials." + name + ".timeLength", timeLength);
+        }
         plugin.getConfig().set("tutorials." + name + ".endmessage", endMessage);
         plugin.getConfig().set("tutorials." + name + ".item", "stick");
         plugin.saveConfig();
