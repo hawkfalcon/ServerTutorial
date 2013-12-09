@@ -1,8 +1,9 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.ViewType;
-import java.util.HashMap;
 import org.bukkit.Material;
+
+import java.util.HashMap;
 
 public class Tutorial {
     private final String name;
