@@ -9,13 +9,15 @@ public class Tutorial {
     private final String name;
     private final HashMap<Integer, TutorialView> tutorialViews;
     private final ViewType viewType;
+    private final int timeLength;
     private final String endMessage;
     private final Material item;
 
-    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, String endMessage, Material item) {
+    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;
+        this.timeLength = timeLength;
         this.endMessage = endMessage;
         this.item = item;
     }
@@ -40,6 +42,10 @@ public class Tutorial {
         return this.viewType;
     }
 
+    public int getTimeLength() {
+        return this.timeLength;
+    }
+    
     public String getEndMessage() {
         return this.endMessage;
     }

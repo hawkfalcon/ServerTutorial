@@ -39,16 +39,6 @@ public class TutorialUtils {
             player.sendMessage(tACC(plugin.getTutorialView(name).getMessage()));
         }
     }
-    
-    public int timeUtils(int time){
-        if(time > 60){
-            return time * 20 * 60;
-        }
-        if (time < 60){
-            return time * 20;
-        }
-        return time;
-    }
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);

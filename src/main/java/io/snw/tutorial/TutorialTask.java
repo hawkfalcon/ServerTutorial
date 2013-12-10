@@ -1,6 +1,8 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
+import io.snw.tutorial.enums.ViewType;
+import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,6 +16,8 @@ public class TutorialTask {
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
     }
+    private TutorialUtils tutorialUtils = new TutorialUtils(plugin);
+    private HashMap<String, Player> player = new HashMap<String, Player>();
 
     public void tutorialTask() {
         new BukkitRunnable() {
@@ -32,6 +36,33 @@ public class TutorialTask {
                 }
             }
         }.runTaskTimer(plugin, 0L, 5L);
+    }
+    
+    public void tutorialTimeTask() {
+
+        for(String name : plugin.getAllInTutorial()){
+            Long timeLength = (long)plugin.getCurrentTutorial(name).getTimeLength() * 20L;
+        new BukkitRunnable(){
+            
+            @Override
+            public void run() {
+                for (String name : plugin.getAllInTutorial()){
+                    
+                    Player player = plugin.getServer().getPlayerExact(name);
+                    if(plugin.getCurrentTutorial(name).getViewType() == ViewType.TIME) {
+                        if(plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
+                            endTutorial(player);
+                        } else {
+                        plugin.incrementCurrentView(name);
+                        plugin.getTutorialUtils().textUtils(player);
+                        player.teleport(plugin.getTutorialView(name).getLocation());
+                        }
+                    }
+                }
+            }
+            
+        }.runTaskTimer(plugin, 0L, timeLength);
+        }
     }
 
     public String tACC(String message) {
@@ -56,5 +87,30 @@ public class TutorialTask {
 
         i.setItemMeta(data);
         player.setItemInHand(i);
+    }
+    
+    public void endTutorial(final Player player) {
+        final String name = player.getName();
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));
+        plugin.removeFromTutorial(name);
+        player.closeInventory();
+        player.getInventory().clear();
+        player.setAllowFlight(plugin.getFlight(name));
+        player.setFlying(plugin.getFlight(name));
+        plugin.removeFlight(name);
+        player.teleport(plugin.getFirstLoc(name));
+        plugin.cleanFirstLoc(name);
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                for (Player online : plugin.getServer().getOnlinePlayers()) {
+                    online.showPlayer(player);
+                    player.showPlayer(online);
+                }
+                player.getInventory().setContents(plugin.getInventory(name));
+                plugin.cleanInventory(name);
+            }
+        }.runTaskLater(plugin, 20L);
     }
 }

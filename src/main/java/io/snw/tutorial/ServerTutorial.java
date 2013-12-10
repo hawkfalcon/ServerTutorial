@@ -71,16 +71,17 @@ public class ServerTutorial extends JavaPlugin {
             if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
                 for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
-                    TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message writte"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));            
+                    TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
             ViewType viewType = ViewType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            int timeLength = this.getConfig().getInt("tutorials." + tutorialName + ".timelength", 0);
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
             Bukkit.getLogger().info(viewType + " " + endMessage + " " + item.toString());
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, endMessage, item);
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
         }
 
@@ -121,6 +122,9 @@ public class ServerTutorial extends JavaPlugin {
             player.hidePlayer(online);
         }
         this.getServer().getPlayerExact(name).teleport(this.getTutorialView(tutorialName, name).getLocation());
+        if(this.getTutorial(tutorialName).getViewType() == ViewType.TIME){
+            this.getTutorialTimeTask();
+        }
         this.getTutorialUtils().textUtils(player);
 
     }
@@ -203,6 +207,10 @@ public class ServerTutorial extends JavaPlugin {
 
     public TutorialTask getTutorialTask() {
         return tutorialTask;
+    }
+    
+    public void getTutorialTimeTask(){
+        tutorialTask.tutorialTimeTask();
     }
 
     public String tACC(String message) {

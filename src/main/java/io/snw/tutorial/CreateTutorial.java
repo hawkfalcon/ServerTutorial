@@ -70,7 +70,11 @@ public class CreateTutorial {
 
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            context.setSessionData("timelength", input);
+            if(input.intValue() < 0){
+                context.setSessionData("timelength", input);
+            } else {
+                context.setSessionData("timelength", "10");
+            }
             return new EndMessage();
         }
     }
@@ -97,8 +101,7 @@ public class CreateTutorial {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            int timeLength = Integer.parseInt(context.getSessionData("timelength").toString(), 0);
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), timeLength);
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength").toString());
             return END_OF_CONVERSATION;
         }
     }
@@ -111,10 +114,12 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage, int timeLength) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, String timeLength) {
         plugin.getConfig().set("tutorials." + name + ".viewtype", viewType);
-        if (timeLength != 0) {
-            plugin.getConfig().set("tutorials." + name + ".timeLength", timeLength);
+        if (timeLength != null) {
+            plugin.getConfig().set("tutorials." + name + ".timelength", timeLength);
+        } else {
+            plugin.getConfig().set("tutorials." + name + ".timelength", "0");
         }
         plugin.getConfig().set("tutorials." + name + ".endmessage", endMessage);
         plugin.getConfig().set("tutorials." + name + ".item", "stick");
