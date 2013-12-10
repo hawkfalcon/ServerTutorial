@@ -91,7 +91,7 @@ public class ViewConversation {
             try {
                 plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".message", message);
                 plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
-                plugin.getConfig().set("tutorials." + name + ".views" + viewID + ".location", location);
+                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".location", location);
                 plugin.saveConfig();
                 plugin.reCasheTutorials();
             } catch (Exception e) {
@@ -108,4 +108,6 @@ public class ViewConversation {
             return ChatColor.AQUA + "[" + ChatColor.GRAY + "Tutorial" + ChatColor.AQUA + "] " + ChatColor.WHITE;
         }
     }
+    
+    
 }
