@@ -1,8 +1,6 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
-import io.snw.tutorial.enums.ViewType;
-import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -16,8 +14,6 @@ public class TutorialTask {
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    private TutorialUtils tutorialUtils = new TutorialUtils(plugin);
-    private HashMap<String, Player> player = new HashMap<String, Player>();
 
     public void tutorialTask() {
         new BukkitRunnable() {
@@ -38,31 +34,22 @@ public class TutorialTask {
         }.runTaskTimer(plugin, 0L, 5L);
     }
     
-    public void tutorialTimeTask() {
-
-        for(String name : plugin.getAllInTutorial()){
-            Long timeLength = (long)plugin.getCurrentTutorial(name).getTimeLength() * 20L;
+    public void tutorialTimeTask(String tutorialName, final String name) {
+        
+        Long timeLength = (long)plugin.getConfig().getInt("tutorials. " + tutorialName + ".timelength") * 20L;
         new BukkitRunnable(){
             
             @Override
             public void run() {
-                for (String name : plugin.getAllInTutorial()){
-                    
-                    Player player = plugin.getServer().getPlayerExact(name);
-                    if(plugin.getCurrentTutorial(name).getViewType() == ViewType.TIME) {
-                        if(plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
-                            endTutorial(player);
-                        } else {
-                        plugin.incrementCurrentView(name);
-                        plugin.getTutorialUtils().textUtils(player);
-                        player.teleport(plugin.getTutorialView(name).getLocation());
-                        }
+                Player player = plugin.getServer().getPlayerExact(name);
+                if(plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
+                    endTutorial(player);
                     }
-                }
+                plugin.incrementCurrentView(name);
+                player.teleport(plugin.getTutorialView(name).getLocation());
             }
             
-        }.runTaskTimer(plugin, 0L, timeLength);
-        }
+        }.runTaskTimer(plugin, timeLength, timeLength);
     }
 
     public String tACC(String message) {

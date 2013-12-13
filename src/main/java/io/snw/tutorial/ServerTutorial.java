@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -80,7 +81,7 @@ public class ServerTutorial extends JavaPlugin {
             int timeLength = this.getConfig().getInt("tutorials." + tutorialName + ".timelength", 0);
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
-            Bukkit.getLogger().info(viewType + " " + endMessage + " " + item.toString());
+            Bukkit.getLogger().log(Level.INFO, "{0} {1} {2}", new Object[]{viewType, endMessage, item.toString()});
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
         }
@@ -123,7 +124,7 @@ public class ServerTutorial extends JavaPlugin {
         }
         this.getServer().getPlayerExact(name).teleport(this.getTutorialView(tutorialName, name).getLocation());
         if(this.getTutorial(tutorialName).getViewType() == ViewType.TIME){
-            this.getTutorialTimeTask();
+            this.getTutorialTimeTask(tutorialName, name);
         }
         this.getTutorialUtils().textUtils(player);
 
@@ -209,8 +210,8 @@ public class ServerTutorial extends JavaPlugin {
         return tutorialTask;
     }
     
-    public void getTutorialTimeTask(){
-        tutorialTask.tutorialTimeTask();
+    public void getTutorialTimeTask(String tutorialName, String name){
+        tutorialTask.tutorialTimeTask(tutorialName, name);
     }
 
     public String tACC(String message) {
