@@ -3,6 +3,7 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -39,6 +40,8 @@ public class ServerTutorial extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
+        this.getConfig().createSection("tutorials");
+        this.saveConfig();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
     }
