@@ -3,7 +3,7 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
-import org.bukkit.Bukkit;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,6 +39,8 @@ public class ServerTutorial extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
+        this.getConfig().createSection("tutorials");
+        this.saveConfig();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
     }
@@ -72,7 +74,7 @@ public class ServerTutorial extends JavaPlugin {
             if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
                 for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));            
+                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
                     TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
@@ -81,7 +83,7 @@ public class ServerTutorial extends JavaPlugin {
             int timeLength = this.getConfig().getInt("tutorials." + tutorialName + ".timelength", 0);
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
-            Bukkit.getLogger().log(Level.INFO, "{0} {1} {2}", new Object[]{viewType, endMessage, item.toString()});
+            this.getLogger().log(Level.INFO, "{0} {1} {2}", new Object[]{viewType, endMessage, item.toString()});
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
         }
@@ -123,7 +125,7 @@ public class ServerTutorial extends JavaPlugin {
             player.hidePlayer(online);
         }
         this.getServer().getPlayerExact(name).teleport(this.getTutorialView(tutorialName, name).getLocation());
-        if(this.getTutorial(tutorialName).getViewType() == ViewType.TIME){
+        if (this.getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             this.getTutorialTimeTask(tutorialName, name);
         }
         this.getTutorialUtils().textUtils(player);
@@ -140,6 +142,11 @@ public class ServerTutorial extends JavaPlugin {
 
     public void removeFromTutorial(String name) {
         this.playerInTutorial.remove(name);
+        this.startLoc.remove(name);
+        this.currentTutorial.remove(name);
+        this.currentTutorialView.remove(name);
+        this.inventories.remove(name);
+        this.flight.remove(name);
     }
 
     public boolean isInTutorial(String name) {
@@ -209,8 +216,8 @@ public class ServerTutorial extends JavaPlugin {
     public TutorialTask getTutorialTask() {
         return tutorialTask;
     }
-    
-    public void getTutorialTimeTask(String tutorialName, String name){
+
+    public void getTutorialTimeTask(String tutorialName, String name) {
         tutorialTask.tutorialTimeTask(tutorialName, name);
     }
 
