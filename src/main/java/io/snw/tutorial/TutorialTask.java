@@ -44,7 +44,8 @@ public class TutorialTask {
                 Player player = plugin.getServer().getPlayerExact(name);
                 if(plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
                     endTutorial(player);
-                    }
+                    cancel();
+                }
                 plugin.incrementCurrentView(name);
                 player.teleport(plugin.getTutorialView(name).getLocation());
             }
