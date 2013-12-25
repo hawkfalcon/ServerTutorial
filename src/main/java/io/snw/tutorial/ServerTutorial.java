@@ -142,6 +142,11 @@ public class ServerTutorial extends JavaPlugin {
 
     public void removeFromTutorial(String name) {
         this.playerInTutorial.remove(name);
+        this.startLoc.remove(name);
+        this.currentTutorial.remove(name);
+        this.currentTutorialView.remove(name);
+        this.inventories.remove(name);
+        this.flight.remove(name);
     }
 
     public boolean isInTutorial(String name) {

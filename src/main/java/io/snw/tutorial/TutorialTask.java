@@ -80,14 +80,14 @@ public class TutorialTask {
     public void endTutorial(final Player player) {
         final String name = player.getName();
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));
-        plugin.removeFromTutorial(name);
         player.closeInventory();
         player.getInventory().clear();
         player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(plugin.getFlight(name));
+        player.setFlying(false);
         plugin.removeFlight(name);
         player.teleport(plugin.getFirstLoc(name));
         plugin.cleanFirstLoc(name);
+        plugin.removeFromTutorial(name);
         new BukkitRunnable() {
 
             @Override
