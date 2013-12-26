@@ -39,7 +39,9 @@ public class ServerTutorial extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
-        this.getConfig().createSection("tutorials");
+        if (!getConfig().contains("tutorials")) {
+            this.getConfig().createSection("tutorials");
+        }
         this.saveConfig();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
