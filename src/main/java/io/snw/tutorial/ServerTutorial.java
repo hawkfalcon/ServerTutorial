@@ -13,7 +13,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -86,7 +85,6 @@ public class ServerTutorial extends JavaPlugin {
             int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
-            this.getLogger().log(Level.INFO, "{0} {1} {2}", new Object[]{viewType, endMessage, item.toString()});
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
         }
