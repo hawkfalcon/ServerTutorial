@@ -74,7 +74,7 @@ public class ViewConversation {
     private class FinishMessage extends MessagePrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "The view for tutorial " + name + " has been successfully created as a " + context.getSessionData("messagetype").toString() + " based view with message " + context.getSessionData("message").toString() + "!";
+            return "The view for tutorial " + name + " has been successfully created as a " + context.getSessionData("messagetype").toString() + " based view with message " + ChatColor.translateAlternateColorCodes('&', context.getSessionData("message").toString()) + ChatColor.RESET + "!";
         }
 
         @Override
