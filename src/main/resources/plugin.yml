@@ -2,7 +2,7 @@ name: ServerTutorial
 main: io.snw.tutorial.ServerTutorial
 version: maven-version-number
 description: Tutorial plugin
-author: hawkfalcon
+authors: [hawkfalcon, gomeow, Frostalf]
 website: snw.io
 commands:
     tutorial:
