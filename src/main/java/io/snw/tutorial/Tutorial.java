@@ -1,6 +1,7 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.ViewType;
+
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class Tutorial {
     public int getTimeLength() {
         return this.timeLength;
     }
-    
+
     public String getEndMessage() {
         return this.endMessage;
     }

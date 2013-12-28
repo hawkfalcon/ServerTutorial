@@ -108,6 +108,6 @@ public class ViewConversation {
             return ChatColor.AQUA + "[" + ChatColor.GRAY + "Tutorial" + ChatColor.AQUA + "] " + ChatColor.WHITE;
         }
     }
-    
-    
+
+
 }
