@@ -31,7 +31,7 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (plugin.isInTutorial(name)) {
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if (event.getAction() != Action.PHYSICAL) {
                 if (player.getItemInHand().getType() == this.plugin.getCurrentTutorial(name).getItem()) {
                     if (this.plugin.getCurrentTutorial(name).getTotalViews() == this.plugin.getCurrentView(name)) {
                         endTutorial(player);
@@ -41,8 +41,6 @@ public class TutorialListener implements Listener {
                         player.teleport(plugin.getTutorialView(name).getLocation());
                     }
                 }
-            } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                endTutorial(player);
             }
         }
     }
@@ -112,14 +110,14 @@ public class TutorialListener implements Listener {
     public void endTutorial(final Player player) {
         final String name = player.getName();
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));
-        plugin.removeFromTutorial(name);
         player.closeInventory();
         player.getInventory().clear();
         player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(plugin.getFlight(name));
+        player.setFlying(false);
         plugin.removeFlight(name);
         player.teleport(plugin.getFirstLoc(name));
         plugin.cleanFirstLoc(name);
+        plugin.removeFromTutorial(name);
         new BukkitRunnable() {
 
             @Override

@@ -101,7 +101,7 @@ public class CreateTutorial {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength").toString());
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength"));
             return END_OF_CONVERSATION;
         }
     }
@@ -114,10 +114,10 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage, String timeLength) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength) {
         plugin.getConfig().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
-            plugin.getConfig().set("tutorials." + name + ".timelength", timeLength);
+            plugin.getConfig().set("tutorials." + name + ".timelength", timeLength.toString());
         } else {
             plugin.getConfig().set("tutorials." + name + ".timelength", "0");
         }
