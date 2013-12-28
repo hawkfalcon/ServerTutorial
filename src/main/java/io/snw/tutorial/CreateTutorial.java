@@ -96,7 +96,7 @@ public class CreateTutorial {
     private class FinishMessage extends MessagePrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "The Tutorial " + name + " has been successfully created as a " + context.getSessionData("viewtype").toString() + " based tutorial with end message " + context.getSessionData("endmessage").toString() + "!";
+            return "The Tutorial " + name + " has been successfully created as a " + context.getSessionData("viewtype").toString() + " based tutorial with end message " + ChatColor.translateAlternateColorCodes('&', context.getSessionData("endmessage").toString()) + ChatColor.RESET + "!";
         }
 
         @Override
