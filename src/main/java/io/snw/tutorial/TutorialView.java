@@ -1,6 +1,7 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
+
 import org.bukkit.Location;
 
 public class TutorialView {

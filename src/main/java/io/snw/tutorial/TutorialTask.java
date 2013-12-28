@@ -1,7 +1,7 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
-import org.bukkit.Bukkit;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,23 +33,25 @@ public class TutorialTask {
             }
         }.runTaskTimer(plugin, 0L, 5L);
     }
-    
+
     public void tutorialTimeTask(String tutorialName, final String name) {
-        
-        Long timeLength = (long)plugin.getConfig().getInt("tutorials. " + tutorialName + ".timelength") * 20L;
-        new BukkitRunnable(){
-            
+        long num = (long) plugin.getTutorial(tutorialName).getTimeLength();
+        Long timeLength = num * 20L;
+
+        new BukkitRunnable() {
+
             @Override
             public void run() {
                 Player player = plugin.getServer().getPlayerExact(name);
-                if(plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
+                if (plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
                     endTutorial(player);
                     cancel();
+                    return;
                 }
                 plugin.incrementCurrentView(name);
                 player.teleport(plugin.getTutorialView(name).getLocation());
             }
-            
+
         }.runTaskTimer(plugin, timeLength, timeLength);
     }
 
@@ -61,7 +63,6 @@ public class TutorialTask {
     String alt;
 
     public void setPlayerItemName(Player player) {
-        Bukkit.getLogger().info(plugin.getCurrentTutorial(player.getName()).getName());
         ItemStack i = new ItemStack(plugin.getCurrentTutorial(player.getName()).getItem());
         ItemMeta data = i.getItemMeta();
         if (reset) {
@@ -76,7 +77,7 @@ public class TutorialTask {
         i.setItemMeta(data);
         player.setItemInHand(i);
     }
-    
+
     public void endTutorial(final Player player) {
         final String name = player.getName();
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));

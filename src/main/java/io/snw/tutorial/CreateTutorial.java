@@ -70,8 +70,8 @@ public class CreateTutorial {
 
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(input.intValue() < 0){
-                context.setSessionData("timelength", input);
+            if (input.intValue() < 0) {
+                context.setSessionData("timelength", input.intValue());
             } else {
                 context.setSessionData("timelength", "10");
             }

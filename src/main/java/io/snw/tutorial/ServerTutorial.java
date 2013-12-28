@@ -82,7 +82,8 @@ public class ServerTutorial extends JavaPlugin {
                 }
             }
             ViewType viewType = ViewType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
-            int timeLength = this.getConfig().getInt("tutorials." + tutorialName + ".timelength", 0);
+            String timeLengthS = this.getConfig().getString("tutorials." + tutorialName + ".timelength", "10");
+            int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
             this.getLogger().log(Level.INFO, "{0} {1} {2}", new Object[]{viewType, endMessage, item.toString()});
@@ -134,7 +135,7 @@ public class ServerTutorial extends JavaPlugin {
 
     }
 
-    private Tutorial getTutorial(String tutorialName) {
+    public Tutorial getTutorial(String tutorialName) {
         return this.tutorials.get(tutorialName);
     }
 
@@ -147,7 +148,6 @@ public class ServerTutorial extends JavaPlugin {
         this.startLoc.remove(name);
         this.currentTutorial.remove(name);
         this.currentTutorialView.remove(name);
-        this.inventories.remove(name);
         this.flight.remove(name);
     }
 
