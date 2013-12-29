@@ -1,7 +1,6 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.ViewType;
-
 import org.bukkit.Material;
 
 import java.util.HashMap;
