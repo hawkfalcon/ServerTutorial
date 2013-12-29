@@ -52,6 +52,9 @@ public class ServerTutorial extends JavaPlugin {
             metrics.start();
         } catch (IOException ioe) {
         }
+        if(!getConfig().contains("auto-update")) {
+            getConfig().set("auto-update", true);
+        }
         if(getConfig().getBoolean("auto-update", true)) {
             Updater updater = new Updater(this, 69090, getFile(), Updater.UpdateType.DEFAULT, true);
         }
