@@ -115,15 +115,15 @@ public class CreateTutorial {
     }
 
     public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength) {
-        plugin.getConfig().set("tutorials." + name + ".viewtype", viewType);
+        plugin.getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
-            plugin.getConfig().set("tutorials." + name + ".timelength", timeLength.toString());
+            plugin.getData().set("tutorials." + name + ".timelength", timeLength.toString());
         } else {
-            plugin.getConfig().set("tutorials." + name + ".timelength", "0");
+            plugin.getData().set("tutorials." + name + ".timelength", "0");
         }
-        plugin.getConfig().set("tutorials." + name + ".endmessage", endMessage);
-        plugin.getConfig().set("tutorials." + name + ".item", "stick");
-        plugin.saveConfig();
+        plugin.getData().set("tutorials." + name + ".endmessage", endMessage);
+        plugin.getData().set("tutorials." + name + ".item", "stick");
+        plugin.saveData();
         plugin.reCasheTutorials();
     }
 }

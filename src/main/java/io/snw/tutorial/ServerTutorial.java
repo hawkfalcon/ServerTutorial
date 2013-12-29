@@ -9,6 +9,8 @@ import io.snw.tutorial.util.Updater;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,19 +43,19 @@ public class ServerTutorial extends JavaPlugin {
     private CreateTutorial createTutorial = new CreateTutorial(this);
     private ViewConversation viewConversation = new ViewConversation(this);
 
+    private File dataFile;
+    private YamlConfiguration data;
+
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
         this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
         this.saveDefaultConfig();
-        if (!getConfig().contains("tutorials")) {
-            this.getConfig().createSection("tutorials");
-        }
-        this.saveConfig();
+        this.loadData();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
-        startMetrics();
-        checkUpdate();
+        this.startMetrics();
+        this.checkUpdate();
     }
 
     private void startMetrics() {
@@ -66,8 +68,9 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     private void checkUpdate() {
-        if (!getConfig().contains("auto-update")) {
+        if (getConfig().get("auto-update") == null) {
             getConfig().set("auto-update", true);
+            saveConfig();
         }
         if (getConfig().getBoolean("auto-update")) {
             final ServerTutorial plugin = this;
@@ -81,11 +84,41 @@ public class ServerTutorial extends JavaPlugin {
                     ServerTutorial.NEWVERSION = updater.getLatestName();
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                         getLogger().log(Level.INFO, "Successfully updated ServerTutorial to version {0} for next restart!", updater.getLatestName());
-                    } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
-                        getLogger().log(Level.INFO, "We didn't find an update!");
                     }
                 }
             });
+        }
+    }
+
+    private void loadData() {
+        File f = new File(getDataFolder(), "data.yml");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        dataFile = f;
+        data = YamlConfiguration.loadConfiguration(f);
+        if (getConfig().contains("tutorials")) {
+            ConfigurationSection section = getConfig().getConfigurationSection("tutorials");
+            data.set("tutorials", section);
+            saveData();
+            getConfig().set("tutorials", null);
+            saveConfig();
+        }
+    }
+
+    public YamlConfiguration getData() {
+        return this.data;
+    }
+
+    public void saveData() {
+        try {
+            data.save(dataFile);
+        } catch (IOException exception) {
+            getLogger().warning("Failed to save data :(");
         }
     }
 
@@ -109,25 +142,25 @@ public class ServerTutorial extends JavaPlugin {
      * Setup all views from config
      */
     public void casheAllData() {
-        if (this.getConfig().getString("tutorials") == null) {
+        if (this.data.getString("tutorials") == null) {
             return;
         }
-        for (String tutorialName : this.getConfig().getConfigurationSection("tutorials").getKeys(false)) {
+        for (String tutorialName : this.data.getConfigurationSection("tutorials").getKeys(false)) {
             this.tutorialNames.add(tutorialName);
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
-            if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
-                for (String vID : this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            if (this.data.getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
+                for (String vID : this.data.getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
-                    TutorialView view = new TutorialView(viewID, this.getConfig().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType messageType = MessageType.valueOf(this.data.getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
+                    TutorialView view = new TutorialView(viewID, this.data.getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
-            ViewType viewType = ViewType.valueOf(this.getConfig().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
-            String timeLengthS = this.getConfig().getString("tutorials." + tutorialName + ".timelength", "10");
+            ViewType viewType = ViewType.valueOf(this.data.getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            String timeLengthS = this.data.getString("tutorials." + tutorialName + ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
-            String endMessage = this.getConfig().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
-            Material item = Material.matchMaterial(this.getConfig().getString("tutorials." + tutorialName + ".item", "stick"));
+            String endMessage = this.data.getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            Material item = Material.matchMaterial(this.data.getString("tutorials." + tutorialName + ".item", "stick"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
         }
@@ -142,7 +175,7 @@ public class ServerTutorial extends JavaPlugin {
 
 
     public void startTutorial(String tutorialName, Player player) {
-        if (this.getConfig().getConfigurationSection("tutorials") == null) {
+        if (this.data.getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
@@ -150,7 +183,7 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage("Invalid tutorial");
             return;
         }
-        if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
+        if (this.data.getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }

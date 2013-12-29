@@ -86,14 +86,14 @@ public class ViewConversation {
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
             int viewID = 1;
-            while (plugin.getConfig().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
+            while (plugin.getData().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
                 viewID++;
             }
             try {
-                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".message", message);
-                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
-                plugin.getConfig().set("tutorials." + name + ".views." + viewID + ".location", location);
-                plugin.saveConfig();
+                plugin.getData().set("tutorials." + name + ".views." + viewID + ".message", message);
+                plugin.getData().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
+                plugin.getData().set("tutorials." + name + ".views." + viewID + ".location", location);
+                plugin.saveData();
                 plugin.reCasheTutorials();
             } catch (Exception e) {
                 e.printStackTrace();
