@@ -13,11 +13,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
+
+    static boolean UPDATE;
+    static String NEWVERSION;
 
     //player name, id
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
@@ -47,16 +52,40 @@ public class ServerTutorial extends JavaPlugin {
         this.saveConfig();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
+        startMetrics();
+        checkUpdate();
+    }
+
+    private void startMetrics() {
         try {
             Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch (IOException ioe) {
+        } catch (IOException ex) {
+            getLogger().warning("Failed to load metrics :(");
         }
-        if(!getConfig().contains("auto-update")) {
+    }
+
+    private void checkUpdate() {
+        if (!getConfig().contains("auto-update")) {
             getConfig().set("auto-update", true);
         }
-        if(getConfig().getBoolean("auto-update", true)) {
-            Updater updater = new Updater(this, 69090, getFile(), Updater.UpdateType.DEFAULT, true);
+        if (getConfig().getBoolean("auto-update")) {
+            final ServerTutorial plugin = this;
+            final File file = this.getFile();
+            final Updater.UpdateType updateType = Updater.UpdateType.DEFAULT;
+            getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+                @Override
+                public void run() {
+                    Updater updater = new Updater(plugin, 69090, file, updateType, false);
+                    ServerTutorial.UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
+                    ServerTutorial.NEWVERSION = updater.getLatestName();
+                    if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
+                        getLogger().log(Level.INFO, "Successfully updated ServerTutorial to version {0} for next restart!", updater.getLatestName());
+                    } else if (updater.getResult() == Updater.UpdateResult.NO_UPDATE) {
+                        getLogger().log(Level.INFO, "We didn't find an update!");
+                    }
+                }
+            });
         }
     }
 
