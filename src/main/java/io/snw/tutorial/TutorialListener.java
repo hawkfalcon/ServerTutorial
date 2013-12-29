@@ -1,18 +1,21 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.ViewType;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialListener implements Listener {
@@ -30,14 +33,16 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (plugin.isInTutorial(name)) {
-            if (event.getAction() != Action.PHYSICAL) {
-                if (player.getItemInHand().getType() == this.plugin.getCurrentTutorial(name).getItem()) {
-                    if (this.plugin.getCurrentTutorial(name).getTotalViews() == this.plugin.getCurrentView(name)) {
-                        endTutorial(player);
-                    } else {
-                        this.plugin.incrementCurrentView(name);
-                        plugin.getTutorialUtils().textUtils(player);
-                        player.teleport(plugin.getTutorialView(name).getLocation());
+            if (plugin.getCurrentTutorial(name).getViewType() == ViewType.CLICK) {
+                if (event.getAction() != Action.PHYSICAL) {
+                    if (player.getItemInHand().getType() == this.plugin.getCurrentTutorial(name).getItem()) {
+                        if (this.plugin.getCurrentTutorial(name).getTotalViews() == this.plugin.getCurrentView(name)) {
+                            endTutorial(player);
+                        } else {
+                            this.plugin.incrementCurrentView(name);
+                            plugin.getTutorialUtils().textUtils(player);
+                            player.teleport(plugin.getTutorialView(name).getLocation());
+                        }
                     }
                 }
             }
