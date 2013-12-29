@@ -3,6 +3,9 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import io.snw.tutorial.util.Metrics;
+import io.snw.tutorial.util.Updater;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -43,6 +47,14 @@ public class ServerTutorial extends JavaPlugin {
         this.saveConfig();
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
+        try {
+            Metrics metrics = new Metrics(this);
+            metrics.start();
+        } catch (IOException ioe) {
+        }
+        if(getConfig().getBoolean("auto-update", true)) {
+            Updater updater = new Updater(this, 69090, getFile(), Updater.UpdateType.DEFAULT, true);
+        }
     }
 
     public void addTutorial(String tutorialName, Tutorial tutorial) {
