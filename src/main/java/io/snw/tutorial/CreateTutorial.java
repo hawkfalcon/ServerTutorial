@@ -19,7 +19,7 @@ public class CreateTutorial {
         this.name = tutorialName;
         this.factory = new ConversationFactory(plugin)
                 .withModality(true)
-                .withPrefix(new Prefix())
+                        //.withPrefix(new Prefix())
                 .withFirstPrompt(new Welcome())
                 .withEscapeSequence("/quit")
                 .withTimeout(10)
@@ -31,7 +31,7 @@ public class CreateTutorial {
         @Override
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
-            return "This will guide you through creating a new Tutorial (" + name + ")!";
+            return ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>&fWelcome to the &bServerTutorial&f tutorial creation!\n&8>&7This will guide you through creating a new Tutorial\n&8>&7Currently creating new tutorial with name: &b" + name + "!");
         }
 
         @Override
@@ -47,7 +47,7 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "Choose a ViewType: CLICK or TIME\nCLICK - cycle though by clicking\nTIME - automated with a timer";
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7First, choose a ViewType: CLICK or TIME\n&8>&6CLICK &7- cycle though by clicking\n&8>&6TIME &7- automated with a timer\n&8>&7>&6> &7Type a ViewType to continue!");
         }
 
         @Override
@@ -64,7 +64,7 @@ public class CreateTutorial {
     private class TimeLength extends NumericPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "How long should each view last?";
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type how long should each view last (in seconds):");
 
         }
 
@@ -82,7 +82,7 @@ public class CreateTutorial {
     private class EndMessage extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "Choose what end message this tutorial should have:";
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type what message this tutorial should have at the end:");
 
         }
 
@@ -96,7 +96,7 @@ public class CreateTutorial {
     private class FinishMessage extends MessagePrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return "The Tutorial " + name + " has been successfully created as a " + context.getSessionData("viewtype").toString() + " based tutorial with end message " + ChatColor.translateAlternateColorCodes('&', context.getSessionData("endmessage").toString()) + ChatColor.RESET + "!";
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7The Tutorial &b" + name + "&7 has been successfully created!\n&8>&7It is a &f" + context.getSessionData("viewtype").toString() + " &7based tutorial with end message &f" + context.getSessionData("endmessage").toString() + "&7!\n&6-------------------------------");
         }
 
         @Override

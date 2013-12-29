@@ -3,7 +3,6 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -103,12 +102,12 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
-        if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
-            player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
-            return;
-        }
         if (this.getTutorial(tutorialName) == null) {
             player.sendMessage("Invalid tutorial");
+            return;
+        }
+        if (this.getConfig().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
+            player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
         String name = player.getName();

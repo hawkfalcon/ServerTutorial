@@ -23,39 +23,55 @@ public class TutorialCommands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("tutorial")) {
             if (args.length == 0) {
                 if (sender.hasPermission("tutorial.view")) {
-                    player.sendMessage("Availible tutorials:");
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
                     StringBuilder sb = new StringBuilder();
-                    for (String tutorial : plugin.getAllTutorials()) {
-                        if (sb.length() > 0) {
-                            sb.append(',');
+                    if (plugin.getAllTutorials().size() != 0) {
+                        for (String tutorial : plugin.getAllTutorials()) {
+                            if (sb.length() > 0) {
+                                sb.append(',');
+                                sb.append(' ');
+                            }
+                            sb.append(tutorial);
                         }
-                        sb.append(tutorial);
+                        player.sendMessage(sb.toString());
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------"));
+                    } else {
+                        player.sendMessage(ChatColor.RED + "There are currently no tutorials setup.\nSet one up with /tutorial create <name>");
                     }
-                    player.sendMessage(sb.toString());
                 }
                 return true;
             }
 
+
             if (args.length == 1) {
-                this.plugin.startTutorial(args[0], player);
+                if (args[0].equalsIgnoreCase("help")) {
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
+                } else {
+                    this.plugin.startTutorial(args[0], player);
+                }
                 return true;
             }
             if (args.length > 1) {
                 if (sender.hasPermission("tutorial.create")) {
                     if (args[0].equalsIgnoreCase("create")) {
-                        plugin.getCreateTutorial().createNewTutorial(player, args[1]);
-                        sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "Tutorial " + args[1] + " was successfully saved.");
+                        if (!plugin.getAllTutorials().contains(args[1])) {
+                            plugin.getCreateTutorial().createNewTutorial(player, args[1]);
+                        } else {
+                            sender.sendMessage(ChatColor.RED + "This tutorial already exists!");
+                            return true;
+                        }
                     } else if (args[0].equalsIgnoreCase("addview")) {
                         if (!plugin.getAllTutorials().contains(args[1])) {
-                            sender.sendMessage(ChatColor.RED + "You must create this tutorial first! /server create <name>");
+                            sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/server create <name>");
                             return true;
                         }
                         plugin.getViewConversation().createNewView(player, args[1]);
-                        sender.sendMessage(ChatColor.DARK_BLUE + "[Tutorial] " + ChatColor.LIGHT_PURPLE + "View was successfully saved.");
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "Try " + ChatColor.GOLD + "/tutorial help");
+                        return true;
                     }
-                    return true;
                 } else {
-                    sender.sendMessage(ChatColor.RED + "Try /tutorial");
+                    sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
                     return true;
                 }
             }
