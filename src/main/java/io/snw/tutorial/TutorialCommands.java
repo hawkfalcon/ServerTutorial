@@ -47,13 +47,13 @@ public class TutorialCommands implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
                 } else {
-                    if(plugin.getAllTutorials().contains(args[0])){
-                        if(sender.hasPermission("servertutorial.tutorials.*") || sender.hasPermission("servertutorials.*")){
+                    if (plugin.getAllTutorials().contains(args[0])) {
+                        if (sender.hasPermission("tutorial.use")) {
                             this.plugin.startTutorial(args[0], player);
                         } else {
-                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have Permissions!"));
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission for this!!"));
                         }
-                        if(sender.hasPermission("servertutorial.tutorials" + args[0])){
+                        if (sender.hasPermission("tutorial.tutorials." + args[0])) {
                             this.plugin.startTutorial(args[0], player);
                         } else {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission for Tutorial:&b " + args[0]));
@@ -61,7 +61,7 @@ public class TutorialCommands implements CommandExecutor {
                     } else {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
                     }
-                    
+
                 }
                 return true;
             }

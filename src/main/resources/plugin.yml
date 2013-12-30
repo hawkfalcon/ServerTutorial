@@ -8,6 +8,10 @@ commands:
     tutorial:
         description: tutorial
 permissions:
+    tutorial.*:
+        children:
+            tutorial.use: true
+            tutorial.create: true
     tutorial.create:
         default: OP
     tutorial.use:
