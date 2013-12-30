@@ -36,6 +36,7 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
 
     private TutorialUtils tutorialUtils = new TutorialUtils(this);
@@ -106,6 +107,7 @@ public class ServerTutorial extends JavaPlugin {
             data.set("tutorials", section);
             saveData();
             getConfig().set("tutorials", null);
+            getConfig().set("permissions", false);
             saveConfig();
         }
     }
@@ -280,7 +282,7 @@ public class ServerTutorial extends JavaPlugin {
     public void addFlight(String name, boolean flight) {
         this.flight.put(name, flight);
     }
-
+    
     public void removeFlight(String name) {
         this.flight.remove(name);
     }

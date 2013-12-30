@@ -47,7 +47,19 @@ public class TutorialCommands implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
                 } else {
-                    this.plugin.startTutorial(args[0], player);
+                    if(plugin.getAllTutorials().contains(args[0])){
+                    boolean permissions = plugin.getData().getBoolean("permissions");
+                        if (permissions == true){
+                            if(sender.hasPermission("servertutorial.tutorials" + args[0]) || sender.hasPermission("servertutorial.tutorials.*") || sender.hasPermission("servertutorials.*")){
+                            this.plugin.startTutorial(args[0], player);
+                            }
+                        } else {
+                        this.plugin.startTutorial(args[0], player);
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
+                    }
+                    
                 }
                 return true;
             }

@@ -52,7 +52,7 @@ public class CreateTutorial {
 
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, String input) {
-            context.setSessionData("viewtype", input);
+            context.setSessionData("viewtype", input.toUpperCase());
             if (input.equalsIgnoreCase("time")) {
                 return new TimeLength();
             } else {

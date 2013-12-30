@@ -48,6 +48,7 @@ public class TutorialTask {
                     return;
                 }
                 plugin.incrementCurrentView(name);
+                plugin.getTutorialUtils().textUtils(player);
                 player.teleport(plugin.getTutorialView(name).getLocation());
             }
 

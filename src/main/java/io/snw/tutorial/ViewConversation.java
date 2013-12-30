@@ -52,7 +52,7 @@ public class ViewConversation {
 
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, String input) {
-            context.setSessionData("messagetype", input);
+            context.setSessionData("messagetype", input.toUpperCase());
             return new Message();
         }
     }
