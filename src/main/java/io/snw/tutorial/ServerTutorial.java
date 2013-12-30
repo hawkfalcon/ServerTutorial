@@ -107,7 +107,6 @@ public class ServerTutorial extends JavaPlugin {
             data.set("tutorials", section);
             saveData();
             getConfig().set("tutorials", null);
-            getConfig().set("permissions", false);
             saveConfig();
         }
     }
