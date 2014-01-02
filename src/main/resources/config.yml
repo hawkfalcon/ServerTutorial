@@ -1,2 +1,4 @@
 auto-update: true
 sign: '[Tutorial]'
+first_join: false
+first_join_tutorial: 'tutorial'

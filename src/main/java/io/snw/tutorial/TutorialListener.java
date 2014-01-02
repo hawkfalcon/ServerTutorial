@@ -122,5 +122,10 @@ public class TutorialListener implements Listener {
             tut.hidePlayer(player);
             player.hidePlayer(tut);
         }
+        if (!player.hasPlayedBefore()) {
+            if (plugin.getConfig().getBoolean("first_join")) {
+               plugin.startTutorial(plugin.getConfig().getString("first_join_tutorial"), player);
+            }
+        }
     }
 }
