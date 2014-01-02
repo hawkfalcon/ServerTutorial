@@ -7,9 +7,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <bukkit.version>1.6.4-R2.0</bukkit.version>
-        <bukkitconnect.version>0.0.1-SNAPSHOT</bukkitconnect.version>
-        <worldguard.version>5.8.1-SNAPSHOT</worldguard.version>
+        <bukkit.version>1.7.2-R0.3</bukkit.version>
     </properties>
 
     <!-- DEPENDENCIES -->
@@ -20,7 +18,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.7.2-R0.3-SNAPSHOT</version>
+            <version>${bukkit.version}-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
