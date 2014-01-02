@@ -37,7 +37,7 @@ public class TutorialListener implements Listener {
                 if (event.getAction() != Action.PHYSICAL) {
                     if (player.getItemInHand().getType() == this.plugin.getCurrentTutorial(name).getItem()) {
                         if (this.plugin.getCurrentTutorial(name).getTotalViews() == this.plugin.getCurrentView(name)) {
-                            endTutorial(player);
+                            plugin.getEndTutorial().endTutorial(player);
                         } else {
                             this.plugin.incrementCurrentView(name);
                             plugin.getTutorialUtils().textUtils(player);
@@ -109,30 +109,5 @@ public class TutorialListener implements Listener {
             tut.hidePlayer(player);
             player.hidePlayer(tut);
         }
-    }
-
-    public void endTutorial(final Player player) {
-        final String name = player.getName();
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));
-        player.closeInventory();
-        player.getInventory().clear();
-        player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(false);
-        plugin.removeFlight(name);
-        player.teleport(plugin.getFirstLoc(name));
-        plugin.cleanFirstLoc(name);
-        plugin.removeFromTutorial(name);
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                for (Player online : plugin.getServer().getOnlinePlayers()) {
-                    online.showPlayer(player);
-                    player.showPlayer(online);
-                }
-                player.getInventory().setContents(plugin.getInventory(name));
-                plugin.cleanInventory(name);
-            }
-        }.runTaskLater(plugin, 20L);
     }
 }

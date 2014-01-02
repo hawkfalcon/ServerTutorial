@@ -1,11 +1,16 @@
 package io.snw.tutorial;
 
 
+import io.snw.tutorial.api.EndTutorialEvent;
+import io.snw.tutorial.api.StartTutorialEvent;
+import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import io.snw.tutorial.util.EndTutorial;
 import io.snw.tutorial.util.Metrics;
 import io.snw.tutorial.util.Updater;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +48,7 @@ public class ServerTutorial extends JavaPlugin {
     private TutorialTask tutorialTask = new TutorialTask(this);
     private CreateTutorial createTutorial = new CreateTutorial(this);
     private ViewConversation viewConversation = new ViewConversation(this);
+    private EndTutorial endTutorial = new EndTutorial(this);
 
     private File dataFile;
     private YamlConfiguration data;
@@ -207,7 +213,8 @@ public class ServerTutorial extends JavaPlugin {
             this.getTutorialTimeTask(tutorialName, name);
         }
         this.getTutorialUtils().textUtils(player);
-
+        StartTutorialEvent event = new StartTutorialEvent(player, this.getTutorial(tutorialName));
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public Tutorial getTutorial(String tutorialName) {
@@ -239,7 +246,11 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void incrementCurrentView(String name) {
+        TutorialView fromTutorialView = this.getTutorialView(name);
         this.currentTutorialView.put(name, getCurrentView(name) + 1);
+        TutorialView toTutorialView = this.getTutorialView(name);
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView);
+        Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
     public int getCurrentView(String name) {
@@ -293,6 +304,11 @@ public class ServerTutorial extends JavaPlugin {
     public TutorialTask getTutorialTask() {
         return tutorialTask;
     }
+
+    public EndTutorial getEndTutorial() {
+        return endTutorial;
+    }
+
 
     public void getTutorialTimeTask(String tutorialName, String name) {
         tutorialTask.tutorialTimeTask(tutorialName, name);

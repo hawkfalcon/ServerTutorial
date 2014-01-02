@@ -43,7 +43,7 @@ public class TutorialTask {
             public void run() {
                 Player player = plugin.getServer().getPlayerExact(name);
                 if (plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
-                    endTutorial(player);
+                    plugin.getEndTutorial().endTutorial(player);
                     cancel();
                     return;
                 }
@@ -76,30 +76,5 @@ public class TutorialTask {
 
         i.setItemMeta(data);
         player.setItemInHand(i);
-    }
-
-    public void endTutorial(final Player player) {
-        final String name = player.getName();
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', this.plugin.getCurrentTutorial(name).getEndMessage()));
-        player.closeInventory();
-        player.getInventory().clear();
-        player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(false);
-        plugin.removeFlight(name);
-        player.teleport(plugin.getFirstLoc(name));
-        plugin.cleanFirstLoc(name);
-        plugin.removeFromTutorial(name);
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                for (Player online : plugin.getServer().getOnlinePlayers()) {
-                    online.showPlayer(player);
-                    player.showPlayer(online);
-                }
-                player.getInventory().setContents(plugin.getInventory(name));
-                plugin.cleanInventory(name);
-            }
-        }.runTaskLater(plugin, 20L);
     }
 }
