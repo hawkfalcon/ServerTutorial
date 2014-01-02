@@ -54,7 +54,7 @@ public class TutorialListener implements Listener {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
-                if (sign.getLine(0).equalsIgnoreCase(plugin.getConfig().getString("sign"))) {
+                if (sign.getLine(0).equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("sign")))) {
                     if (sign.getLine(1) == null) return;
                     plugin.startTutorial(sign.getLine(1), player);
                 }
