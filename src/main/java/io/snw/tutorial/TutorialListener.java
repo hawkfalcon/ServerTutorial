@@ -3,6 +3,9 @@ package io.snw.tutorial;
 import io.snw.tutorial.enums.ViewType;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,6 +47,16 @@ public class TutorialListener implements Listener {
                             player.teleport(plugin.getTutorialView(name).getLocation());
                         }
                     }
+                }
+            }
+        }
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Block block = event.getClickedBlock();
+            if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
+                Sign sign = (Sign) block.getState();
+                if (sign.getLine(0).equalsIgnoreCase(plugin.getConfig().getString("sign"))) {
+                    if (sign.getLine(1) == null) return;
+                    plugin.startTutorial(sign.getLine(1), player);
                 }
             }
         }
