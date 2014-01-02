@@ -22,7 +22,7 @@ public class ViewConversation {
                         // .withPrefix(new Prefix())
                 .withFirstPrompt(new Welcome())
                 .withEscapeSequence("/quit")
-                .withTimeout(10)
+                .withTimeout(60)
                 .thatExcludesNonPlayersWithMessage("You must be in game!");
         factory.buildConversation(player).begin();
     }
