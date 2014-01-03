@@ -138,7 +138,7 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onPacketSending(PacketEvent event){
         Player player = event.getPlayer();
-        if((pm.getPlugin("ProtocolLib").isEnabled())){
+        if((pm.isPluginEnabled("ProtocolLib"))){
             if(plugin.getAllInTutorial().contains(player.getName())){
                 event.setCancelled(true);
             }
