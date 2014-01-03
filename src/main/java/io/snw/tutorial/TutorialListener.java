@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialListener implements Listener {
@@ -34,7 +35,7 @@ public class TutorialListener implements Listener {
     public TutorialListener(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+    private PluginManager pm;
     private ProtocolManager protocolManger = ProtocolLibrary.getProtocolManager();
 
     @EventHandler
@@ -137,8 +138,12 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onPacketSending(PacketEvent event){
         Player player = event.getPlayer();
-        if(plugin.getAllInTutorial().contains(player.getName())){
-            event.setCancelled(true);
+        if((pm.getPlugin("ProtocolLib").isEnabled())){
+            if(plugin.getAllInTutorial().contains(player.getName())){
+                event.setCancelled(true);
+            }
+        } else {
+            event.setCancelled(false);
         }
     }
 }
