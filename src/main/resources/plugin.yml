@@ -3,6 +3,7 @@ main: io.snw.tutorial.ServerTutorial
 version: maven-version-number
 description: Tutorial plugin
 authors: [hawkfalcon, gomeow, Frostalf]
+softdepend: [ProtocolLib]
 website: snw.io
 commands:
     tutorial:

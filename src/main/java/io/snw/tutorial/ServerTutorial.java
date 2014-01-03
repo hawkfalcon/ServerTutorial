@@ -1,7 +1,7 @@
 package io.snw.tutorial;
 
-
-import io.snw.tutorial.api.EndTutorialEvent;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
+import org.bukkit.plugin.PluginManager;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -49,9 +50,18 @@ public class ServerTutorial extends JavaPlugin {
     private CreateTutorial createTutorial = new CreateTutorial(this);
     private ViewConversation viewConversation = new ViewConversation(this);
     private EndTutorial endTutorial = new EndTutorial(this);
+    private ProtocolManager protocolManager;
+    private PluginManager pm;
 
     private File dataFile;
     private YamlConfiguration data;
+
+    @Override
+    public void onLoad(){
+        if (pm.isPluginEnabled("ProtocolLib")){
+            protocolManager = ProtocolLibrary.getProtocolManager();
+        }
+    }
 
     @Override
     public void onEnable() {

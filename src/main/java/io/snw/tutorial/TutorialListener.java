@@ -1,5 +1,9 @@
 package io.snw.tutorial;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketEvent;
 import io.snw.tutorial.enums.ViewType;
 
 import org.bukkit.ChatColor;
@@ -30,6 +34,8 @@ public class TutorialListener implements Listener {
     public TutorialListener(ServerTutorial plugin) {
         this.plugin = plugin;
     }
+    
+    private ProtocolManager protocolManger = ProtocolLibrary.getProtocolManager();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -126,6 +132,13 @@ public class TutorialListener implements Listener {
             if (plugin.getConfig().getBoolean("first_join")) {
                plugin.startTutorial(plugin.getConfig().getString("first_join_tutorial"), player);
             }
+        }
+    }
+    @EventHandler
+    public void onPacketSending(PacketEvent event){
+        Player player = event.getPlayer();
+        if(plugin.getAllInTutorial().contains(player.getName())){
+            event.setCancelled(true);
         }
     }
 }
