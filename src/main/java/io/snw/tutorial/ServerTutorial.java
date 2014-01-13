@@ -326,4 +326,16 @@ public class ServerTutorial extends JavaPlugin {
     public ViewConversation getViewConversation() {
         return viewConversation;
     }
+    
+    public void removeTutorial(String tutorialName) {
+        this.data.set("tutorials." + tutorialName, null);
+        this.saveData();
+        this.reCasheTutorials();
+    }
+    
+    public void removeTutorialView(String tutorialName, int id) {
+        this.data.set("tutorials." + tutorialName + ".views." + id, null);
+        this.saveData();
+        this.reCasheTutorials();
+    }
 }
