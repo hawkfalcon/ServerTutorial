@@ -214,7 +214,7 @@ public class ServerTutorial extends JavaPlugin {
         }
         this.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, this.getTutorial(tutorialName));
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        this.getServer().getPluginManager().callEvent(event);
     }
 
     public Tutorial getTutorial(String tutorialName) {

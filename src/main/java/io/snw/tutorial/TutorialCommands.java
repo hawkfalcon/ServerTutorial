@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.Permissions;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,10 +23,10 @@ public class TutorialCommands implements CommandExecutor {
         Player player = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("tutorial")) {
             if (args.length == 0) {
-                if (sender.hasPermission("tutorial.view")) {
+                if (Permissions.VIEW.hasPerm(sender)) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
                     StringBuilder sb = new StringBuilder();
-                    if (plugin.getAllTutorials().size() != 0) {
+                    if (!plugin.getAllTutorials().isEmpty()) {
                         for (String tutorial : plugin.getAllTutorials()) {
                             if (sb.length() > 0) {
                                 sb.append(',');
@@ -48,7 +49,7 @@ public class TutorialCommands implements CommandExecutor {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
                 } else {
                     if (plugin.getAllTutorials().contains(args[0])) {
-                        if (sender.hasPermission("tutorial.use")) {
+                        if (Permissions.USE.hasPerm(sender)) {
                             this.plugin.startTutorial(args[0], player);
                         } else {
                             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission for this!!"));
@@ -66,7 +67,7 @@ public class TutorialCommands implements CommandExecutor {
                 return true;
             }
             if (args.length > 1) {
-                if (sender.hasPermission("tutorial.create")) {
+                if (Permissions.CREATE.hasPerm(sender)) {
                     if (args[0].equalsIgnoreCase("create")) {
                         if (!plugin.getAllTutorials().contains(args[1])) {
                             plugin.getCreateTutorial().createNewTutorial(player, args[1]);
