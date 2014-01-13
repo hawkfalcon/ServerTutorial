@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.commands.TutorialMainCommand;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import io.snw.tutorial.api.StartTutorialEvent;
@@ -56,7 +57,7 @@ public class ServerTutorial extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
-        this.getCommand("tutorial").setExecutor(new TutorialCommands(this));
+        this.getCommand("tutorial").setExecutor(new TutorialMainCommand(this));
         this.saveDefaultConfig();
         this.loadData();
         this.casheAllData();
