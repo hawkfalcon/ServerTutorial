@@ -33,7 +33,7 @@ public class TutorialUse implements CommandExecutor {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
                 return true;
             }
-        } else if (sender.hasPermission("tutorial.tutorials." + args[0])) {
+        } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0])) {
             if (plugin.getAllTutorials().contains(args[0])){
                 plugin.startTutorial(args[0], player);
                 return true;

@@ -15,7 +15,8 @@ public enum Permissions {
     VIEW("tutorial.view", "", "tutorial.*"),
     USE("tutorial.use", "", "tutorial.*"),
     CREATE("tutorial.create", "", "tutorial.*"),
-    REMOVE("tutorial.remove", "", "tutorial.*");
+    REMOVE("tutorial.remove", "", "tutorial.*"),
+    TUTORIAL("tutorial.tutorial.%tutorial%", "", "tutorial.tutorial.*");
     
     String perm;
     String requiredPerm;
@@ -50,4 +51,15 @@ public enum Permissions {
             return true;
         }
     }
+    
+    public boolean hasTutorialPerm(Player player, String tutorial) {
+        String s = TUTORIAL.perm.replace("%perm%", tutorial);
+        if(player.hasPermission("tutorial.use")) {
+            if(player.hasPermission(s)){
+                return true;
+            }
+        }
+        return false;
+        }
+    
 }
