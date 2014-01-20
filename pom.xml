@@ -28,11 +28,11 @@
             <version>2.6</version>
         </dependency>
         <!-- ProtocolLib -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>3.1.0</version>
-        </dependency>
+        </dependency> -->
 
     </dependencies>
 
@@ -45,11 +45,12 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
-        <repository>
+        <!-- For ProtocolLib -->
+        <!--<repository>
             <id>comphenix-rep</id>
             <name>Comphenix Repository</name>
             <url>http://repo.comphenix.net/content/groups/public</url>
-        </repository>
+        </repository> -->
 
     </repositories>
 

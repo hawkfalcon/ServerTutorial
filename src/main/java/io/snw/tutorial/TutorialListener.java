@@ -1,7 +1,5 @@
 package io.snw.tutorial;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import io.snw.tutorial.enums.ViewType;
 
 import org.bukkit.ChatColor;
@@ -22,7 +20,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialListener implements Listener {
 
@@ -34,7 +31,6 @@ public class TutorialListener implements Listener {
         this.plugin = plugin;
     }
     private PluginManager pm;
-    private ProtocolManager protocolManger = ProtocolLibrary.getProtocolManager();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {

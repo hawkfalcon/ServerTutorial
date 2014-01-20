@@ -1,8 +1,6 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.commands.TutorialMainCommand;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
