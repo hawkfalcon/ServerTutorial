@@ -27,8 +27,6 @@ public class TutorialMainCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        String subCommandName = args[0].toLowerCase();
-        CommandExecutor subCommand = subCommandMap.get(subCommandName);
         CommandExecutor subCommandUse = subCommandMap.get("use");
         CommandExecutor subCommandView = subCommandMap.get("view");
         if (!(sender instanceof Player)) {
@@ -45,6 +43,8 @@ public class TutorialMainCommand implements CommandExecutor {
                 return true;
             }
             if (args.length > 1) {
+                String subCommandName = args[0].toLowerCase();
+                CommandExecutor subCommand = subCommandMap.get(subCommandName);
                 if(subCommandMap.containsKey(subCommandName)) {
                     return subCommand.onCommand(sender, cmd, commandLabel, args);
                 }
