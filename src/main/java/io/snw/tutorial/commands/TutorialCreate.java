@@ -34,7 +34,7 @@ public class TutorialCreate implements CommandExecutor {
                 }
                 } else if (args[0].equalsIgnoreCase("addview")) {
                     if (!plugin.getAllTutorials().contains(args[1])) {
-                        sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/server create <name>");
+                        sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
                         return true;
                     }
                     plugin.getViewConversation().createNewView(player, args[1]);
