@@ -12,19 +12,17 @@ import org.bukkit.entity.Player;
  */
 public enum Permissions {
     
-    VIEW("tutorial.view", "", "tutorial.*"),
-    USE("tutorial.use", "", "tutorial.*"),
-    CREATE("tutorial.create", "", "tutorial.*"),
-    REMOVE("tutorial.remove", "", "tutorial.*"),
-    TUTORIAL("tutorial.tutorial.%tutorial%", "", "tutorial.tutorial.*");
+    VIEW("tutorial.view", "tutorial.*"),
+    USE("tutorial.use", "tutorial.*"),
+    CREATE("tutorial.create", "tutorial.*"),
+    REMOVE("tutorial.remove", "tutorial.*"),
+    TUTORIAL("tutorial.tutorial.%tutorial%", "tutorial.tutorial.*");
     
     String perm;
-    String requiredPerm;
     ArrayList<String> hierarchy = new ArrayList<String>();
 
-    Permissions(String perm, String requiredPerm, String... hierarchy) {
+    Permissions(String perm, String... hierarchy) {
         this.perm = perm;
-        this.requiredPerm = requiredPerm;
         this.hierarchy.addAll(Arrays.asList(hierarchy));
         
     }
@@ -39,8 +37,7 @@ public enum Permissions {
     }    
     
     public boolean hasPerm(Player player){
-        boolean hasRequiredPerm = this.requiredPerm.equalsIgnoreCase("") ? true : player.hasPermission(this.requiredPerm);
-        if(!(player.hasPermission(this.perm) && hasRequiredPerm)) {
+        if(!(player.hasPermission(this.perm))) {
             for(String s : this.hierarchy){
                 if(player.hasPermission(s)){
                     return true;
@@ -53,13 +50,8 @@ public enum Permissions {
     }
     
     public boolean hasTutorialPerm(Player player, String tutorial) {
-        String s = TUTORIAL.perm.replace("%perm%", tutorial);
-        if(player.hasPermission("tutorial.use")) {
-            if(player.hasPermission(s)){
-                return true;
-            }
-        }
-        return false;
-        }
+        String s = TUTORIAL.perm.replace("%tutorial%", tutorial);
+        return player.hasPermission(s);
+    }
     
 }
