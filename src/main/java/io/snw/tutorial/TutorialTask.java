@@ -47,6 +47,9 @@ public class TutorialTask {
                     cancel();
                     return;
                 }
+                if (plugin.getTutorialView(name).getMessageType() == MessageType.META) {
+                    setPlayerItemName(player);
+                }
                 plugin.incrementCurrentView(name);
                 plugin.getTutorialUtils().textUtils(player);
                 player.teleport(plugin.getTutorialView(name).getLocation());
