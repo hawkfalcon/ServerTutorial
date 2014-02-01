@@ -50,6 +50,9 @@ public class TutorialTask {
                 if (plugin.getTutorialView(name).getMessageType() == MessageType.META) {
                     setPlayerItemName(player);
                 }
+                if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                    player.sendMessage(plugin.getTutorialUtils().tACC(plugin.getTutorialView(name).getMessage()));
+                }
                 plugin.incrementCurrentView(name);
                 plugin.getTutorialUtils().textUtils(player);
                 player.teleport(plugin.getTutorialView(name).getLocation());

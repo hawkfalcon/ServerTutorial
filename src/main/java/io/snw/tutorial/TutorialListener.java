@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 
 import org.bukkit.ChatColor;
@@ -39,13 +40,16 @@ public class TutorialListener implements Listener {
         if (plugin.isInTutorial(name)) {
             if (plugin.getCurrentTutorial(name).getViewType() == ViewType.CLICK) {
                 if (event.getAction() != Action.PHYSICAL) {
-                    if (player.getItemInHand().getType() == this.plugin.getCurrentTutorial(name).getItem()) {
-                        if (this.plugin.getCurrentTutorial(name).getTotalViews() == this.plugin.getCurrentView(name)) {
+                    if (player.getItemInHand().getType() == plugin.getCurrentTutorial(name).getItem()) {
+                        if (plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
                             plugin.getEndTutorial().endTutorial(player);
                         } else {
-                            this.plugin.incrementCurrentView(name);
+                            plugin.incrementCurrentView(name);
                             plugin.getTutorialUtils().textUtils(player);
                             player.teleport(plugin.getTutorialView(name).getLocation());
+                            if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                                player.sendMessage(plugin.getTutorialUtils().tACC(plugin.getTutorialView(name).getMessage()));
+                            }
                         }
                     }
                 }
