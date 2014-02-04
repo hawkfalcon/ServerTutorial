@@ -3,6 +3,7 @@ package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.enums.Permissions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

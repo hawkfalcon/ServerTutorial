@@ -3,6 +3,7 @@ package io.snw.tutorial.util;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.api.EndTutorialEvent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

@@ -1,6 +1,7 @@
 package io.snw.tutorial.api;
 
 import io.snw.tutorial.Tutorial;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

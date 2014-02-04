@@ -1,7 +1,14 @@
 package io.snw.tutorial;
 
 import org.bukkit.ChatColor;
-import org.bukkit.conversations.*;
+import org.bukkit.conversations.ConversationContext;
+import org.bukkit.conversations.ConversationFactory;
+import org.bukkit.conversations.ConversationPrefix;
+import org.bukkit.conversations.FixedSetPrompt;
+import org.bukkit.conversations.MessagePrompt;
+import org.bukkit.conversations.NumericPrompt;
+import org.bukkit.conversations.Prompt;
+import org.bukkit.conversations.StringPrompt;
 import org.bukkit.entity.Player;
 
 public class CreateTutorial {
