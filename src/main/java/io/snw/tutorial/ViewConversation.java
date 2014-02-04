@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ConversationPrefix;
-import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.Prompt;
 import org.bukkit.conversations.StringPrompt;
@@ -46,10 +45,7 @@ public class ViewConversation {
         }
     }
 
-    private class ChooseMessageType extends FixedSetPrompt {
-        public ChooseMessageType() {
-            super("TEXT", "META");
-        }
+    private class ChooseMessageType extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -57,9 +53,12 @@ public class ViewConversation {
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, String input) {
-            context.setSessionData("messagetype", input.toUpperCase());
-            return new Message();
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if (input.equalsIgnoreCase("text") || input.equalsIgnoreCase("meta")) {
+                context.setSessionData("messagetype", input.toUpperCase());
+                return new Message();
+            }
+            return new ChooseMessageType();
         }
     }
 

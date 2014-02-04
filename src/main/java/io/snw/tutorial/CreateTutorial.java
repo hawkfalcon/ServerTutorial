@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ConversationPrefix;
-import org.bukkit.conversations.FixedSetPrompt;
 import org.bukkit.conversations.MessagePrompt;
 import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
@@ -47,10 +46,7 @@ public class CreateTutorial {
         }
     }
 
-    private class ChooseViewType extends FixedSetPrompt {
-        public ChooseViewType() {
-            super("CLICK", "TIME");
-        }
+    private class ChooseViewType extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -58,13 +54,16 @@ public class CreateTutorial {
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, String input) {
-            context.setSessionData("viewtype", input.toUpperCase());
-            if (input.equalsIgnoreCase("time")) {
-                return new TimeLength();
-            } else {
-                return new EndMessage();
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if (input.equalsIgnoreCase("time") || input.equalsIgnoreCase("click")) {
+                context.setSessionData("viewtype", input.toUpperCase());
+                if (input.equalsIgnoreCase("time")) {
+                    return new TimeLength();
+                } else {
+                    return new EndMessage();
+                }
             }
+            return new ChooseViewType();
         }
     }
 
