@@ -1,13 +1,19 @@
 package io.snw.tutorial;
 
-import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
+import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.EndTutorial;
 import io.snw.tutorial.util.Metrics;
 import io.snw.tutorial.util.Updater;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,12 +24,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -157,7 +157,7 @@ public class ServerTutorial extends JavaPlugin {
             if (this.data.getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
                 for (String vID : this.data.getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(this.data.getString("tutorials." + tutorialName + ".views." + viewID + ".type", "META"));
+                    MessageType messageType = MessageType.valueOf(this.data.getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
                     TutorialView view = new TutorialView(viewID, this.data.getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), this.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
