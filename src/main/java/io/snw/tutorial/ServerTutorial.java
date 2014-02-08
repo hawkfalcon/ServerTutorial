@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -331,8 +333,17 @@ public class ServerTutorial extends JavaPlugin {
         this.reCasheTutorials();
     }
     
-    public void removeTutorialView(String tutorialName, int id) {
-        this.data.set("tutorials." + tutorialName + ".views." + id, null);
+    public void removeTutorialView(String tutorialName, int view) {
+        int viewsCount = this.getTutorial(tutorialName).getTotalViews();
+        Set<String> tutorialViewsSet = this.getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(true);
+        List<String> tutorialViews = new ArrayList<String>(tutorialViewsSet);
+        tutorialViews.remove(view);
+        for(int i = view; i < viewsCount; i++) {
+            tutorialViews.get(i).replace("'" + Integer.toString(i) + "'", "'" + Integer.toString(i - 1) + "'");
+        }
+        for(String views : tutorialViews) {
+            this.getData().set("tutorials" + tutorialName + ".views", views);
+        }
         this.saveData();
         this.reCasheTutorials();
     }
