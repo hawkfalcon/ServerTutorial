@@ -3,10 +3,6 @@ package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.enums.Permissions;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
