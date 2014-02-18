@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -333,16 +331,22 @@ public class ServerTutorial extends JavaPlugin {
         this.reCasheTutorials();
     }
     
-    public void removeTutorialView(String tutorialName, int view) {
+    public void removeTutorialView(String tutorialName, int viewID) {
         int viewsCount = this.getTutorial(tutorialName).getTotalViews();
-        Set<String> tutorialViewsSet = this.getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(true);
-        List<String> tutorialViews = new ArrayList<String>(tutorialViewsSet);
-        tutorialViews.remove(view);
-        for(int i = view; i < viewsCount; i++) {
-            tutorialViews.get(i).replace("'" + Integer.toString(i) + "'", "'" + Integer.toString(i - 1) + "'");
-        }
-        for(String views : tutorialViews) {
-            this.getData().set("tutorials" + tutorialName + ".views", views);
+        this.getData().set("tutorials." + tutorialName + ".views." + viewID, null);
+        this.saveData();
+        if(viewsCount != viewID) {
+            for(String vID : this.data.getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+                int currentID = Integer.parseInt(vID);
+                int newViewID = Integer.parseInt(vID) - 1;
+                String message = this.data.getString("tutorials." + tutorialName + ".views." + currentID + ".message");
+                String messageType = this.data.getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
+                String location = this.data.getString("tutorials." + tutorialName + ".views." + currentID + ".location");
+                this.data.set("tutorials." + tutorialName + ".views." + newViewID + ".message", message);
+                this.data.set("tutorials." + tutorialName + ".views." + newViewID + ".messagetype", messageType);
+                this.data.set("tutorials." + tutorialName + ".views." + newViewID + ".location" , location);
+                this.data.set("tutorials." + tutorialName + ".views." + currentID, null);
+                }
         }
         this.saveData();
         this.reCasheTutorials();
