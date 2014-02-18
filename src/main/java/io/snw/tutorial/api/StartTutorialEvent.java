@@ -17,6 +17,7 @@ public class StartTutorialEvent extends Event {
         this.tutorial = tutorial;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }

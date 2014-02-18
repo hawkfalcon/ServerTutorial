@@ -19,6 +19,7 @@ public class ViewSwitchEvent extends Event {
         this.toTutorialView = toTutorialView;
     }
 
+    @Override
     public HandlerList getHandlers() {
         return handlers;
     }
