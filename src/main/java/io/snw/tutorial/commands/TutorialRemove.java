@@ -35,13 +35,18 @@ public class TutorialRemove implements CommandExecutor {
                     return true;
                 }
                 if(args.length == 3) {
-                    try {
-                    int id = Integer.parseInt(args[2]);
-                    plugin.removeTutorialView(args[1], id);
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed View: &b" + id + " from " + args[1]));
-                    return true;
-                    } catch (NumberFormatException ex) {
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Last Argument Needs to be a Number!"));
+                    if(plugin.getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
+                        try {
+                            int id = Integer.parseInt(args[2]);
+                            plugin.removeTutorialView(args[1], id);
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed View: &b" + id + " from " + args[1]));
+                            return true;
+                        } catch (NumberFormatException ex) {
+                            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Last Argument Needs to be a Number!"));
+                            return true;
+                        }
+                    } else {
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Tutorial View does not exist!"));
                         return true;
                     }
                 }
