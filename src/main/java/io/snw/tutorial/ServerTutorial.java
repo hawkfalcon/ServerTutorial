@@ -146,6 +146,14 @@ public class ServerTutorial extends JavaPlugin {
             getLogger().warning("Failed to save data :(");
         }
     }
+    
+    public void savePlayerData() {
+        try {
+            data.save(playerDataFile);
+        } catch (IOException e) {
+            getLogger().warning("Failed to save player data :(");
+        }
+    }
 
     public void addTutorial(String tutorialName, Tutorial tutorial) {
         this.tutorials.put(tutorialName, tutorial);
@@ -236,8 +244,10 @@ public class ServerTutorial extends JavaPlugin {
         if(this.playerData.get("players." + name) == null) {
             this.playerData.set("players." + name + ".seen", "true");
             this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
+            this.savePlayerData();
         } else if(this.playerData.get("players." + name + ".tutorials." + tutorialName) == null) {
             this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
+            this.saveData();
         }
     }
 
