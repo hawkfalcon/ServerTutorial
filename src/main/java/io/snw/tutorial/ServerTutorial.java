@@ -233,6 +233,12 @@ public class ServerTutorial extends JavaPlugin {
         this.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, this.getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
+        if(this.playerData.get("players." + name) == null) {
+            this.playerData.set("players." + name + ".seen", "true");
+            this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
+        } else if(this.playerData.get("players." + name + ".tutorials." + tutorialName) == null) {
+            this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
+        }
     }
 
     public Tutorial getTutorial(String tutorialName) {
