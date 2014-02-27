@@ -25,11 +25,12 @@ public class TutorialReload implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         
         if(Permissions.RELOAD.hasPerm(sender)) {
-            plugin.reCasheTutorials();
             for(String playerName : plugin.getAllInTutorial()) {
                 Player player = plugin.getServer().getPlayer(playerName);
                 plugin.getEndTutorial().endTutorial(player);
+                
             }
+            plugin.reCasheTutorials();
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
