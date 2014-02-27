@@ -51,6 +51,8 @@ public class ServerTutorial extends JavaPlugin {
 
     private File dataFile;
     private YamlConfiguration data;
+    private File playerDataFile;
+    private YamlConfiguration playerData;
 
     @Override
     public void onEnable() {
@@ -114,6 +116,23 @@ public class ServerTutorial extends JavaPlugin {
             getConfig().set("tutorials", null);
             saveConfig();
         }
+    }
+    
+    private void loadPlayerData() {
+        File f = new File(getDataFolder(), "players.yml");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        playerDataFile = f;
+        playerData = YamlConfiguration.loadConfiguration(f);
+    }
+    
+    public YamlConfiguration getPlayerData() {
+        return this.playerData;
     }
 
     public YamlConfiguration getData() {
