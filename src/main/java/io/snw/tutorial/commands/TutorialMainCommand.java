@@ -24,6 +24,7 @@ public class TutorialMainCommand implements CommandExecutor {
         subCommandMap.put("view", new TutorialView(plugin));
         subCommandMap.put("remove", new TutorialRemove(plugin));
         subCommandMap.put("addview", new TutorialCreate(plugin));
+        subCommandMap.put("reload", new TutorialReload(plugin));
     }
 
     
@@ -32,6 +33,7 @@ public class TutorialMainCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         CommandExecutor subCommandUse = subCommandMap.get("use");
         CommandExecutor subCommandView = subCommandMap.get("view");
+        CommandExecutor subCommandReload = subCommandMap.get("reload");
         if (!(sender instanceof Player)) {
             return false;
         }
@@ -40,6 +42,8 @@ public class TutorialMainCommand implements CommandExecutor {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("help")) {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
+                } else if(args[0].equalsIgnoreCase("reload")) {
+                    return subCommandReload.onCommand(sender, cmd, commandLabel, args);
                 } else {
                     return subCommandUse.onCommand(sender, cmd, commandLabel, args);
                 }

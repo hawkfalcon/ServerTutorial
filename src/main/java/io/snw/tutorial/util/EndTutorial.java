@@ -12,7 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EndTutorial {
 
 
-    ServerTutorial plugin;
+    private ServerTutorial plugin;
 
 
     public EndTutorial(ServerTutorial plugin) {

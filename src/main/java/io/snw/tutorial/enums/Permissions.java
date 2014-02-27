@@ -17,6 +17,7 @@ public enum Permissions {
     USE("tutorial.use", "tutorial.*"),
     CREATE("tutorial.create", "tutorial.*"),
     REMOVE("tutorial.remove", "tutorial.*"),
+    RELOAD("tutorial.reload", "tutorial.*"),
     TUTORIAL("tutorial.tutorial.%tutorial%", "tutorial.tutorial.*");
     
     String perm;
