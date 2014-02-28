@@ -9,12 +9,20 @@ first_join: false
 first_join_tutorial: 'tutorial'
 
 #rewards. Money Rewards requires Vault.
-enable_rewards: false
-money: "0"
-exp_to_give: "0"
+rewards: false
 
-#False for per tutorial, true for per view to give exp
-per_tutorial_exp: false
-per_view_exp: false
+#per view eco settings
+view_money: "0.00"
+view_exp_give: "0.0"
+
+#per tutorial eco settings
+tutorial_money: "0.00"
+tutorial_exp_give: "0.0"
+
+#Enable/disable for per tutorial rewards
 per_tutorial_money: false
+per_tutorial_exp: false
+
+#Enable/disable for per view rewards
 per_view_money: false
+per_view_exp: false

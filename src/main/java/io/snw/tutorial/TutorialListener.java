@@ -1,7 +1,12 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.api.EndTutorialEvent;
+import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import java.util.logging.Level;
+
+import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,6 +31,7 @@ public class TutorialListener implements Listener {
 
 
     ServerTutorial plugin;
+    private TutorialEco eco = new TutorialEco(plugin);
 
 
     public TutorialListener(ServerTutorial plugin) {
@@ -132,5 +138,49 @@ public class TutorialListener implements Listener {
                plugin.startTutorial(plugin.getConfig().getString("first_join_tutorial"), player);
             }
         }
+    }
+    
+    @EventHandler
+    public void onViewSwitch(ViewSwitchEvent event) {
+        if(eco.setupEconomy() && plugin.getConfig().getBoolean("rewards")) {
+            Player player = event.getPlayer();
+            if(plugin.getConfig().getBoolean("per_view_money")) {
+                EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfig().getDouble("view_money"));
+                if(ecoResponse.transactionSuccess()) {
+                    player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                } else {
+                    plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                }
+            }
+            
+            if(plugin.getConfig().getBoolean("per_view_exp")) {
+                float exp = plugin.getConfig().getInt("view_exp_give");
+                float currentExp = player.getExp();
+                player.setExp(exp + currentExp);
+                player.sendMessage(ChatColor.BLUE + "You recieved " + exp + " experience. You now have " + player.getExp() + " experience.");
+            }            
+        }
+    }
+    
+    @EventHandler
+    public void onTutorialEnd(EndTutorialEvent event) {
+        if(eco.setupEconomy() && plugin.getConfig().getBoolean("rewards")) {
+            Player player = event.getPlayer();
+            if(plugin.getConfig().getBoolean("per_tutorial_money")) {
+                EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfig().getDouble("tutorial_money"));
+                if(ecoResponse.transactionSuccess()) {
+                    player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                } else {
+                    plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                }
+            }
+            
+            if(plugin.getConfig().getBoolean("per_tutorial_exp")) {
+                float exp = plugin.getConfig().getInt("tutorial_exp_give");
+                float currentExp = player.getExp();
+                player.setExp(exp + currentExp);
+                player.sendMessage(ChatColor.BLUE + "You recieved " + exp + " experience. You now have " + player.getExp() + " experience.");
+            }            
+        }                
     }
 }

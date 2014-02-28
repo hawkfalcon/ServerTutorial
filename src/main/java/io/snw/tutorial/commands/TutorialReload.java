@@ -2,7 +2,9 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.api.TutorialReloadEvent;
 import io.snw.tutorial.enums.Permissions;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,10 +29,12 @@ public class TutorialReload implements CommandExecutor {
         if(Permissions.RELOAD.hasPerm(sender)) {
             for(String playerName : plugin.getAllInTutorial()) {
                 Player player = plugin.getServer().getPlayer(playerName);
-                plugin.getEndTutorial().endTutorial(player);
+                plugin.getEndTutorial().reloadEndTutorial(player);
                 
             }
             plugin.reCasheTutorials();
+            TutorialReloadEvent event = new TutorialReloadEvent();
+            Bukkit.getServer().getPluginManager().callEvent(event);
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
