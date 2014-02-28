@@ -8,6 +8,13 @@ sign: '&0[Tutorial]'
 first_join: false
 first_join_tutorial: 'tutorial'
 
+#rewards
+enable_rewards: false
+money: "0"
+exp_to_give: "0"
+
 #False for per tutorial, true for per view to give exp
-per_view_exp: false;
-exp_to_give: 0;
+per_tutorial_exp: false
+per_view_exp: false
+per_tutorial_money: false
+per_view_money: false
