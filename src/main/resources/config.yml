@@ -8,7 +8,7 @@ sign: '&0[Tutorial]'
 first_join: false
 first_join_tutorial: 'tutorial'
 
-#rewards
+#rewards. Money Rewards requires Vault.
 enable_rewards: false
 money: "0"
 exp_to_give: "0"

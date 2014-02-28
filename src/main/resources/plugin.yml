@@ -4,6 +4,7 @@ version: maven-version-number
 description: Tutorial plugin
 authors: [hawkfalcon, gomeow, Frostalf]
 website: snw.io
+softdepend: [Vault]
 commands:
     tutorial:
         description: tutorial
