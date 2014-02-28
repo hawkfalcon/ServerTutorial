@@ -5,7 +5,6 @@ import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
-import io.snw.tutorial.util.EndTutorial;
 import io.snw.tutorial.util.Metrics;
 import io.snw.tutorial.util.Updater;
 

@@ -1,4 +1,4 @@
-package io.snw.tutorial.util;
+package io.snw.tutorial;
 
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
