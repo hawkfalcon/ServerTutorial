@@ -25,7 +25,7 @@
         <!-- Vault -->
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
-            <artifactId>vault</artifactId>
+            <artifactId>Vault</artifactId>
             <version>1.2.31</version>
             <scope>provided</scope>
         </dependency>
