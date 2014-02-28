@@ -71,7 +71,7 @@ public class TutorialListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (plugin.isInTutorial(player.getName())) {
-            player.teleport(plugin.getTutorialView(player.getName()).getLocation());
+            player.teleport(plugin.getTutorialView(player.getName()).getLocation());               
         }
     }
 

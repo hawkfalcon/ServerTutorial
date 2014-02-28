@@ -1,4 +1,13 @@
+#set false to disable auto-updating
 auto-update: true
+
+#Sign setting
 sign: '&0[Tutorial]'
+
+#Set to true to make those that are new to server to join a tutorial and which tutorial to make them join
 first_join: false
 first_join_tutorial: 'tutorial'
+
+#False for per tutorial, true for per view to give exp
+per_view_exp: false;
+exp_to_give: 0;

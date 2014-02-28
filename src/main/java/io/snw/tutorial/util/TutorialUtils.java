@@ -1,5 +1,6 @@
-package io.snw.tutorial;
+package io.snw.tutorial.util;
 
+import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.enums.MessageType;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ public class TutorialUtils {
     }
 
     public Location getLocation(String tutorialName, int viewID) {
-        String[] loc = plugin.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split("\\,");
+        String[] loc = plugin.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split(",");
         World w = Bukkit.getWorld(loc[0]);
         Double x = Double.parseDouble(loc[1]);
         Double y = Double.parseDouble(loc[2]);

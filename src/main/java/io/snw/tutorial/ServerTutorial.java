@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
