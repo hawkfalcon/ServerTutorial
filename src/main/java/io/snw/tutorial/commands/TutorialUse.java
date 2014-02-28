@@ -27,15 +27,15 @@ public class TutorialUse implements CommandExecutor {
         
         Player player = (Player) sender;
         if (Permissions.USE.hasPerm(sender)){
-            if (plugin.getAllTutorials().contains(args[0])) {
+            if (plugin.getAllTutorials().contains(args[0].toLowerCase())) {
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
                 return true;
             }
-        } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0])) {
-            if (plugin.getAllTutorials().contains(args[0])){
+        } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
+            if (plugin.getAllTutorials().contains(args[0].toLowerCase())){
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {

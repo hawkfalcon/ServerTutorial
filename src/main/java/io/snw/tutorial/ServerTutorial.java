@@ -183,7 +183,7 @@ public class ServerTutorial extends JavaPlugin {
             return;
         }
         for (String tutorialName : this.data.getConfigurationSection("tutorials").getKeys(false)) {
-            this.tutorialNames.add(tutorialName);
+            this.tutorialNames.add(tutorialName.toLowerCase());
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
             if (this.data.getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
                 for (String vID : this.data.getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
