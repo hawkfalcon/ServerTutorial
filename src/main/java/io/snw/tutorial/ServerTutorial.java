@@ -59,6 +59,7 @@ public class ServerTutorial extends JavaPlugin {
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand(this));
         this.saveDefaultConfig();
         this.loadData();
+        this.loadPlayerData();        
         this.casheAllData();
         this.getTutorialTask().tutorialTask();
         this.startMetrics();
@@ -148,7 +149,7 @@ public class ServerTutorial extends JavaPlugin {
     
     public void savePlayerData() {
         try {
-            data.save(playerDataFile);
+            playerData.save(playerDataFile);
         } catch (IOException e) {
             getLogger().warning("Failed to save player data :(");
         }
@@ -240,13 +241,13 @@ public class ServerTutorial extends JavaPlugin {
         this.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, this.getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
-        if(this.playerData.get("players." + name) == null) {
-            this.playerData.set("players." + name + ".seen", "true");
-            this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
+        if(this.getPlayerData().get("players." + name) == null) {
+            this.getPlayerData().set("players." + name + ".seen", "true");
+            this.getPlayerData().set("players." + name + ".tutorials." + tutorialName, "true");
             this.savePlayerData();
-        } else if(this.playerData.get("players." + name + ".tutorials." + tutorialName) == null) {
-            this.playerData.set("players." + name + ".tutorials." + tutorialName, "true");
-            this.saveData();
+        } else if(this.getPlayerData().get("players." + name + ".tutorials." + tutorialName) == null) {
+            this.getPlayerData().set("players." + name + ".tutorials." + tutorialName, "true");
+            this.savePlayerData();
         }
     }
 
