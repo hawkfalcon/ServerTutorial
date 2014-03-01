@@ -11,6 +11,9 @@ first_join_tutorial: 'tutorial'
 #rewards. Money Rewards requires Vault.
 rewards: false
 
+#Count Down Timer for tutorial views
+exp_countdown: false
+
 #per view eco settings
 view_money: "0.00"
 view_exp_give: "0.0"
