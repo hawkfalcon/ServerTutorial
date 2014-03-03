@@ -16,11 +16,11 @@ exp_countdown: false
 
 #per view eco settings
 view_money: "0.00"
-view_exp_give: "0.0"
+view_exp: "0.0"
 
 #per tutorial eco settings
 tutorial_money: "0.00"
-tutorial_exp_give: "0.0"
+tutorial_exp: "0.0"
 
 #Enable/disable for per tutorial rewards
 per_tutorial_money: false

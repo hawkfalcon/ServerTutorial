@@ -1,9 +1,11 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
+import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -32,6 +34,7 @@ public class TutorialListener implements Listener {
 
     ServerTutorial plugin;
     private TutorialEco eco = new TutorialEco(plugin);
+    private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
 
 
     public TutorialListener(ServerTutorial plugin) {
@@ -142,45 +145,67 @@ public class TutorialListener implements Listener {
     
     @EventHandler
     public void onViewSwitch(ViewSwitchEvent event) {
-        if(eco.setupEconomy() && plugin.getConfig().getBoolean("rewards")) {
-            Player player = event.getPlayer();
-            if(plugin.getConfig().getBoolean("per_view_money")) {
-                EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfig().getDouble("view_money"));
-                if(ecoResponse.transactionSuccess()) {
-                    player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
-                } else {
-                    plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+        Player player = event.getPlayer();
+        if(plugin.getConfigs().getExpCountdown()) {
+            player.setExp(player.getExp() - 1f);
+        }
+        if (plugin.getConfigs().getRewards()) {
+            if (plugin.getConfigs().getPerViewExp() || plugin.getConfigs().getPerViewMoney()) {
+                if(!plugin.getConfigs().getExpCountdown()) {
+                    player.setExp(player.getExp() + plugin.getConfigs().getViewExp());
                 }
+                if(eco.setupEconomy()) {
+                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfigs().getViewMoney());
+                    if(ecoResponse.transactionSuccess()) {
+                        player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                    } else {
+                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                    }
+                }                
             }
-            
-            if(plugin.getConfig().getBoolean("per_view_exp")) {
-                float exp = plugin.getConfig().getInt("view_exp_give");
-                float currentExp = player.getExp();
-                player.setExp(exp + currentExp);
-                player.sendMessage(ChatColor.BLUE + "You recieved " + exp + " experience. You now have " + player.getExp() + " experience.");
-            }            
         }
     }
     
     @EventHandler
     public void onTutorialEnd(EndTutorialEvent event) {
-        if(eco.setupEconomy() && plugin.getConfig().getBoolean("rewards")) {
+        if(plugin.getConfigs().getRewards()) {
             Player player = event.getPlayer();
-            if(plugin.getConfig().getBoolean("per_tutorial_money")) {
-                EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfig().getDouble("tutorial_money"));
-                if(ecoResponse.transactionSuccess()) {
-                    player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
-                } else {
-                    plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+            String playerName = player.getName().toLowerCase();
+            if(eco.setupEconomy()) {
+                if(plugin.getConfigs().getPerTutorialMoney()) {
+                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfigs().getTutorialMoney());
+                    if(ecoResponse.transactionSuccess()) {
+                        player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                    } else {
+                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                    }
                 }
             }
             
-            if(plugin.getConfig().getBoolean("per_tutorial_exp")) {
-                float exp = plugin.getConfig().getInt("tutorial_exp_give");
-                float currentExp = player.getExp();
-                player.setExp(exp + currentExp);
-                player.sendMessage(ChatColor.BLUE + "You recieved " + exp + " experience. You now have " + player.getExp() + " experience.");
-            }            
+            if(plugin.getConfigs().getPerTutorialExp()) {
+                if(plugin.getConfigs().getExpCountdown()) {
+                    if(plugin.getConfigs().getPerViewExp()) {
+                        player.setExp(event.getTutorial().getTotalViews() * plugin.getConfigs().getViewExp() + plugin.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+                        this.expTracker.remove(playerName);
+                    } else {
+                        player.setExp(plugin.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+                        this.expTracker.remove(playerName);
+                    }
+                } else {
+                    player.setExp(plugin.getConfigs().getTutorialExp() + player.getExp());
+                }
+            }
         }                
+    }
+    
+    @EventHandler
+    public void onTutorialStart(StartTutorialEvent event) {
+        Player player = event.getPlayer();
+        if(plugin.getConfigs().getExpCountdown()) {
+            float expCounter = event.getTutorial().getTotalViews();
+            player.setExp(expCounter);
+            TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), player.getExp());
+            this.expTracker.put(player.getName(), tutorialExp);            
+        }
     }
 }

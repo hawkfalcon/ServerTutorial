@@ -44,6 +44,7 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
+    private HashMap<String, TutorialConfigs> configs = new HashMap<String, TutorialConfigs>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
 
     private TutorialUtils tutorialUtils = new TutorialUtils(this);
@@ -200,14 +201,32 @@ public class ServerTutorial extends JavaPlugin {
             Material item = Material.matchMaterial(this.data.getString("tutorials." + tutorialName + ".item", "stick"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             this.addTutorial(tutorialName, tutorial);
+
         }
 
+    }
+    
+    public void cacheConfigs() {
+        TutorialConfigs configOptions = new TutorialConfigs(getConfig().getBoolean("auto-update"), getConfig().getString("sign"), getConfig().getBoolean("first_join"), getConfig().getString("first_join_tutorial"), 
+        getConfig().getBoolean("rewards"), getConfig().getBoolean("exp_countdown"), getConfig().getDouble("view_money"), Float.valueOf(getConfig().getString("view_exp")), getConfig().getDouble("tutorial_money"), Float.valueOf(getConfig().getString("tutorial_exp")), 
+        getConfig().getBoolean("per_tutorial_money"), getConfig().getBoolean("per_tutorial_exp"), getConfig().getBoolean("per_view_money"), getConfig().getBoolean("per_view_exp"));
+        this.addConfig(configOptions);
+    }
+    
+    public void addConfig(TutorialConfigs configs) {
+        this.configs.put("config", configs);
+    }
+    
+    public TutorialConfigs getConfigs() {
+        return this.configs.get("config");
     }
 
     public void reCasheTutorials() {
         this.tutorials.clear();
         this.tutorialNames.clear();
+        this.configs.clear();
         casheAllData();
+        cacheConfigs();
     }
 
 
