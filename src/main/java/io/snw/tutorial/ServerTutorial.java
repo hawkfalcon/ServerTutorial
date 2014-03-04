@@ -10,6 +10,7 @@ import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.Metrics;
+import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.util.Updater;
 
 import java.io.File;
@@ -45,6 +46,7 @@ public class ServerTutorial extends JavaPlugin {
     private Caching cache = new Caching(this);
     private Getters getters = new Getters(this);
     private Setters setters = new Setters(this);
+    private TutorialTask tutorialTask = new TutorialTask(this);
 
     @Override
     public void onEnable() {
@@ -55,7 +57,7 @@ public class ServerTutorial extends JavaPlugin {
         this.dataLoad().loadPlayerData();
         this.caching().casheAllData();
         this.caching().cacheConfigs();
-        this.getters().getTutorialTask().tutorialTask();
+        this.tutorialTask().tutorialTask();
         this.startMetrics();
         this.checkUpdate();
     }
@@ -255,5 +257,9 @@ public class ServerTutorial extends JavaPlugin {
     
     public DataLoading dataLoad() {
         return this.dataLoad;
+    }
+    
+    public TutorialTask tutorialTask() {
+        return this.tutorialTask;
     }
 }

@@ -15,8 +15,6 @@ public class Getters {
     public Getters(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
-    private TutorialTask tutorialTask = new TutorialTask(plugin);
 
     public Tutorial getCurrentTutorial(String name) {
         return plugin.caching().tutorial().get(plugin.caching().currentTutorial().get(name));
@@ -55,7 +53,7 @@ public class Getters {
     }
     
     public TutorialTask getTutorialTask() {
-        return this.tutorialTask;
+        return plugin.tutorialTask();
     }
 
     public void getTutorialTimeTask(String tutorialName, String name) {
