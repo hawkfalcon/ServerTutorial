@@ -1,5 +1,5 @@
 
-package io.snw.tutorial;
+package io.snw.tutorial.rewards;
 
 
 public class TutorialExp {

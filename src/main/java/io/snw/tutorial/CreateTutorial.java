@@ -1,5 +1,7 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.DataLoading;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -14,6 +16,8 @@ public class CreateTutorial {
 
     ServerTutorial plugin;
     String name;
+    private Caching cache = new Caching(plugin);
+    private DataLoading dataLoad = new DataLoading(plugin);
 
     public CreateTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -121,15 +125,15 @@ public class CreateTutorial {
     }
 
     public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength) {
-        plugin.getData().set("tutorials." + name + ".viewtype", viewType);
+        dataLoad.getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
-            plugin.getData().set("tutorials." + name + ".timelength", timeLength.toString());
+            dataLoad.getData().set("tutorials." + name + ".timelength", timeLength.toString());
         } else {
-            plugin.getData().set("tutorials." + name + ".timelength", "0");
+            dataLoad.getData().set("tutorials." + name + ".timelength", "0");
         }
-        plugin.getData().set("tutorials." + name + ".endmessage", endMessage);
-        plugin.getData().set("tutorials." + name + ".item", "stick");
-        plugin.saveData();
-        plugin.reCasheTutorials();
+        dataLoad.getData().set("tutorials." + name + ".endmessage", endMessage);
+        dataLoad.getData().set("tutorials." + name + ".item", "stick");
+        dataLoad.saveData();
+        cache.reCasheTutorials();
     }
 }

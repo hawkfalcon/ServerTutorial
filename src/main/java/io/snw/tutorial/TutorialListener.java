@@ -1,8 +1,13 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.rewards.TutorialExp;
+import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.api.EndTutorialEvent;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.Getters;
+import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import java.util.HashMap;
@@ -35,6 +40,9 @@ public class TutorialListener implements Listener {
     ServerTutorial plugin;
     private TutorialEco eco = new TutorialEco(plugin);
     private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
+    private Getters getters = new Getters(plugin);
+    private Setters setters = new Setters(plugin);
+    private Caching cache = new Caching(plugin);
 
 
     public TutorialListener(ServerTutorial plugin) {
@@ -46,18 +54,18 @@ public class TutorialListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
-        if (plugin.isInTutorial(name)) {
-            if (plugin.getCurrentTutorial(name).getViewType() == ViewType.CLICK) {
+        if (getters.isInTutorial(name)) {
+            if (getters.getCurrentTutorial(name).getViewType() == ViewType.CLICK) {
                 if (event.getAction() != Action.PHYSICAL) {
-                    if (player.getItemInHand().getType() == plugin.getCurrentTutorial(name).getItem()) {
-                        if (plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
+                    if (player.getItemInHand().getType() == getters.getCurrentTutorial(name).getItem()) {
+                        if (getters.getCurrentTutorial(name).getTotalViews() == getters.getCurrentView(name)) {
                             plugin.getEndTutorial().endTutorial(player);
                         } else {
                             plugin.incrementCurrentView(name);
                             plugin.getTutorialUtils().textUtils(player);
-                            player.teleport(plugin.getTutorialView(name).getLocation());
-                            if (plugin.getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                                player.sendMessage(plugin.getTutorialUtils().tACC(plugin.getTutorialView(name).getMessage()));
+                            player.teleport(getters.getTutorialView(name).getLocation());
+                            if (getters.getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                                player.sendMessage(plugin.getTutorialUtils().tACC(getters.getTutorialView(name).getMessage()));
                             }
                         }
                     }
@@ -79,42 +87,42 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (plugin.isInTutorial(player.getName())) {
-            player.teleport(plugin.getTutorialView(player.getName()).getLocation());               
+        if (getters.isInTutorial(player.getName())) {
+            player.teleport(getters.getTutorialView(player.getName()).getLocation());               
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
+        if (getters.isInTutorial(event.getPlayer().getName())) {
             plugin.removeFromTutorial(event.getPlayer().getName());
         }
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
+        if (getters.isInTutorial(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
+        if (getters.isInTutorial(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPickup(PlayerPickupItemEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
+        if (getters.isInTutorial(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPlace(PlayerDropItemEvent event) {
-        if (plugin.isInTutorial(event.getPlayer().getName())) {
+        if (getters.isInTutorial(event.getPlayer().getName())) {
             event.setCancelled(true);
         }
     }
@@ -122,7 +130,7 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onWhee(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (plugin.isInTutorial(((Player) event.getEntity()).getName())) {
+            if (getters.isInTutorial(((Player) event.getEntity()).getName())) {
                 event.setCancelled(true);
             }
         }
@@ -131,7 +139,7 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        for (String name : plugin.getAllInTutorial()) {
+        for (String name : getters.getAllInTutorial()) {
             Player tut = plugin.getServer().getPlayerExact(name);
             tut.hidePlayer(player);
             player.hidePlayer(tut);
@@ -146,16 +154,16 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onViewSwitch(ViewSwitchEvent event) {
         Player player = event.getPlayer();
-        if(plugin.getConfigs().getExpCountdown()) {
+        if(getters.getConfigs().getExpCountdown()) {
             player.setExp(player.getExp() - 1f);
         }
-        if (plugin.getConfigs().getRewards()) {
-            if (plugin.getConfigs().getPerViewExp() || plugin.getConfigs().getPerViewMoney()) {
-                if(!plugin.getConfigs().getExpCountdown()) {
-                    player.setExp(player.getExp() + plugin.getConfigs().getViewExp());
+        if (getters.getConfigs().getRewards()) {
+            if (getters.getConfigs().getPerViewExp() || getters.getConfigs().getPerViewMoney()) {
+                if(!getters.getConfigs().getExpCountdown()) {
+                    player.setExp(player.getExp() + getters.getConfigs().getViewExp());
                 }
                 if(eco.setupEconomy()) {
-                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfigs().getViewMoney());
+                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), getters.getConfigs().getViewMoney());
                     if(ecoResponse.transactionSuccess()) {
                         player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                     } else {
@@ -168,12 +176,12 @@ public class TutorialListener implements Listener {
     
     @EventHandler
     public void onTutorialEnd(EndTutorialEvent event) {
-        if(plugin.getConfigs().getRewards()) {
+        if(getters.getConfigs().getRewards()) {
             Player player = event.getPlayer();
             String playerName = player.getName().toLowerCase();
             if(eco.setupEconomy()) {
-                if(plugin.getConfigs().getPerTutorialMoney()) {
-                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), plugin.getConfigs().getTutorialMoney());
+                if(getters.getConfigs().getPerTutorialMoney()) {
+                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer(player.getName(), getters.getConfigs().getTutorialMoney());
                     if(ecoResponse.transactionSuccess()) {
                         player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                     } else {
@@ -182,17 +190,17 @@ public class TutorialListener implements Listener {
                 }
             }
             
-            if(plugin.getConfigs().getPerTutorialExp()) {
-                if(plugin.getConfigs().getExpCountdown()) {
-                    if(plugin.getConfigs().getPerViewExp()) {
-                        player.setExp(event.getTutorial().getTotalViews() * plugin.getConfigs().getViewExp() + plugin.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+            if(getters.getConfigs().getPerTutorialExp()) {
+                if(getters.getConfigs().getExpCountdown()) {
+                    if(getters.getConfigs().getPerViewExp()) {
+                        player.setExp(event.getTutorial().getTotalViews() * getters.getConfigs().getViewExp() + getters.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
                         this.expTracker.remove(playerName);
                     } else {
-                        player.setExp(plugin.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+                        player.setExp(getters.getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
                         this.expTracker.remove(playerName);
                     }
                 } else {
-                    player.setExp(plugin.getConfigs().getTutorialExp() + player.getExp());
+                    player.setExp(getters.getConfigs().getTutorialExp() + player.getExp());
                 }
             }
         }                
@@ -201,7 +209,7 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onTutorialStart(StartTutorialEvent event) {
         Player player = event.getPlayer();
-        if(plugin.getConfigs().getExpCountdown()) {
+        if(getters.getConfigs().getExpCountdown()) {
             float expCounter = event.getTutorial().getTotalViews();
             player.setExp(expCounter);
             TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), player.getExp());

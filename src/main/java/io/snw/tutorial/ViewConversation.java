@@ -1,5 +1,7 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.DataLoading;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -13,6 +15,8 @@ public class ViewConversation {
 
     ServerTutorial plugin;
     String name;
+    private DataLoading dataLoad = new DataLoading(plugin);
+    private Caching cache = new Caching(plugin);
 
     public ViewConversation(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -91,15 +95,15 @@ public class ViewConversation {
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
             int viewID = 1;
-            while (plugin.getData().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
+            while (dataLoad.getData().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
                 viewID++;
             }
             try {
-                plugin.getData().set("tutorials." + name + ".views." + viewID + ".message", message);
-                plugin.getData().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
-                plugin.getData().set("tutorials." + name + ".views." + viewID + ".location", location);
-                plugin.saveData();
-                plugin.reCasheTutorials();
+                dataLoad.getData().set("tutorials." + name + ".views." + viewID + ".message", message);
+                dataLoad.getData().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
+                dataLoad.getData().set("tutorials." + name + ".views." + viewID + ".location", location);
+                dataLoad.saveData();
+                cache.reCasheTutorials();
             } catch (Exception e) {
                 e.printStackTrace();
             }

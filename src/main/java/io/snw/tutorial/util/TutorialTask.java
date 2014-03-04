@@ -1,5 +1,7 @@
-package io.snw.tutorial;
+package io.snw.tutorial.util;
 
+import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
 
 import org.bukkit.ChatColor;
@@ -10,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialTask {
     ServerTutorial plugin;
+    private Getters getters = new Getters(plugin);
 
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -20,12 +23,12 @@ public class TutorialTask {
 
             @Override
             public void run() {
-                for (String name : plugin.getAllInTutorial()) {
+                for (String name : getters.getAllInTutorial()) {
 
                     Player player = plugin.getServer().getPlayerExact(name);
                     if (!player.isDead()) {
                         player.closeInventory();
-                        if (plugin.getTutorialView(name).getMessageType() == MessageType.META) {
+                        if (getters.getTutorialView(name).getMessageType() == MessageType.META) {
                             setPlayerItemName(player);
                         }
                     }
@@ -35,7 +38,7 @@ public class TutorialTask {
     }
 
     public void tutorialTimeTask(String tutorialName, final String name) {
-        long num = (long) plugin.getTutorial(tutorialName).getTimeLength();
+        long num = (long) getters.getTutorial(tutorialName).getTimeLength();
         Long timeLength = num * 20L;
 
         new BukkitRunnable() {
@@ -43,17 +46,17 @@ public class TutorialTask {
             @Override
             public void run() {
                 Player player = plugin.getServer().getPlayerExact(name);
-                if (plugin.getCurrentTutorial(name).getTotalViews() == plugin.getCurrentView(name)) {
+                if (getters.getCurrentTutorial(name).getTotalViews() == getters.getCurrentView(name)) {
                     plugin.getEndTutorial().endTutorial(player);
                     cancel();
                     return;
                 }
-                if (plugin.getTutorialView(name).getMessageType() == MessageType.META) {
+                if (getters.getTutorialView(name).getMessageType() == MessageType.META) {
                     setPlayerItemName(player);
                 }
                 plugin.incrementCurrentView(name);
                 plugin.getTutorialUtils().textUtils(player);
-                player.teleport(plugin.getTutorialView(name).getLocation());
+                player.teleport(getters.getTutorialView(name).getLocation());
             }
 
         }.runTaskTimer(plugin, timeLength, timeLength);
@@ -67,7 +70,7 @@ public class TutorialTask {
     String alt;
 
     public void setPlayerItemName(Player player) {
-        ItemStack i = new ItemStack(plugin.getCurrentTutorial(player.getName()).getItem());
+        ItemStack i = new ItemStack(getters.getCurrentTutorial(player.getName()).getItem());
         ItemMeta data = i.getItemMeta();
         if (reset) {
             alt = "" + ChatColor.RESET;
@@ -76,7 +79,7 @@ public class TutorialTask {
             alt = "";
             reset = true;
         }
-        data.setDisplayName(tACC(plugin.getTutorialView(player.getName()).getMessage()) + alt);
+        data.setDisplayName(tACC(getters.getTutorialView(player.getName()).getMessage()) + alt);
 
         i.setItemMeta(data);
         player.setItemInHand(i);

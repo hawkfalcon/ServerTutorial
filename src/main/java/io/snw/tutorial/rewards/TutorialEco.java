@@ -1,6 +1,7 @@
 
-package io.snw.tutorial;
+package io.snw.tutorial.rewards;
 
+import io.snw.tutorial.ServerTutorial;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
