@@ -15,7 +15,7 @@ public class EndTutorial {
     public EndTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     public void endTutorial(final Player player) {
         final String name = player.getName();
         Tutorial tutorial = plugin.getters().getCurrentTutorial(name);
@@ -68,5 +68,5 @@ public class EndTutorial {
                 plugin.cleanInventory(name);
             }
         }.runTaskLater(plugin, 20L);
-    }    
+    }
 }

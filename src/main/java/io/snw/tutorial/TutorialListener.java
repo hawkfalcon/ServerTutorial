@@ -144,7 +144,7 @@ public class TutorialListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onViewSwitch(ViewSwitchEvent event) {
         Player player = event.getPlayer();
@@ -167,7 +167,7 @@ public class TutorialListener implements Listener {
             }
         }
     }
-    
+
     @EventHandler
     public void onTutorialEnd(EndTutorialEvent event) {
         if(plugin.getters().getConfigs().getRewards()) {
@@ -183,7 +183,7 @@ public class TutorialListener implements Listener {
                     }
                 }
             }
-            
+
             if(plugin.getters().getConfigs().getPerTutorialExp()) {
                 if(plugin.getters().getConfigs().getExpCountdown()) {
                     if(plugin.getters().getConfigs().getPerViewExp()) {
@@ -197,9 +197,9 @@ public class TutorialListener implements Listener {
                     player.setExp(plugin.getters().getConfigs().getTutorialExp() + player.getExp());
                 }
             }
-        }                
+        }
     }
-    
+
     @EventHandler
     public void onTutorialStart(StartTutorialEvent event) {
         Player player = event.getPlayer();

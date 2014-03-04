@@ -11,18 +11,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TutorialRemove implements CommandExecutor {
-    
+
     private ServerTutorial plugin;
-    
+
     public TutorialRemove(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
+
         Player player = (Player) sender;
-        
+
         if(Permissions.REMOVE.hasPerm(sender)){
             if(plugin.getters().getAllTutorials().contains(args[1])){
                 if(args.length == 2) {

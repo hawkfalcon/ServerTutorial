@@ -9,9 +9,9 @@ import io.snw.tutorial.TutorialView;
 import java.util.ArrayList;
 
 public class Getters {
-    
+
     ServerTutorial plugin;
-    
+
     public Getters(ServerTutorial plugin) {
         this.plugin = plugin;
     }
@@ -19,11 +19,11 @@ public class Getters {
     public Tutorial getCurrentTutorial(String name) {
         return plugin.caching().tutorial().get(plugin.caching().currentTutorial().get(name));
     }
-    
+
     public Tutorial getTutorial(String tutorialName) {
         return plugin.caching().tutorial().get(tutorialName);
     }
-    
+
     public TutorialView getTutorialView(String tutorialName, String name) {
         return plugin.caching().tutorial().get(tutorialName).getView(getCurrentView(name));
     }
@@ -34,8 +34,8 @@ public class Getters {
     
     public TutorialConfigs getConfigs() {
         return plugin.caching().configs().get("config");
-    }        
-    
+    }
+
     public ArrayList<String> getAllTutorials() {
         return plugin.caching().tutorialNames();
     }

@@ -17,7 +17,7 @@ public class CreateTutorial {
 
     public CreateTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
-    } 
+    }
 
     private ConversationFactory factory;
 
@@ -71,7 +71,6 @@ public class CreateTutorial {
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type how long should each view last (in seconds):");
-
         }
 
         @Override

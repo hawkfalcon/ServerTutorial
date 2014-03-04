@@ -24,8 +24,8 @@ public class Caching {
     
     public Caching(ServerTutorial plugin) {
         this.plugin = plugin;
-    }    
-    
+    }
+
     public void casheAllData() {
         if (plugin.dataLoad().getData().getString("tutorials") == null) {
             return;
@@ -48,31 +48,29 @@ public class Caching {
             Material item = Material.matchMaterial(plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".item", "stick"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             plugin.setters().addTutorial(tutorialName, tutorial);
-
         }
-
     }
-    
+
     public ArrayList<String> tutorialNames() {
         return this.tutorialNames;
     }
-    
+
     public HashMap<String, Tutorial> tutorial() {
         return this.tutorials;
     }
-    
+
     public HashMap<String, String> currentTutorial() {
         return this.currentTutorial;
     }
-    
+
     public HashMap<String, Integer> currentTutorialView() {
         return this.currentTutorialView;
     }
-    
+
     public HashMap<String, TutorialConfigs> configs() {
         return this.configs;
     }
-    
+
     public ArrayList<String> playerInTutorial() {
         return playerInTutorial;
     }
@@ -83,17 +81,17 @@ public class Caching {
         plugin.getConfig().getBoolean("per_tutorial_money"), plugin.getConfig().getBoolean("per_tutorial_exp"), plugin.getConfig().getBoolean("per_view_money"), plugin.getConfig().getBoolean("per_view_exp"));
         this.addConfig(configOptions);
     }
-    
+
     public void addConfig(TutorialConfigs configs) {
         this.configs.put("config", configs);
     }
-    
+
     public void reCasheTutorials() {
         this.tutorials.clear();
         this.tutorialNames.clear();
         casheAllData();
     }
-    
+
     public void reCacheConfigs() {
         this.configs.clear();
         cacheConfigs();

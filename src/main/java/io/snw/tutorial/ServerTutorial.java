@@ -29,16 +29,13 @@ public class ServerTutorial extends JavaPlugin {
 
     static boolean UPDATE;
     static String NEWVERSION;
-    
-    
+
+
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
-    
-
     private TutorialUtils tutorialUtils = new TutorialUtils(this);
-    
     private CreateTutorial createTutorial = new CreateTutorial(this);
     private ViewConversation viewConversation = new ViewConversation(this);
     private EndTutorial endTutorial = new EndTutorial(this);
@@ -95,7 +92,6 @@ public class ServerTutorial extends JavaPlugin {
         }
     }
 
-
     public void startTutorial(String tutorialName, Player player) {
         if (this.dataLoad().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
@@ -148,8 +144,6 @@ public class ServerTutorial extends JavaPlugin {
         this.flight.remove(name);
     }
 
-
-
     public void initializeCurrentView(String name) {
         this.caching().currentTutorialView().put(name, 1);
     }
@@ -198,8 +192,6 @@ public class ServerTutorial extends JavaPlugin {
         return tutorialUtils;
     }
 
-
-
     public EndTutorial getEndTutorial() {
         return endTutorial;
     }
@@ -215,13 +207,13 @@ public class ServerTutorial extends JavaPlugin {
     public ViewConversation getViewConversation() {
         return viewConversation;
     }
-    
+
     public void removeTutorial(String tutorialName) {
         this.dataLoad().getData().set("tutorials." + tutorialName, null);
         this.dataLoad().saveData();
         this.caching().reCasheTutorials();
     }
-    
+
     public void removeTutorialView(String tutorialName, int viewID) {
         int viewsCount = this.getters().getTutorial(tutorialName).getTotalViews();
         this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
@@ -242,23 +234,23 @@ public class ServerTutorial extends JavaPlugin {
         this.dataLoad().saveData();
         this.caching().reCasheTutorials();
     }
-    
+
     public Getters getters() {
         return this.getters;
     }
-    
+
     public Setters setters() {
         return this.setters;
     }
-    
+
     public Caching caching() {
         return this.cache;
     }
-    
+
     public DataLoading dataLoad() {
         return this.dataLoad;
     }
-    
+
     public TutorialTask tutorialTask() {
         return this.tutorialTask;
     }

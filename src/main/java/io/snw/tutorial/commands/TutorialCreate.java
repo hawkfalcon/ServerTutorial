@@ -12,18 +12,18 @@ import org.bukkit.entity.Player;
 
 
 public class TutorialCreate implements CommandExecutor {
-    
+
     private ServerTutorial plugin;
-    
+
     public TutorialCreate(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
+
         Player player = (Player) sender;
-        
+
         if (Permissions.CREATE.hasPerm(sender)) {
             if (args[0].equalsIgnoreCase("create")) {
                 if (!plugin.getters().getAllTutorials().contains(args[1])) {
@@ -40,7 +40,7 @@ public class TutorialCreate implements CommandExecutor {
                     }
                     plugin.getViewConversation().createNewView(player, args[1]);
                     return true;
-                    
+
                 } else {
                     sender.sendMessage(ChatColor.RED + "Try " + ChatColor.GOLD + "/tutorial help");
                     return true;    

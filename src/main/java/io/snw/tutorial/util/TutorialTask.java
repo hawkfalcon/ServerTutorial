@@ -15,7 +15,7 @@ public class TutorialTask {
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     public void tutorialTask() {
         new BukkitRunnable() {
 

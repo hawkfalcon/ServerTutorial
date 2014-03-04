@@ -14,12 +14,12 @@ public class DataLoading {
     private YamlConfiguration data;
     private File playerDataFile;
     private YamlConfiguration playerData;
-    
-    
+
+
     public DataLoading(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     public void loadData() {
         File f = new File(plugin.getDataFolder(), "data.yml");
         if (!f.exists()) {
@@ -39,7 +39,7 @@ public class DataLoading {
             plugin.saveConfig();
         }
     }
-    
+
     public void loadPlayerData() {
         File f = new File(plugin.getDataFolder(), "players.yml");
         if (!f.exists()) {
@@ -68,12 +68,12 @@ public class DataLoading {
             plugin.getLogger().warning("Failed to save data :(");
         }
     }
-    
+
     public void savePlayerData() {
         try {
             playerData.save(playerDataFile);
         } catch (IOException e) {
             plugin.getLogger().warning("Failed to save player data :(");
         }
-    }    
+    }
 }

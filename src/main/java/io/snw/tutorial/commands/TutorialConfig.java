@@ -11,16 +11,15 @@ import org.bukkit.command.CommandSender;
  * @author Frostalf
  */
 public class TutorialConfig implements CommandExecutor {
-    
+
     ServerTutorial plugin;
-    
+
     public TutorialConfig(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return true;
     }
-
 }

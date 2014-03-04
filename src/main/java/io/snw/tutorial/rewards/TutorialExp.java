@@ -3,7 +3,7 @@ package io.snw.tutorial.rewards;
 
 
 public class TutorialExp {
-    
+
     private float exp;
     private String playerName;
     
@@ -11,13 +11,12 @@ public class TutorialExp {
         this.playerName = playerName;
         this.exp = exp;
     }
-    
+
     public float getExp() {
         return this.exp;
     }
-    
+
     public String getPlayerName() {
         return this.playerName;
     }
-
 }

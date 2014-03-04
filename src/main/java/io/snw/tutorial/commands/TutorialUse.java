@@ -11,16 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TutorialUse implements CommandExecutor {
-    
+
     private ServerTutorial plugin;
-    
+
     public TutorialUse(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
         Player player = (Player) sender;
         if (Permissions.USE.hasPerm(sender)){
             if (plugin.getters().getAllTutorials().contains(args[0].toLowerCase())) {

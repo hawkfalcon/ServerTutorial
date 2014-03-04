@@ -27,8 +27,6 @@ public class TutorialMainCommand implements CommandExecutor {
         subCommandMap.put("reload", new TutorialReload(plugin));
     }
 
-    
-    
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         CommandExecutor subCommandUse = subCommandMap.get("use");

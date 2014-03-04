@@ -12,21 +12,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TutorialReload implements CommandExecutor {
-    
+
     private ServerTutorial plugin;
-    
+
     public TutorialReload(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
+
         if(Permissions.RELOAD.hasPerm(sender)) {
             for(String playerName : plugin.getters().getAllInTutorial()) {
                 Player player = plugin.getServer().getPlayer(playerName);
                 plugin.getEndTutorial().reloadEndTutorial(player);
-                
             }
             plugin.caching().reCasheTutorials();
             plugin.caching().reCacheConfigs();
@@ -37,6 +36,5 @@ public class TutorialReload implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
             return true;
         }
-    }    
-
+    }
 }

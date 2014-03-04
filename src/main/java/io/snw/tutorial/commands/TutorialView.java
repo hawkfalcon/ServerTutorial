@@ -11,19 +11,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TutorialView implements CommandExecutor {
-    
+
     private ServerTutorial plugin;
-    
+
     public TutorialView (ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        
         Player player = (Player) sender;
-        
         if (Permissions.VIEW.hasPerm(sender)) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
             StringBuilder sb = new StringBuilder();
