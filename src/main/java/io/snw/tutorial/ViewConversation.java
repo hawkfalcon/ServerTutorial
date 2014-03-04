@@ -67,8 +67,6 @@ public class ViewConversation {
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type what message this view should have:");
-
-
         }
 
         @Override

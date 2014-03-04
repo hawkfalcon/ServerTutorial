@@ -1,6 +1,5 @@
 package io.snw.tutorial;
 
-import io.snw.tutorial.api.AddViewEvent;
 import io.snw.tutorial.rewards.TutorialExp;
 import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.api.EndTutorialEvent;
