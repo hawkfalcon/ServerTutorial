@@ -105,6 +105,7 @@ public class ViewConversation {
                 e.printStackTrace();
             }
             AddViewEvent event = new AddViewEvent(player, plugin.getters().getTutorial(name), plugin.getters().getTutorialView(name, viewID));
+            plugin.getServer().getPluginManager().callEvent(event);
             return END_OF_CONVERSATION;
         }
     }
