@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class TutorialRemove implements CommandExecutor {
     
     private ServerTutorial plugin;
-    private Getters getters = new Getters(plugin);
+    private Getters getters;
     
     public TutorialRemove(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -26,14 +26,14 @@ public class TutorialRemove implements CommandExecutor {
         Player player = (Player) sender;
         
         if(Permissions.REMOVE.hasPerm(sender)){
-            if(getters.getAllTutorials().contains(args[1])){
+            if(this.getters.getAllTutorials().contains(args[1])){
                 if(args.length == 2) {
                     plugin.removeTutorial(args[1]);
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed Tutorial: &b" + args[1]));
                     return true;
                 }
                 if(args.length == 3) {
-                    if(getters.getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
+                    if(this.getters.getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
                         try {
                             int id = Integer.parseInt(args[2]);
                             plugin.removeTutorialView(args[1], id);

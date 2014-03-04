@@ -12,12 +12,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialTask {
     ServerTutorial plugin;
-    private Getters getters = new Getters(plugin);
 
     public TutorialTask(ServerTutorial plugin) {
         this.plugin = plugin;
     }
 
+    private Getters getters;
+    
     public void tutorialTask() {
         new BukkitRunnable() {
 

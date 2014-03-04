@@ -15,15 +15,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class TutorialUtils {
     ServerTutorial plugin;
-    private DataLoading dataLoad = new DataLoading(plugin);
-    private Getters getters = new Getters(plugin);
+    private DataLoading dataLoad;
+    private Getters getters;
 
     public TutorialUtils(ServerTutorial plugin) {
         this.plugin = plugin;
     }
 
     public Location getLocation(String tutorialName, int viewID) {
-        String[] loc = dataLoad.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split(",");
+        String[] loc = this.dataLoad.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split(",");
         World w = Bukkit.getWorld(loc[0]);
         Double x = Double.parseDouble(loc[1]);
         Double y = Double.parseDouble(loc[2]);

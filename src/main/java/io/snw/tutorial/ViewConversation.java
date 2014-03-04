@@ -15,8 +15,8 @@ public class ViewConversation {
 
     ServerTutorial plugin;
     String name;
-    private DataLoading dataLoad = new DataLoading(plugin);
-    private Caching cache = new Caching(plugin);
+    private DataLoading dataLoad;
+    private Caching cache;
 
     public ViewConversation(ServerTutorial plugin) {
         this.plugin = plugin;

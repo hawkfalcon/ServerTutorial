@@ -11,31 +11,32 @@ import java.util.ArrayList;
 public class Getters {
     
     ServerTutorial plugin;
-    private Caching cache = new Caching(plugin);
-    private TutorialTask tutorialTask = new TutorialTask(plugin);
     
     public Getters(ServerTutorial plugin) {
         this.plugin = plugin;
     }
+    
+    private Caching cache;
+    private TutorialTask tutorialTask;
 
     public Tutorial getCurrentTutorial(String name) {
-        return cache.tutorial().get(cache.currentTutorial().get(name));
+        return this.cache.tutorial().get(cache.currentTutorial().get(name));
     }
     
     public Tutorial getTutorial(String tutorialName) {
-        return cache.tutorial().get(tutorialName);
+        return this.cache.tutorial().get(tutorialName);
     }
     
     public TutorialView getTutorialView(String tutorialName, String name) {
-        return cache.tutorial().get(tutorialName).getView(getCurrentView(name));
+        return this.cache.tutorial().get(tutorialName).getView(getCurrentView(name));
     }
 
     public TutorialView getTutorialView(String name) {
-        return cache.tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
+        return this.cache.tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
     }    
     
     public TutorialConfigs getConfigs() {
-        return cache.configs().get("config");
+        return this.cache.configs().get("config");
     }        
     
     public ArrayList<String> getAllTutorials() {

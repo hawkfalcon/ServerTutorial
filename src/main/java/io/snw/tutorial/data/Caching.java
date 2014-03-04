@@ -19,38 +19,39 @@ public class Caching {
     private HashMap<String, TutorialConfigs> configs = new HashMap<String, TutorialConfigs>();
     //player name, tutorial name
     private HashMap<String, String> currentTutorial = new HashMap<String, String>();    
-    private DataLoading dataLoading = new DataLoading(plugin);
+    private DataLoading dataLoading;
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
-    private Getters getters = new Getters(plugin);
-    private Setters setters = new Setters(plugin);
     
     public Caching(ServerTutorial plugin) {
         this.plugin = plugin;
     }
     
+    private Getters getters;
+    private Setters setters;
+    
     
     
     public void casheAllData() {
-        if (dataLoading.getData().getString("tutorials") == null) {
+        if (this.dataLoading.getData().getString("tutorials") == null) {
             return;
         }
-        for (String tutorialName : dataLoading.getData().getConfigurationSection("tutorials").getKeys(false)) {
+        for (String tutorialName : this.dataLoading.getData().getConfigurationSection("tutorials").getKeys(false)) {
             this.tutorialNames.add(tutorialName.toLowerCase());
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
-            if (dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
-                for (String vID : dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            if (this.dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
+                for (String vID : this.dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(viewID, dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), plugin.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType messageType = MessageType.valueOf(this.dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
+                    TutorialView view = new TutorialView(viewID, this.dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), plugin.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
-            ViewType viewType = ViewType.valueOf(dataLoading.getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
-            String timeLengthS = dataLoading.getData().getString("tutorials." + tutorialName + ".timelength", "10");
+            ViewType viewType = ViewType.valueOf(this.dataLoading.getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            String timeLengthS = this.dataLoading.getData().getString("tutorials." + tutorialName + ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
-            String endMessage = dataLoading.getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
-            Material item = Material.matchMaterial(dataLoading.getData().getString("tutorials." + tutorialName + ".item", "stick"));
+            String endMessage = this.dataLoading.getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            Material item = Material.matchMaterial(this.dataLoading.getData().getString("tutorials." + tutorialName + ".item", "stick"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             setters.addTutorial(tutorialName, tutorial);
 

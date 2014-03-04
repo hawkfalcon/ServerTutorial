@@ -14,12 +14,12 @@ public class EndTutorial {
 
 
     private ServerTutorial plugin;
-    private Getters getters = new Getters(plugin);
-
 
     public EndTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
     }
+    private Getters getters;
+    
     public void endTutorial(final Player player) {
         final String name = player.getName();
         Tutorial tutorial = this.getters.getCurrentTutorial(name);

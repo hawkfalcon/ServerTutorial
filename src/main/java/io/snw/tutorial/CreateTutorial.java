@@ -16,12 +16,12 @@ public class CreateTutorial {
 
     ServerTutorial plugin;
     String name;
-    private Caching cache = new Caching(plugin);
-    private DataLoading dataLoad = new DataLoading(plugin);
 
     public CreateTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
     }
+    private Caching cache = new Caching(plugin);
+    private DataLoading dataLoad = new DataLoading(plugin);    
 
     private ConversationFactory factory;
 

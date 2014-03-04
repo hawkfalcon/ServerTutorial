@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class TutorialView implements CommandExecutor {
     
     private ServerTutorial plugin;
-    private Getters getters = new Getters(plugin);
+    private Getters getters;
     
     public TutorialView (ServerTutorial plugin) {
         this.plugin = plugin;
@@ -29,8 +29,8 @@ public class TutorialView implements CommandExecutor {
         if (Permissions.VIEW.hasPerm(sender)) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
             StringBuilder sb = new StringBuilder();
-            if (!getters.getAllTutorials().isEmpty()) {
-                for (String tutorial : getters.getAllTutorials()) {
+            if (!this.getters.getAllTutorials().isEmpty()) {
+                for (String tutorial : this.getters.getAllTutorials()) {
                     if (sb.length() > 0) {
                         sb.append(',');
                         sb.append(' ');
