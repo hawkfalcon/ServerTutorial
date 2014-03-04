@@ -2,7 +2,6 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
-import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 
 import org.bukkit.ChatColor;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 public class TutorialCreate implements CommandExecutor {
     
     private ServerTutorial plugin;
-    private Getters getters;
     
     public TutorialCreate(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -28,7 +26,7 @@ public class TutorialCreate implements CommandExecutor {
         
         if (Permissions.CREATE.hasPerm(sender)) {
             if (args[0].equalsIgnoreCase("create")) {
-                if (!this.getters.getAllTutorials().contains(args[1])) {
+                if (!plugin.getters().getAllTutorials().contains(args[1])) {
                     plugin.getCreateTutorial().createNewTutorial(player, args[1]);
                     return true;
                 } else {
@@ -36,7 +34,7 @@ public class TutorialCreate implements CommandExecutor {
                     return true;
                 }
                 } else if (args[0].equalsIgnoreCase("addview")) {
-                    if (!this.getters.getAllTutorials().contains(args[1])) {
+                    if (!plugin.getters().getAllTutorials().contains(args[1])) {
                         sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
                         return true;
                     }

@@ -16,47 +16,46 @@ public class Getters {
         this.plugin = plugin;
     }
     
-    private Caching cache;
-    private TutorialTask tutorialTask;
+    private TutorialTask tutorialTask = new TutorialTask(plugin);
 
     public Tutorial getCurrentTutorial(String name) {
-        return this.cache.tutorial().get(cache.currentTutorial().get(name));
+        return plugin.caching().tutorial().get(plugin.caching().currentTutorial().get(name));
     }
     
     public Tutorial getTutorial(String tutorialName) {
-        return this.cache.tutorial().get(tutorialName);
+        return plugin.caching().tutorial().get(tutorialName);
     }
     
     public TutorialView getTutorialView(String tutorialName, String name) {
-        return this.cache.tutorial().get(tutorialName).getView(getCurrentView(name));
+        return plugin.caching().tutorial().get(tutorialName).getView(getCurrentView(name));
     }
 
     public TutorialView getTutorialView(String name) {
-        return this.cache.tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
+        return plugin.caching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
     }    
     
     public TutorialConfigs getConfigs() {
-        return this.cache.configs().get("config");
+        return plugin.caching().configs().get("config");
     }        
     
     public ArrayList<String> getAllTutorials() {
-        return cache.tutorialNames();
+        return plugin.caching().tutorialNames();
     }
 
     public ArrayList<String> getAllInTutorial() {
-        return cache.playerInTutorial();
+        return plugin.caching().playerInTutorial();
     }
 
     public int getCurrentView(String name) {
-        return cache.currentTutorialView().get(name);
+        return plugin.caching().currentTutorialView().get(name);
     }
 
     public boolean isInTutorial(String name) {
-        return cache.playerInTutorial().contains(name);
+        return plugin.caching().playerInTutorial().contains(name);
     }
     
     public TutorialTask getTutorialTask() {
-        return tutorialTask;
+        return this.tutorialTask;
     }
 
     public void getTutorialTimeTask(String tutorialName, String name) {

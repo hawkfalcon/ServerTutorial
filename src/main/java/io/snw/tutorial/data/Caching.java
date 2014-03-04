@@ -19,41 +19,35 @@ public class Caching {
     private HashMap<String, TutorialConfigs> configs = new HashMap<String, TutorialConfigs>();
     //player name, tutorial name
     private HashMap<String, String> currentTutorial = new HashMap<String, String>();    
-    private DataLoading dataLoading;
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     
     public Caching(ServerTutorial plugin) {
         this.plugin = plugin;
-    }
-    
-    private Getters getters;
-    private Setters setters;
-    
-    
+    }    
     
     public void casheAllData() {
-        if (this.dataLoading.getData().getString("tutorials") == null) {
+        if (plugin.dataLoad().getData().getString("tutorials") == null) {
             return;
         }
-        for (String tutorialName : this.dataLoading.getData().getConfigurationSection("tutorials").getKeys(false)) {
+        for (String tutorialName : plugin.dataLoad().getData().getConfigurationSection("tutorials").getKeys(false)) {
             this.tutorialNames.add(tutorialName.toLowerCase());
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
-            if (this.dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
-                for (String vID : this.dataLoading.getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            if (plugin.dataLoad().getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
+                for (String vID : plugin.dataLoad().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(this.dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(viewID, this.dataLoading.getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), plugin.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType messageType = MessageType.valueOf(plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
+                    TutorialView view = new TutorialView(viewID, plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), plugin.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
-            ViewType viewType = ViewType.valueOf(this.dataLoading.getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
-            String timeLengthS = this.dataLoading.getData().getString("tutorials." + tutorialName + ".timelength", "10");
+            ViewType viewType = ViewType.valueOf(plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            String timeLengthS = plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
-            String endMessage = this.dataLoading.getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
-            Material item = Material.matchMaterial(this.dataLoading.getData().getString("tutorials." + tutorialName + ".item", "stick"));
+            String endMessage = plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            Material item = Material.matchMaterial(plugin.dataLoad().getData().getString("tutorials." + tutorialName + ".item", "stick"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
-            setters.addTutorial(tutorialName, tutorial);
+            plugin.setters().addTutorial(tutorialName, tutorial);
 
         }
 

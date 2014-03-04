@@ -2,7 +2,6 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
-import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 
 import org.bukkit.ChatColor;
@@ -15,8 +14,6 @@ public class TutorialUse implements CommandExecutor {
     
     private ServerTutorial plugin;
     
-    private Getters getters;
-    
     public TutorialUse(ServerTutorial plugin) {
         this.plugin = plugin;
     }
@@ -26,7 +23,7 @@ public class TutorialUse implements CommandExecutor {
         
         Player player = (Player) sender;
         if (Permissions.USE.hasPerm(sender)){
-            if (this.getters.getAllTutorials().contains(args[0].toLowerCase())) {
+            if (plugin.getters().getAllTutorials().contains(args[0].toLowerCase())) {
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
@@ -34,7 +31,7 @@ public class TutorialUse implements CommandExecutor {
                 return true;
             }
         } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
-            if (this.getters.getAllTutorials().contains(args[0].toLowerCase())){
+            if (plugin.getters().getAllTutorials().contains(args[0].toLowerCase())){
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {

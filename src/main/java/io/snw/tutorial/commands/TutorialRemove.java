@@ -2,7 +2,6 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
-import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 
 import org.bukkit.ChatColor;
@@ -14,7 +13,6 @@ import org.bukkit.entity.Player;
 public class TutorialRemove implements CommandExecutor {
     
     private ServerTutorial plugin;
-    private Getters getters;
     
     public TutorialRemove(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -26,14 +24,14 @@ public class TutorialRemove implements CommandExecutor {
         Player player = (Player) sender;
         
         if(Permissions.REMOVE.hasPerm(sender)){
-            if(this.getters.getAllTutorials().contains(args[1])){
+            if(plugin.getters().getAllTutorials().contains(args[1])){
                 if(args.length == 2) {
                     plugin.removeTutorial(args[1]);
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed Tutorial: &b" + args[1]));
                     return true;
                 }
                 if(args.length == 3) {
-                    if(this.getters.getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
+                    if(plugin.getters().getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
                         try {
                             int id = Integer.parseInt(args[2]);
                             plugin.removeTutorialView(args[1], id);

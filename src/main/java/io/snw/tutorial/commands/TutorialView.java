@@ -2,7 +2,6 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
-import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 
 import org.bukkit.ChatColor;
@@ -14,7 +13,6 @@ import org.bukkit.entity.Player;
 public class TutorialView implements CommandExecutor {
     
     private ServerTutorial plugin;
-    private Getters getters;
     
     public TutorialView (ServerTutorial plugin) {
         this.plugin = plugin;
@@ -29,8 +27,8 @@ public class TutorialView implements CommandExecutor {
         if (Permissions.VIEW.hasPerm(sender)) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
             StringBuilder sb = new StringBuilder();
-            if (!this.getters.getAllTutorials().isEmpty()) {
-                for (String tutorial : this.getters.getAllTutorials()) {
+            if (!plugin.getters().getAllTutorials().isEmpty()) {
+                for (String tutorial : plugin.getters().getAllTutorials()) {
                     if (sb.length() > 0) {
                         sb.append(',');
                         sb.append(' ');
