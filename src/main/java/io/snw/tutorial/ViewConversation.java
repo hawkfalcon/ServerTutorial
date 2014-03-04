@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.api.AddViewEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -103,6 +104,7 @@ public class ViewConversation {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            AddViewEvent event = new AddViewEvent(player, plugin.getters().getTutorial(name), plugin.getters().getTutorialView(name, viewID));
             return END_OF_CONVERSATION;
         }
     }

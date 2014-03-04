@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.api.CreateTutorialEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -14,6 +15,7 @@ public class CreateTutorial {
 
     ServerTutorial plugin;
     String name;
+    Player player;
 
     public CreateTutorial(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -23,6 +25,7 @@ public class CreateTutorial {
 
     public void createNewTutorial(Player player, String tutorialName) {
         this.name = tutorialName;
+        this.player = player;
         this.factory = new ConversationFactory(plugin)
                 .withModality(true)
                         //.withPrefix(new Prefix())
@@ -37,6 +40,7 @@ public class CreateTutorial {
         @Override
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
+            context.setSessionData("player", player.getName());
             return ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>&fWelcome to the &bServerTutorial&f tutorial creation!\n&8>&7This will guide you through creating a new Tutorial\n&8>&7Currently creating new tutorial with name: &b" + name + "!");
         }
 
@@ -106,7 +110,7 @@ public class CreateTutorial {
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength"));
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength"), context.getSessionData("player").toString());
             return END_OF_CONVERSATION;
         }
     }
@@ -119,7 +123,7 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName) {
         plugin.dataLoad().getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
             plugin.dataLoad().getData().set("tutorials." + name + ".timelength", timeLength.toString());
@@ -130,5 +134,7 @@ public class CreateTutorial {
         plugin.dataLoad().getData().set("tutorials." + name + ".item", "stick");
         plugin.dataLoad().saveData();
         plugin.caching().reCasheTutorials();
+        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), plugin.getters().getTutorial(name));
+        plugin.getServer().getPluginManager().callEvent(event);
     }
 }

@@ -30,8 +30,11 @@ public class Getters {
 
     public TutorialView getTutorialView(String name) {
         return plugin.caching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
-    }    
-    
+    }
+
+    public TutorialView getTutorialView(String tutorialName, int id) {
+        return plugin.caching().tutorial().get(this.getTutorial(tutorialName).getName()).getView(id);
+    }
     public TutorialConfigs getConfigs() {
         return plugin.caching().configs().get("config");
     }

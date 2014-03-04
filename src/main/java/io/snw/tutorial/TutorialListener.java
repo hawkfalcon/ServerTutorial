@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.api.AddViewEvent;
 import io.snw.tutorial.rewards.TutorialExp;
 import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.api.EndTutorialEvent;
@@ -163,7 +164,7 @@ public class TutorialListener implements Listener {
                     } else {
                         plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                     }
-                }                
+                }
             }
         }
     }
@@ -207,7 +208,7 @@ public class TutorialListener implements Listener {
             float expCounter = event.getTutorial().getTotalViews();
             player.setExp(expCounter);
             TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), player.getExp());
-            this.expTracker.put(player.getName(), tutorialExp);            
+            this.expTracker.put(player.getName(), tutorialExp);
         }
     }
 }
