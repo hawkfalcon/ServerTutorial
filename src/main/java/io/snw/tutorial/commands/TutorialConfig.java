@@ -20,6 +20,10 @@ public class TutorialConfig implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        
+        if(args[1].equalsIgnoreCase("edit")) {
+            
+        }
         return true;
     }
 }

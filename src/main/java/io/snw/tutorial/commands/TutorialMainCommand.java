@@ -25,6 +25,7 @@ public class TutorialMainCommand implements CommandExecutor {
         subCommandMap.put("remove", new TutorialRemove(plugin));
         subCommandMap.put("addview", new TutorialCreate(plugin));
         subCommandMap.put("reload", new TutorialReload(plugin));
+        subCommandMap.put("config", new TutorialConfig(plugin));
     }
 
     @Override
@@ -32,6 +33,7 @@ public class TutorialMainCommand implements CommandExecutor {
         CommandExecutor subCommandUse = subCommandMap.get("use");
         CommandExecutor subCommandView = subCommandMap.get("view");
         CommandExecutor subCommandReload = subCommandMap.get("reload");
+        CommandExecutor subCommandConfig = subCommandMap.get("config");
         if (!(sender instanceof Player)) {
             return false;
         }
