@@ -18,7 +18,7 @@ public class Caching {
     private HashMap<String, Tutorial> tutorials = new HashMap<String, Tutorial>();
     private HashMap<String, TutorialConfigs> configs = new HashMap<String, TutorialConfigs>();
     //player name, tutorial name
-    private HashMap<String, String> currentTutorial = new HashMap<String, String>();    
+    private HashMap<String, String> currentTutorial = new HashMap<String, String>();
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     
