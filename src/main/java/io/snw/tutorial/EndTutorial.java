@@ -1,6 +1,7 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +18,7 @@ public class EndTutorial {
     }
 
     public void endTutorial(final Player player) {
-        final String name = player.getName();
+        final String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
         Tutorial tutorial = plugin.getters().getCurrentTutorial(name);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', tutorial.getEndMessage()));
         player.closeInventory();
@@ -45,7 +46,7 @@ public class EndTutorial {
     }
 
     public void reloadEndTutorial(final Player player) {
-        final String name = player.getName();
+        final String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
         Tutorial tutorial = plugin.getters().getCurrentTutorial(name);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', tutorial.getEndMessage()));
         player.closeInventory();

@@ -105,7 +105,7 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
-        String name = player.getName();
+        String name = this.getServer().getPlayer(player.getUniqueId()).getName();
         this.startLoc.put(name, player.getLocation());
         this.addInventory(name, player.getInventory().getContents());
         this.addFlight(name, player.getAllowFlight());
