@@ -208,7 +208,7 @@ public class ConfigConversation {
         public String getPromptText(ConversationContext context) {
             return "nothing";
         }
-        
+
         @Override
         public Prompt acceptValidatedInput(ConversationContext context, Number input) {
             if(isNumberValid(context, input.floatValue())) {
@@ -218,7 +218,7 @@ public class ConfigConversation {
         }
     }
 
-    private class ViewExp extends StringPrompt {
+    private class ViewExp extends NumericPrompt {
         
         @Override
         public String getPromptText(ConversationContext context) {
@@ -226,12 +226,15 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData("viewexp", input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
 
-    private class TutorialMoney extends StringPrompt {
+    private class TutorialMoney extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -239,12 +242,15 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData("tutotialmoney", input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
 
-    private class TutorialExp extends StringPrompt {
+    private class TutorialExp extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -252,7 +258,10 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData(context, input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
