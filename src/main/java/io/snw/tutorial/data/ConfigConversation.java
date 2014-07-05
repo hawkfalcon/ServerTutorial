@@ -266,7 +266,7 @@ public class ConfigConversation {
         }
     }
 
-    private class PerTutorialMoney extends StringPrompt {
+    private class PerTutorialMoney extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -274,12 +274,15 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData(context, input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
 
-    private class PerTutorialExp extends StringPrompt {
+    private class PerTutorialExp extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -287,12 +290,15 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData(context, input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
 
-    private class PerViewMoney extends StringPrompt {
+    private class PerViewMoney extends NumericPrompt {
         
         @Override
         public String getPromptText(ConversationContext context) {
@@ -300,12 +306,15 @@ public class ConfigConversation {
         }
         
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData(context, input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
 
-    private class PerViewExp extends StringPrompt {
+    private class PerViewExp extends NumericPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
@@ -313,7 +322,10 @@ public class ConfigConversation {
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
+        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
+            if(isNumberValid(context, input.floatValue())) {
+                context.setSessionData(context, input.floatValue());
+            }
             return END_OF_CONVERSATION;
         }
     }
