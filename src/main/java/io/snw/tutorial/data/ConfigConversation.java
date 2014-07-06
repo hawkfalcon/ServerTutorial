@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.MessagePrompt;
-import org.bukkit.conversations.NumericPrompt;
 import org.bukkit.conversations.Prompt;
 import static org.bukkit.conversations.Prompt.END_OF_CONVERSATION;
 import org.bukkit.conversations.StringPrompt;
@@ -92,15 +91,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().getUpdate() + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)"));
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().getUpdate()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
                 context.setSessionData("autoupdate", input.toLowerCase());
                 return new Done();
-            } else if (input.toLowerCase().equals("cancel")) {
+            } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
             return new AutoUpdater();
@@ -111,7 +110,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(plugin.getters().getConfigs().signSetting() + "\n&8>Type what you want the Sign Text to be, also add any color codes."));
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(plugin.getters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes.");
         }
 
         @Override
@@ -130,18 +129,18 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join: " + String.valueOf(plugin.getters().getConfigs().firstJoin()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
                 context.setSessionData("firstjoin", input.toLowerCase());
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
-            return new Done();
+            return new FirstJoin();
         }
     }
 
@@ -149,15 +148,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(!input.toLowerCase().equalsIgnoreCase("cancel")) {
+            if(!input.equalsIgnoreCase("cancel")) {
                 context.setSessionData("firstjointutorial", input);
                 return new Done();
-            } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
+            } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
             return new FirstJoinTutorial();
@@ -168,7 +167,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Rewards: " + String.valueOf(plugin.getters().getConfigs().getRewards()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -187,7 +186,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current input for ExpCountDown: " + plugin.getConfig());
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Exp CountDown: " + String.valueOf(plugin.getters().getConfigs().getExpCountdown()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -198,135 +197,152 @@ public class ConfigConversation {
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new ExpCountDown();
         }
     }
 
-    private class ViewMoney extends NumericPrompt {
+    private class ViewMoney extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money: " + String.valueOf(plugin.getters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData("viewmoney", input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if (input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
+                context.setSessionData("viewmoney", input.toLowerCase());
+                return new Done();
+            } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new ViewMoney();
         }
     }
 
-    private class ViewExp extends NumericPrompt {
+    private class ViewExp extends StringPrompt {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp: " + String.valueOf(plugin.getters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData("viewexp", input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                context.setSessionData("viewexp", input.toLowerCase());
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class TutorialMoney extends NumericPrompt {
+    private class TutorialMoney extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData("tutotialmoney", input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                context.setSessionData("tutorialmoney", input.toLowerCase());
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class TutorialExp extends NumericPrompt {
+    private class TutorialExp extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Tutorial Exp: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData(context, input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                context.setSessionData("tutorialexp", input.toLowerCase());
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class PerTutorialMoney extends NumericPrompt {
+    private class PerTutorialMoney extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData(context, input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(!Double.isNaN(Double.valueOf(input))) {
+                context.setSessionData("pertutorialmoney", input);
+            } else if (input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class PerTutorialExp extends NumericPrompt {
+    private class PerTutorialExp extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData(context, input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(!Float.isNaN(Float.valueOf(input))) {
+                context.setSessionData("pertutorialexp", input);
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class PerViewMoney extends NumericPrompt {
+    private class PerViewMoney extends StringPrompt {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money Reward: " + String.valueOf(plugin.getters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
         }
         
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData(context, input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(!Double.isNaN(Double.valueOf(input))) {
+                context.setSessionData("perviewmoney", input);
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
 
-    private class PerViewExp extends NumericPrompt {
+    private class PerViewExp extends StringPrompt {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getViewExp()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
         }
 
         @Override
-        public Prompt acceptValidatedInput(ConversationContext context, Number input) {
-            if(isNumberValid(context, input.floatValue())) {
-                context.setSessionData(context, input.floatValue());
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(!Float.isNaN(Float.valueOf(input))) {
+                context.setSessionData("perviewexp", input);
+            } else if(input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
             }
-            return END_OF_CONVERSATION;
+            return new Done();
         }
     }
     
@@ -334,12 +350,17 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return "nothing";
+            return ChatColor.translateAlternateColorCodes('&', "&8>Are you done changing config options?: Accepted values are yes or no. ");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            return END_OF_CONVERSATION;
+            if(input.equalsIgnoreCase("yes")) {
+                return END_OF_CONVERSATION;
+            } else if (input.equalsIgnoreCase("no")) {
+                return new ConfigOption();
+            }
+            return new Done();
         }
     }
 }
