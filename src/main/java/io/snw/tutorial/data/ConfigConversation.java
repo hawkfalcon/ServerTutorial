@@ -52,35 +52,37 @@ public class ConfigConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input.toLowerCase().equalsIgnoreCase("autoupdater")) {
+            if(input.equalsIgnoreCase("autoupdater")) {
                 return new AutoUpdater();
-            } else if(input.toLowerCase().equalsIgnoreCase("sign text")) {
+            } else if(input.equalsIgnoreCase("metrics")) {
+                return new Metrics();
+            } else if(input.equalsIgnoreCase("sign text")) {
                 return new SignText();
-            } else if(input.toLowerCase().equalsIgnoreCase("first join")) {
+            } else if(input.equalsIgnoreCase("first join")) {
                 return new FirstJoin();
-            } else if(input.toLowerCase().equalsIgnoreCase("first join tutorial")) {
+            } else if(input.equalsIgnoreCase("first join tutorial")) {
                 return new FirstJoinTutorial();
-            } else if(input.toLowerCase().equalsIgnoreCase("rewards")) {
+            } else if(input.equalsIgnoreCase("rewards")) {
                 return new Rewards();
-            } else if(input.toLowerCase().equalsIgnoreCase("exp countdown")) {
+            } else if(input.equalsIgnoreCase("exp countdown")) {
                 return new ExpCountDown();
-            } else if(input.toLowerCase().equalsIgnoreCase("view money")) {
+            } else if(input.equalsIgnoreCase("view money")) {
                 return new ViewMoney();
-            } else if(input.toLowerCase().equalsIgnoreCase("view exp")) {
+            } else if(input.equalsIgnoreCase("view exp")) {
                 return new ViewExp();
-            } else if(input.toLowerCase().equalsIgnoreCase("tutorial money")) {
+            } else if(input.equalsIgnoreCase("tutorial money")) {
                 return new TutorialMoney();
-            } else if(input.toLowerCase().equalsIgnoreCase("tutorial exp")) {
+            } else if(input.equalsIgnoreCase("tutorial exp")) {
                 return new TutorialExp();
-            } else if(input.toLowerCase().equalsIgnoreCase("per tutorial money")) {
+            } else if(input.equalsIgnoreCase("per tutorial money")) {
                 return new PerTutorialMoney();
-            } else if(input.toLowerCase().equalsIgnoreCase("per tutorial exp")) {
+            } else if(input.equalsIgnoreCase("per tutorial exp")) {
                 return new PerTutorialExp();
-            } else if(input.toLowerCase().equalsIgnoreCase("per view money")) {
+            } else if(input.equalsIgnoreCase("per view money")) {
                 return new PerViewMoney();
-            } else if(input.toLowerCase().equalsIgnoreCase("per view exp")) {
+            } else if(input.equalsIgnoreCase("per view exp")) {
                 return new PerViewExp();
-            } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
+            } else if(input.equalsIgnoreCase("cancel")) {
                 return END_OF_CONVERSATION;
             }
             return new ConfigOption();
@@ -97,7 +99,9 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                context.setSessionData("autoupdate", input.toLowerCase());
+                plugin.getConfig().set("auto-update", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -106,17 +110,39 @@ public class ConfigConversation {
         }
     }
 
-    private class SignText extends StringPrompt {
-
+    private class Metrics extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(plugin.getters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes.");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Metrics: " + String.valueOf(plugin.getters().getConfigs().getMetrics()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(!input.toLowerCase().equalsIgnoreCase("cancel")) {
-                context.setSessionData("signtext", input);
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                plugin.getConfig().set("auto-update", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
+                return new Done();
+            } else if (input.equalsIgnoreCase("cancel")) {
+                return new ConfigOption();
+            }
+            return new Metrics();
+        }
+    }
+
+    private class SignText extends StringPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(plugin.getters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes. Can only be 15 characters long");
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if(!input.toLowerCase().equalsIgnoreCase("cancel") && input.length() <= 15) {
+                plugin.getConfig().set("sign", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -135,7 +161,9 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                context.setSessionData("firstjoin", input.toLowerCase());
+                plugin.getConfig().set("first_join", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -148,14 +176,18 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!input.equalsIgnoreCase("cancel")) {
-                context.setSessionData("firstjointutorial", input);
-                return new Done();
+                if(plugin.caching().tutorial().containsKey(input)) {
+                    plugin.getConfig().set("first_join_tutorial", input);
+                    plugin.saveConfig();
+                    plugin.caching().reCacheConfigs();
+                    return new Done();
+                }
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -172,8 +204,10 @@ public class ConfigConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
-                context.setSessionData("rewards", input.toLowerCase());
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                plugin.getConfig().set("rewards", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -191,8 +225,10 @@ public class ConfigConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
-                context.setSessionData("expcountdown", input.toLowerCase());
+            if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
+                plugin.getConfig().set("exp_countdown", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -205,13 +241,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money: " + String.valueOf(plugin.getters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money: " + String.valueOf(plugin.getters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if (input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
-                context.setSessionData("viewmoney", input.toLowerCase());
+                plugin.getConfig().set("view_money", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -224,13 +262,15 @@ public class ConfigConversation {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp: " + String.valueOf(plugin.getters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp: " + String.valueOf(plugin.getters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                context.setSessionData("viewexp", input.toLowerCase());
+                plugin.getConfig().set("view_exp", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -242,13 +282,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                context.setSessionData("tutorialmoney", input.toLowerCase());
+                plugin.getConfig().set("tutorial_money", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -260,13 +302,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Tutorial Exp: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are true, false, cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Tutorial Exp: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                context.setSessionData("tutorialexp", input.toLowerCase());
+                plugin.getConfig().set("tutorial_exp", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -278,13 +322,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs is a Number including decimal values or Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Double.isNaN(Double.valueOf(input))) {
-                context.setSessionData("pertutorialmoney", input);
+                plugin.getConfig().set("per_tutorial_money", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -296,13 +342,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Float.isNaN(Float.valueOf(input))) {
-                context.setSessionData("pertutorialexp", input);
+                plugin.getConfig().set("per_tutorial_exp", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -314,13 +362,15 @@ public class ConfigConversation {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money Reward: " + String.valueOf(plugin.getters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money Reward: " + String.valueOf(plugin.getters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting)");
         }
         
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Double.isNaN(Double.valueOf(input))) {
-                context.setSessionData("perviewmoney", input);
+                plugin.getConfig().set("per_view_money", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -332,13 +382,15 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getViewExp()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getViewExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Float.isNaN(Float.valueOf(input))) {
-                context.setSessionData("perviewexp", input);
+                plugin.getConfig().set("per_view_exp", input);
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -350,12 +402,14 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Are you done changing config options?: Accepted values are yes or no. ");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Are you done changing config options? \n&8Valid inputs is yes or no.");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("yes")) {
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return END_OF_CONVERSATION;
             } else if (input.equalsIgnoreCase("no")) {
                 return new ConfigOption();

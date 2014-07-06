@@ -8,6 +8,7 @@ package io.snw.tutorial;
 public class TutorialConfigs {
 
     private boolean autoUpdate;
+    private boolean metrics;
     private String signSetting;
     private boolean firstJoin;
     private String firstJoinTutorial;
@@ -23,10 +24,11 @@ public class TutorialConfigs {
     private boolean perViewMoney;
 
 
-    public TutorialConfigs(boolean autoUpdate, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, double viewMoney, float viewExp, 
+    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, double viewMoney, float viewExp, 
             double tutorialMoney, float tutorialExp, boolean perTutorialMoney, boolean perTutorialExp, boolean perViewExp, boolean perViewMoney) {
         
         this.autoUpdate = autoUpdate;
+        this.metrics = metrics;
         this.signSetting = signSetting;
         this.firstJoin = firstJoin;
         this.firstJoinTutorial = firstJoinTutorial;
@@ -44,6 +46,10 @@ public class TutorialConfigs {
 
     public boolean getUpdate() {
         return this.autoUpdate;
+    }
+
+    public boolean getMetrics() {
+        return this.metrics;
     }
 
     public String signSetting() {
