@@ -60,11 +60,18 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     private void startMetrics() {
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException ex) {
-            getLogger().warning("Failed to load metrics :(");
+        if(getConfig().get("metrics") == null) {
+            getConfig().set("metrics", true);
+            saveConfig();
+            this.caching().reCacheConfigs();
+        }
+        if(getConfig().getBoolean("metrics")) {
+            try {
+                Metrics metrics = new Metrics(this);
+                metrics.start();
+                } catch (IOException ex) {
+                    getLogger().warning("Failed to load metrics :(");
+                }
         }
     }
 

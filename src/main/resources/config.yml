@@ -1,6 +1,9 @@
 #set false to disable auto-updating
 auto-update: true
 
+#set false to disable metrics
+metrics: true
+
 #Sign setting
 sign: '&0[Tutorial]'
 
