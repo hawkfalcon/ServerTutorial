@@ -25,7 +25,7 @@
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
-package io.snw.tutorial.util;
+package io.snw.tutorial.metrics;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

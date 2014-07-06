@@ -121,8 +121,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
-                <!--<configuration> <stylesheetfile>${project.basedir}/style/stylesheet.css</stylesheetfile>
-                  </configuration> -->
+                <configuration>
+                    <!--<stylesheetfile>${project.basedir}/style/stylesheet.css</stylesheetfile>-->
+                    <excludePackageNames>io.snw.tutorial.metrics:io.snw.tutorial.util</excludePackageNames>
+                  </configuration>
                 <executions>
                     <execution>
                         <id>non-aggregate</id>

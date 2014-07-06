@@ -9,7 +9,7 @@ import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.ViewType;
-import io.snw.tutorial.util.Metrics;
+import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.util.Updater;
 
