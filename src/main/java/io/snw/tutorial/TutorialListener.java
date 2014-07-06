@@ -72,6 +72,7 @@ public class TutorialListener implements Listener {
                 Sign sign = (Sign) block.getState();
                 if (sign.getLine(0).equalsIgnoreCase(ChatColor.stripColor(plugin.getters().getConfigs().signSetting()))) {
                     if (sign.getLine(1) == null) return;
+                    if(plugin.getters().isInTutorial(name)) return;
                     plugin.startTutorial(sign.getLine(1), player);
                 }
             }
