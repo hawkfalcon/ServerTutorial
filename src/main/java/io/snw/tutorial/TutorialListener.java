@@ -157,8 +157,9 @@ public class TutorialListener implements Listener {
                 if(!plugin.getters().getConfigs().getExpCountdown()) {
                     player.setExp(player.getExp() + plugin.getters().getConfigs().getViewExp());
                 } else {
-                    TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getViewExp());
-                    expTracker.replace(player.getName(), tutorialExp);
+                    TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getViewExp());
+                    this.expTracker.replace(player.getName(), tutorialExp);
+                    player.sendMessage(ChatColor.BLUE + "You recieved " + plugin.getters().getConfigs().getViewExp() + " Exp you have: " + this.expTracker.get(player.getName()).getExp());
                 }
             }
             if(plugin.getters().getConfigs().getPerViewMoney()) {
