@@ -1,5 +1,6 @@
-package io.snw.tutorial;
+package io.snw.tutorial.conversation;
 
+import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.api.CreateTutorialEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
