@@ -1,5 +1,6 @@
 package io.snw.tutorial.api;
 
+import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialView;
 
 import org.bukkit.entity.Player;
@@ -12,9 +13,11 @@ public class ViewSwitchEvent extends Event {
     private Player player;
     private TutorialView fromTutorialView;
     private TutorialView toTutorialView;
+    private Tutorial tutorial;
 
-    public ViewSwitchEvent(Player player, TutorialView fromTutorialView, TutorialView toTutorialView) {
+    public ViewSwitchEvent(Player player, TutorialView fromTutorialView, TutorialView toTutorialView, Tutorial tutorial) {
         this.player = player;
+        this.tutorial = tutorial;
         this.fromTutorialView = fromTutorialView;
         this.toTutorialView = toTutorialView;
     }
@@ -50,5 +53,13 @@ public class ViewSwitchEvent extends Event {
      */
     public TutorialView getToTutorialView() {
         return this.toTutorialView;
+    }
+    
+    /**
+     * Tutorial from which view is part of
+     * @return Tutorial
+     */
+    public Tutorial getTutorial() {
+        return this.tutorial;
     }
 }

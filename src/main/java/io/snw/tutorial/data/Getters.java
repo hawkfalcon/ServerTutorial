@@ -1,12 +1,15 @@
 
 package io.snw.tutorial.data;
 
+import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialConfigs;
 import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.TutorialView;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
 
 public class Getters {
 
@@ -61,5 +64,9 @@ public class Getters {
 
     public void getTutorialTimeTask(String tutorialName, String name) {
         getTutorialTask().tutorialTimeTask(tutorialName, name);
+    }
+    
+    public Map<String, UUID> getResponse() {
+        return plugin.caching().getResponse();
     }
 }

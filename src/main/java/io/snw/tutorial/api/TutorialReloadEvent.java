@@ -8,6 +8,7 @@ public class TutorialReloadEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList(); 
 
+    public TutorialReloadEvent() {}
     @Override
     public HandlerList getHandlers() {
         return handlers;

@@ -7,7 +7,11 @@ import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import io.snw.tutorial.util.UUIDFetcher;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -37,6 +41,7 @@ public class TutorialListener implements Listener {
     ServerTutorial plugin;
     private TutorialEco eco;
     private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
+    private Map<String, UUID> response;
 
 
     public TutorialListener(ServerTutorial plugin) {
@@ -134,6 +139,19 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        final String playerName = player.getName();
+        if (!plugin.getServer().getOnlineMode()) {
+            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        plugin.caching().getResponse().put(playerName, UUIDFetcher.getUUIDOf(playerName));
+                    } catch (Exception e) {
+                        
+                    }
+                }
+            });
+        }
         for (String name : plugin.getters().getAllInTutorial()) {
             Player tut = plugin.getServer().getPlayerExact(name);
             tut.hidePlayer(player);
@@ -153,22 +171,24 @@ public class TutorialListener implements Listener {
             player.setExp(player.getExp() - 1f);
         }
         if (plugin.getters().getConfigs().getRewards()) {
-            if (plugin.getters().getConfigs().getPerViewExp()) {
-                if(!plugin.getters().getConfigs().getExpCountdown()) {
-                    player.setExp(player.getExp() + plugin.getters().getConfigs().getViewExp());
-                } else {
-                    TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getViewExp());
-                    this.expTracker.put(player.getName(), tutorialExp);
-                    player.sendMessage(ChatColor.BLUE + "You recieved " + plugin.getters().getConfigs().getViewExp() + " Exp you have: " + this.expTracker.get(player.getName()).getExp());
-                }
-            }
-            if(plugin.getters().getConfigs().getPerViewMoney()) {
-                if(this.eco.setupEconomy()) {
-                    EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getViewMoney());
-                    if(ecoResponse.transactionSuccess()) {
-                        player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+            if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
+                if (plugin.getters().getConfigs().getPerViewExp()) {
+                    if(!plugin.getters().getConfigs().getExpCountdown()) {
+                        player.setExp(player.getExp() + plugin.getters().getConfigs().getViewExp());
                     } else {
-                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                        TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getViewExp());
+                        this.expTracker.put(player.getName(), tutorialExp);
+                        player.sendMessage(ChatColor.BLUE + "You recieved " + plugin.getters().getConfigs().getViewExp() + " Exp you have: " + this.expTracker.get(player.getName()).getExp());
+                    }
+                }
+                if(plugin.getters().getConfigs().getPerViewMoney()) {
+                    if(this.eco.setupEconomy()) {
+                        EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getViewMoney());
+                        if(ecoResponse.transactionSuccess()) {
+                            player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                        } else {
+                            plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                        }
                     }
                 }
             }
@@ -192,10 +212,12 @@ public class TutorialListener implements Listener {
                 }
             }
             if(plugin.getters().getConfigs().getPerTutorialExp() || plugin.getters().getConfigs().getPerTutorialMoney()) {
-                if(plugin.getters().getConfigs().getExpCountdown()) {
-                    player.setExp(plugin.getters().getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
-                } else {
-                    player.setExp(plugin.getters().getConfigs().getTutorialExp() + player.getExp());
+                if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
+                    if(plugin.getters().getConfigs().getExpCountdown()) {
+                        player.setExp(plugin.getters().getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+                    } else {
+                        player.setExp(plugin.getters().getConfigs().getTutorialExp() + player.getExp());
+                    }
                 }
             }
             this.expTracker.remove(playerName);

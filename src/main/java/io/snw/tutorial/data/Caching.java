@@ -9,7 +9,10 @@ import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class Caching {
 
@@ -21,7 +24,8 @@ public class Caching {
     private HashMap<String, String> currentTutorial = new HashMap<String, String>();
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
-    
+    private Map<String, UUID> response = null;
+
     public Caching(ServerTutorial plugin) {
         this.plugin = plugin;
     }
@@ -75,6 +79,10 @@ public class Caching {
         return playerInTutorial;
     }
 
+    public Map<String, UUID> getResponse() {
+        return this.response;
+    }
+
     public void cacheConfigs() {
         TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), 
         plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getDouble("view_money"), Float.valueOf(plugin.getConfig().getString("view_exp")), plugin.getConfig().getDouble("tutorial_money"), Float.valueOf(plugin.getConfig().getString("tutorial_exp")), 
@@ -95,5 +103,13 @@ public class Caching {
     public void reCacheConfigs() {
         this.configs.clear();
         cacheConfigs();
+    }
+    
+    public UUID getUUID(Player player) {
+        if(plugin.getServer().getOnlineMode()) {
+            return player.getUniqueId();
+        } else {
+            return this.getResponse().get(player.getName());
+        }
     }
 }

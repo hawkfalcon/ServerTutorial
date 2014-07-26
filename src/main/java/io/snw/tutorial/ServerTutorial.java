@@ -13,11 +13,15 @@ import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
+import io.snw.tutorial.util.UUIDFetcher;
 import io.snw.tutorial.util.Updater;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -102,6 +106,7 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void startTutorial(String tutorialName, Player player) {
+        String name = this.getServer().getPlayer(this.caching().getUUID(player)).getName();
         if (this.dataLoad().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
@@ -114,7 +119,6 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
-        String name = this.getServer().getPlayer(player.getUniqueId()).getName();
         this.startLoc.put(name, player.getLocation());
         this.addInventory(name, player.getInventory().getContents());
         this.addFlight(name, player.getAllowFlight());
@@ -128,19 +132,19 @@ public class ServerTutorial extends JavaPlugin {
             online.hidePlayer(player);
             player.hidePlayer(online);
         }
-        this.getServer().getPlayerExact(name).teleport(this.getters().getTutorialView(tutorialName, name).getLocation());
+        this.getServer().getPlayer(this.caching().getUUID(player)).teleport(this.getters().getTutorialView(tutorialName, name).getLocation());
         if (this.getters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             this.getters().getTutorialTimeTask(tutorialName, name);
         }
         this.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, this.getters().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
-        if(this.dataLoad().getPlayerData().get("players." + name) == null) {
-            this.dataLoad().getPlayerData().set("players." + name + ".seen", "true");
-           this.dataLoad().getPlayerData().set("players." + name + ".tutorials." + tutorialName, "true");
+        if(this.dataLoad().getPlayerData().get("players." + this.caching().getUUID(player)) == null) {
+            this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".seen", "true");
+           this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName, "true");
             this.dataLoad().savePlayerData();
-        } else if(this.dataLoad().getPlayerData().get("players." + name + ".tutorials." + tutorialName) == null) {
-            this.dataLoad().getPlayerData().set("players." + name + ".tutorials." + tutorialName, "true");
+        } else if(this.dataLoad().getPlayerData().get("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName) == null) {
+            this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName, "true");
             this.dataLoad().savePlayerData();
         }
     }
@@ -161,7 +165,7 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = this.getters().getTutorialView(name);
         this.caching().currentTutorialView().put(name, this.getters().getCurrentView(name) + 1);
         TutorialView toTutorialView = this.getters().getTutorialView(name);
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView);
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, this.getters.getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
