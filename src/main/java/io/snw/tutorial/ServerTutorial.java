@@ -6,6 +6,7 @@ import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
+import io.snw.tutorial.conversation.ConfigConversation;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
@@ -46,6 +47,7 @@ public class ServerTutorial extends JavaPlugin {
     private Getters getters = new Getters(this);
     private Setters setters = new Setters(this);
     private TutorialTask tutorialTask = new TutorialTask(this);
+    private ConfigConversation configConversation = new ConfigConversation(this);
 
     @Override
     public void onEnable() {
@@ -215,6 +217,10 @@ public class ServerTutorial extends JavaPlugin {
 
     public ViewConversation getViewConversation() {
         return viewConversation;
+    }
+
+    public ConfigConversation getConfigConversation() {
+        return configConversation;
     }
 
     public void removeTutorial(String tutorialName) {
