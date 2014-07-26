@@ -71,7 +71,7 @@ public class TutorialListener implements Listener {
                 }
             }
         }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getType() != plugin.getters().getCurrentTutorial(name).getItem()) {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
@@ -94,8 +94,12 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
         if (plugin.getters().isInTutorial(event.getPlayer().getName())) {
             plugin.removeFromTutorial(event.getPlayer().getName());
+        }
+        if (!plugin.getServer().getOnlineMode()) {
+            plugin.caching().getResponse().remove(player.getName());
         }
     }
 
