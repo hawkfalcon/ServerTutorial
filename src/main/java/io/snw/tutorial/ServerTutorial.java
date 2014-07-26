@@ -13,15 +13,11 @@ import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
-import io.snw.tutorial.util.UUIDFetcher;
 import io.snw.tutorial.util.Updater;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;

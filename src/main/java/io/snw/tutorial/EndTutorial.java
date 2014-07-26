@@ -1,7 +1,6 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
