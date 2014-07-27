@@ -13,7 +13,10 @@ public class TutorialEco {
     public TutorialEco(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-
+/**
+ * 
+ * @return boolean returns true if vault is enabled and there is an economy plugin, otherwise false if either is not present 
+ */
     public boolean setupEconomy() {
         if (plugin.getServer().getPluginManager().getPlugin("Vault") == null) {
             return false;
@@ -25,7 +28,10 @@ public class TutorialEco {
         this.econ = rsp.getProvider();
         return this.econ != null;
     }
-
+/**
+ * 
+ * @return Economy Economy vault found 
+ */
     public Economy getEcon() {
         return this.econ;
     }

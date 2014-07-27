@@ -78,7 +78,7 @@
     <!-- BUILD -->
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
+        <defaultGoal>clean package install</defaultGoal>
         <finalName>ServerTutorial</finalName>
         <!-- Distribution Management -->
         <extensions>
@@ -136,7 +136,11 @@
                 <version>2.9.1</version>
                 <configuration>
                     <!--<stylesheetfile>${project.basedir}/style/stylesheet.css</stylesheetfile>-->
-                    <excludePackageNames>io.snw.tutorial.metrics:io.snw.tutorial.util</excludePackageNames>
+                    <links>
+                        <link>http://jd.bukkit.org/dev/apidocs/</link>
+                    </links>
+                    <linksource>true</linksource>
+                    <excludePackageNames>io.snw.tutorial.metrics</excludePackageNames>
                   </configuration>
                 <executions>
                     <execution>
@@ -147,10 +151,10 @@
                         </goals>
                         <configuration>
                             <links>
-                                <link>http://jd.bukkit.org/beta/apidocs/</link>
+                                <link>http://jd.bukkit.org/dev/apidocs/</link>
                             </links>
                             <linksource>true</linksource>
-                            <!-- Links own source files -->
+                            <!--Links own source files-->
                         </configuration>
                     </execution>
                 </executions>

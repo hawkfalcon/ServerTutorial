@@ -78,7 +78,9 @@ public class ServerTutorial extends JavaPlugin {
                 }
         }
     }
-
+/**
+ * Check's for update
+ */
     private void checkUpdate() {
         if (getConfig().get("auto-update") == null) {
             getConfig().set("auto-update", true);
@@ -102,7 +104,11 @@ public class ServerTutorial extends JavaPlugin {
             });
         }
     }
-
+/**
+ * Start's tutorial
+ * @param tutorialName tutorial name
+ * @param player Player
+ */
     public void startTutorial(String tutorialName, Player player) {
         String name = this.getServer().getPlayer(this.caching().getUUID(player)).getName();
         if (this.dataLoad().getData().getConfigurationSection("tutorials") == null) {
@@ -146,7 +152,10 @@ public class ServerTutorial extends JavaPlugin {
             this.dataLoad().savePlayerData();
         }
     }
-
+/**
+ * Removes player from tutorial
+ * @param name Player name 
+ */
     public void removeFromTutorial(String name) {
         this.caching().playerInTutorial().remove(name);
         this.startLoc.remove(name);
@@ -163,6 +172,7 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = this.getters().getTutorialView(name);
         this.caching().currentTutorialView().put(name, this.getters().getCurrentView(name) + 1);
         TutorialView toTutorialView = this.getters().getTutorialView(name);
+        @SuppressWarnings("deprecation")
         ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, this.getters.getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }

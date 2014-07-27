@@ -30,11 +30,18 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         this.names = ImmutableList.copyOf(names);
         this.rateLimiting = rateLimiting;
     }
-
+/**
+ * 
+ * @param names Player Names
+ */
     public UUIDFetcher(List<String> names) {
         this(names, true);
     }
-
+/**
+ * 
+ * @return Map Mapping of String, UUID
+ * @throws Exception [Exception thrown if no connection or invalid json]
+ */
     @Override
     public Map<String, UUID> call() throws Exception {
         Map<String, UUID> uuidMap = new HashMap<String, UUID>();
@@ -96,7 +103,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
     }
-
+/**
+ * 
+ * @param name Player Name
+ * @return UUID UUID of Player
+ * @throws Exception [Exception thrown if no connection or invalid json]
+ */
     public static UUID getUUIDOf(String name) throws Exception {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }
