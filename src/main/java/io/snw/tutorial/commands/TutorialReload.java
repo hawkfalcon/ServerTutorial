@@ -30,7 +30,7 @@ public class TutorialReload implements CommandExecutor {
             plugin.caching().reCasheTutorials();
             plugin.caching().reCacheConfigs();
             TutorialReloadEvent event = new TutorialReloadEvent();
-            Bukkit.getServer().getPluginManager().callEvent(event);
+            plugin.getServer().getPluginManager().callEvent(event);
             return true;
         } else {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
