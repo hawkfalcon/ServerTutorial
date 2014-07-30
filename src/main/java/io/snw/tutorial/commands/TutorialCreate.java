@@ -27,18 +27,18 @@ public class TutorialCreate implements CommandExecutor {
         if (Permissions.CREATE.hasPerm(sender)) {
             if (args[0].equalsIgnoreCase("create")) {
                 if (!plugin.getters().getAllTutorials().contains(args[1])) {
-                    plugin.getCreateTutorial().createNewTutorial(player, args[1]);
+                    plugin.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
                     return true;
                 } else {
                     sender.sendMessage(ChatColor.RED + "This tutorial already exists!");
                     return true;
                 }
                 } else if (args[0].equalsIgnoreCase("addview")) {
-                    if (!plugin.getters().getAllTutorials().contains(args[1])) {
+                    if (!plugin.getters().getAllTutorials().contains(args[1].toLowerCase())) {
                         sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
                         return true;
                     }
-                    plugin.getViewConversation().createNewView(player, args[1]);
+                    plugin.getViewConversation().createNewView(player, args[1].toLowerCase());
                     return true;
 
                 } else {
