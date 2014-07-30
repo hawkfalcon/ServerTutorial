@@ -9,7 +9,6 @@ import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.util.UUIDFetcher;
 import java.util.HashMap;
 import java.util.logging.Level;
-import net.milkbowl.vault.economy.Economy;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
