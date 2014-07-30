@@ -1,12 +1,15 @@
 
 package io.snw.tutorial.data;
 
+import io.snw.tutorial.MapPlayerTutorial;
+import io.snw.tutorial.PlayerData;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialConfigs;
 import io.snw.tutorial.TutorialView;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import io.snw.tutorial.util.UUIDFetcher;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +28,7 @@ public class Caching {
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
     private Map<String, UUID> response = null;
+    private HashMap<String, PlayerData> playerDataMap = new HashMap<String, PlayerData>();
 
     public Caching(ServerTutorial plugin) {
         this.plugin = plugin;
@@ -53,6 +57,23 @@ public class Caching {
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
             plugin.setters().addTutorial(tutorialName, tutorial);
         }
+        if (plugin.dataLoad().getPlayerData().getString("players") != null) {
+            for (String uuid : plugin.dataLoad().getPlayerData().getConfigurationSection("players").getKeys(false)) {
+                UUID playerUUID = UUID.fromString(uuid);
+                boolean seenOnServer = Boolean.valueOf(plugin.dataLoad().getData().getString("players." + uuid + ".seen"));
+                HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
+                if (plugin.dataLoad().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
+                    for (String playerTutorial : plugin.dataLoad().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false)) {
+                        String playerTutorialName = playerTutorial;
+                        boolean seen = Boolean.valueOf(plugin.dataLoad().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorialName));
+                    MapPlayerTutorial mapPlayerTutorial = new MapPlayerTutorial(playerTutorialName, seen);
+                    playerTutorials.put(playerTutorialName, mapPlayerTutorial);
+                    }
+                }
+                PlayerData playerData = new PlayerData(playerUUID, seenOnServer,  playerTutorials);
+                this.playerDataMap.put(plugin.getServer().getOfflinePlayer(playerUUID).getName(), playerData);
+            }
+        }
     }
 
     public ArrayList<String> tutorialNames() {
@@ -73,6 +94,10 @@ public class Caching {
 
     public HashMap<String, TutorialConfigs> configs() {
         return this.configs;
+    }
+    
+    public HashMap<String, PlayerData> playerDataMap() {
+        return this.playerDataMap;
     }
 
     public ArrayList<String> playerInTutorial() {

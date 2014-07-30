@@ -1,12 +1,14 @@
 
 package io.snw.tutorial.data;
 
+import io.snw.tutorial.PlayerData;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialConfigs;
 import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.TutorialView;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,6 +41,22 @@ public class Getters {
     }
     public TutorialConfigs getConfigs() {
         return plugin.caching().configs().get("config");
+    }
+    
+    public PlayerData getPlayerData(String name) {
+        return plugin.caching().playerDataMap().get(name);
+    }
+
+    public HashMap<String, PlayerData> getPlayerData() {
+        return plugin.caching().playerDataMap();
+    }
+
+    public boolean getPlayerSeenServer(String name) {
+        if (plugin.caching().playerDataMap().containsKey(name)) {
+            return plugin.caching().playerDataMap().get(name).getSeen();
+        } else {
+            return false;
+        }
     }
 
     public ArrayList<String> getAllTutorials() {
