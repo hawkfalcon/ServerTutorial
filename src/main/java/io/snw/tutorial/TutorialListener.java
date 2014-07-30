@@ -6,17 +6,16 @@ import io.snw.tutorial.api.EndTutorialEvent;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.enums.MessageType;
-import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.UUIDFetcher;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
+import net.milkbowl.vault.economy.Economy;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -32,30 +31,26 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.PluginManager;
 
 public class TutorialListener implements Listener {
 
 
     ServerTutorial plugin;
-    private TutorialEco eco;
     private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
-    private Map<String, UUID> response;
 
     public TutorialListener(ServerTutorial plugin) {
         this.plugin = plugin;
     }
-    private PluginManager pm;
+    private TutorialEco eco = new TutorialEco();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
-        if (plugin.getters().isInTutorial(name)) {
-            if (plugin.getters().getCurrentTutorial(name).getViewType() == ViewType.CLICK) {
-                if (event.getAction() != Action.PHYSICAL) {
-                    if (player.getItemInHand().getType() == plugin.getters().getCurrentTutorial(name).getItem()) {
-                        if (plugin.getters().getCurrentTutorial(name).getTotalViews() == plugin.getters().getCurrentView(name)) {
+        if (event.getAction() != Action.PHYSICAL) {
+            if (plugin.getters().isInTutorial(name)) {
+                if (player.getItemInHand().getType() == plugin.getters().getCurrentTutorial(name).getItem()) {
+                    if (plugin.getters().getCurrentTutorial(name).getTotalViews() == plugin.getters().getCurrentView(name)) {
                             plugin.getEndTutorial().endTutorial(player);
                         } else {
                             plugin.incrementCurrentView(name);
@@ -65,17 +60,15 @@ public class TutorialListener implements Listener {
                                 player.sendMessage(plugin.getTutorialUtils().tACC(plugin.getters().getTutorialView(name).getMessage()));
                             }
                         }
-                    }
                 }
             }
         }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && player.getItemInHand().getType() != plugin.getters().getCurrentTutorial(name).getItem()) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && !plugin.getters().isInTutorial(name)) {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
                 if (sign.getLine(0).equalsIgnoreCase(ChatColor.stripColor(plugin.getters().getConfigs().signSetting()))) {
                     if (sign.getLine(1) == null) return;
-                    if(plugin.getters().isInTutorial(name)) return;
                     plugin.startTutorial(sign.getLine(1), player);
                 }
             }
@@ -184,8 +177,8 @@ public class TutorialListener implements Listener {
                     }
                 }
                 if(plugin.getters().getConfigs().getViewMoney()) {
-                    if(this.eco.setupEconomy()) {
-                        EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getPerViewMoney());
+                    if(eco.setupEconomy()) {
+                        EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer)player, plugin.getters().getConfigs().getPerViewMoney());
                         if(ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                         } else {
@@ -202,27 +195,26 @@ public class TutorialListener implements Listener {
         if(plugin.getters().getConfigs().getRewards()) {
             Player player = event.getPlayer();
             String playerName = player.getName().toLowerCase();
-            
-            if(this.eco.setupEconomy()) {
+            if(eco.setupEconomy()) {
                 if(plugin.getters().getConfigs().getTutorialMoney()) {
-                    EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getPerTutorialMoney());
+                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer) player, plugin.getters().getConfigs().getPerTutorialMoney());
                     if(ecoResponse.transactionSuccess()) {
                         player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                     } else {
                         plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                     }
                 }
-            }
-            if(plugin.getters().getConfigs().getTutorialExp() || plugin.getters().getConfigs().getTutorialMoney()) {
-                if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
-                    if(plugin.getters().getConfigs().getExpCountdown()) {
-                        player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + this.expTracker.get(playerName).getExp());
-                    } else {
-                        player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + player.getExp());
+                if(plugin.getters().getConfigs().getTutorialExp() || plugin.getters().getConfigs().getTutorialMoney()) {
+                    if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
+                        if(plugin.getters().getConfigs().getExpCountdown()) {
+                            player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + this.expTracker.get(playerName).getExp());
+                        } else {
+                            player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + player.getExp());
+                        }
                     }
                 }
+                this.expTracker.remove(playerName);
             }
-            this.expTracker.remove(playerName);
         }
     }
 

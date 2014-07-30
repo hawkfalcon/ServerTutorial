@@ -2,7 +2,6 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,7 +16,7 @@ public class EndTutorial {
     }
 
     public void endTutorial(final Player player) {
-        final String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
+        final String name = plugin.getServer().getPlayer(player.getName()).getName();
         Tutorial tutorial = plugin.getters().getCurrentTutorial(name);
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', tutorial.getEndMessage()));
         player.closeInventory();

@@ -86,7 +86,7 @@ public class Caching {
     public void cacheConfigs() {
         TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), 
         plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"), 
-        plugin.getConfig().getDouble("per_tutorial_money"), Float.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Float.valueOf(plugin.getConfig().getString("per_view_exp")), plugin.getConfig().getDouble("per_view_money"));
+        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Float.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Float.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 
