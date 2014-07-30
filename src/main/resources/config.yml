@@ -17,18 +17,18 @@ rewards: false
 #Count Down Timer for tutorial views
 exp_countdown: false
 
-#per view eco settings
-view_money: "0.00"
-view_exp: "0.0"
-
-#per tutorial eco settings
-tutorial_money: "0.00"
-tutorial_exp: "0.0"
+#Enable/disable for per view rewards
+view_money: false
+view_exp: false
 
 #Enable/disable for per tutorial rewards
-per_tutorial_money: false
-per_tutorial_exp: false
+tutorial_money: false
+tutorial_exp: false
 
-#Enable/disable for per view rewards
-per_view_money: false
-per_view_exp: false
+#per tutorial eco settings
+per_tutorial_money: "0.00"
+per_tutorial_exp: "0.0"
+
+#per view eco settings
+per_view_money: "0.00"
+per_view_exp: "0.0"
