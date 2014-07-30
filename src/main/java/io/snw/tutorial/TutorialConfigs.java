@@ -14,18 +14,18 @@ public class TutorialConfigs {
     private String firstJoinTutorial;
     private boolean rewards;
     private boolean expCountdown;
-    private double viewMoney;
-    private float viewExp;
-    private double tutorialMoney;
-    private float tutorialExp;
-    private boolean perTutorialMoney;
-    private boolean perTutorialExp;
-    private boolean perViewExp;
-    private boolean perViewMoney;
+    private boolean viewMoney;
+    private boolean viewExp;
+    private boolean tutorialMoney;
+    private boolean tutorialExp;
+    private double perTutorialMoney;
+    private float perTutorialExp;
+    private float perViewExp;
+    private double perViewMoney;
 
 
-    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, double viewMoney, float viewExp, 
-            double tutorialMoney, float tutorialExp, boolean perTutorialMoney, boolean perTutorialExp, boolean perViewExp, boolean perViewMoney) {
+    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, 
+            boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, float perTutorialExp, float perViewExp, double perViewMoney) {
         
         this.autoUpdate = autoUpdate;
         this.metrics = metrics;
@@ -72,35 +72,35 @@ public class TutorialConfigs {
         return this.expCountdown;
     }
 
-    public double getViewMoney() {
+    public boolean getViewMoney() {
         return this.viewMoney;
     }
 
-    public float getViewExp() {
+    public boolean getViewExp() {
         return this.viewExp;
     }
 
-    public double getTutorialMoney() {
+    public boolean getTutorialMoney() {
         return this.tutorialMoney;
     }
 
-    public float getTutorialExp() {
+    public boolean getTutorialExp() {
         return this.tutorialExp;
     }
 
-    public boolean getPerTutorialMoney() {
+    public double getPerTutorialMoney() {
         return this.perTutorialMoney;
     }
 
-    public boolean getPerViewMoney() {
+    public double getPerViewMoney() {
         return this.perViewMoney;
     }
 
-    public boolean getPerTutorialExp() {
+    public float getPerTutorialExp() {
         return this.perTutorialExp;
     }
 
-    public boolean getPerViewExp() {
+    public float getPerViewExp() {
         return this.perViewExp;
     }
 }
