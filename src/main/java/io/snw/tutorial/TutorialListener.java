@@ -165,7 +165,7 @@ public class TutorialListener implements Listener {
             player.setExp(player.getExp() - 1f);
         }
         if (plugin.getters().getConfigs().getRewards()) {
-            if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
+            if (!seenTutorial(player.getName(), event.getTutorial().getName())) {
                 if (plugin.getters().getConfigs().getViewExp()) {
                     if(!plugin.getters().getConfigs().getExpCountdown()) {
                         player.setExp(player.getExp() + plugin.getters().getConfigs().getPerViewExp());
@@ -195,17 +195,17 @@ public class TutorialListener implements Listener {
         if(plugin.getters().getConfigs().getRewards()) {
             Player player = event.getPlayer();
             String playerName = player.getName().toLowerCase();
-            if(eco.setupEconomy()) {
-                if(plugin.getters().getConfigs().getTutorialMoney()) {
-                    EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer) player, plugin.getters().getConfigs().getPerTutorialMoney());
-                    if(ecoResponse.transactionSuccess()) {
-                        player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
-                    } else {
-                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+            if (!seenTutorial(playerName, event.getTutorial().getName())) {
+                if(eco.setupEconomy()) {
+                    if(plugin.getters().getConfigs().getTutorialMoney()) {
+                        EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer) player, plugin.getters().getConfigs().getPerTutorialMoney());
+                        if(ecoResponse.transactionSuccess()) {
+                            player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                        } else {
+                            plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                        }
                     }
-                }
-                if(plugin.getters().getConfigs().getTutorialExp() || plugin.getters().getConfigs().getTutorialMoney()) {
-                    if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
+                    if(plugin.getters().getConfigs().getTutorialExp() || plugin.getters().getConfigs().getTutorialMoney()) {
                         if(plugin.getters().getConfigs().getExpCountdown()) {
                             player.setExp(0);
                             player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + this.expTracker.get(playerName).getExp());
@@ -213,8 +213,10 @@ public class TutorialListener implements Listener {
                             player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + player.getExp());
                         }
                     }
+                    this.expTracker.remove(playerName);
                 }
-                this.expTracker.remove(playerName);
+            } else {
+                player.sendMessage(ChatColor.BLUE + "You have been through this tutorial already. You will not collect rewards!");
             }
         }
     }
@@ -228,5 +230,14 @@ public class TutorialListener implements Listener {
             float expCounter = event.getTutorial().getTotalViews();
             player.setExp(expCounter);
         }
+    }
+
+    public boolean seenTutorial(String name, String tutorial) {
+        if (plugin.getters().getPlayerData().containsKey(name)) {
+            if (plugin.getters().getPlayerData(name).getPlayerTutorialData().containsKey(tutorial)) {
+                return plugin.getters().getPlayerData(name).getPlayerTutorialData().get(tutorial).getSeen();
+            }
+        }
+        return false;
     }
 }
