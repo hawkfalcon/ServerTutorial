@@ -1,7 +1,6 @@
 
 package io.snw.tutorial.rewards;
 
-import io.snw.tutorial.ServerTutorial;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -17,7 +16,10 @@ public class TutorialEco {
     public boolean setupEconomy() {
         return getEcon() != null;
     }
-    
+    /**
+     * 
+     * @return Economy returns Economy instance otherwise null if none found 
+     */
     public Economy getEcon() {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
             return null;
