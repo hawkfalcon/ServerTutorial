@@ -175,18 +175,18 @@ public class TutorialListener implements Listener {
         }
         if (plugin.getters().getConfigs().getRewards()) {
             if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
-                if (plugin.getters().getConfigs().getPerViewExp()) {
+                if (plugin.getters().getConfigs().getViewExp()) {
                     if(!plugin.getters().getConfigs().getExpCountdown()) {
-                        player.setExp(player.getExp() + plugin.getters().getConfigs().getViewExp());
+                        player.setExp(player.getExp() + plugin.getters().getConfigs().getPerViewExp());
                     } else {
-                        TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getViewExp());
+                        TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + plugin.getters().getConfigs().getPerViewExp());
                         this.expTracker.put(player.getName(), tutorialExp);
                         player.sendMessage(ChatColor.BLUE + "You recieved " + plugin.getters().getConfigs().getViewExp() + " Exp you have: " + this.expTracker.get(player.getName()).getExp());
                     }
                 }
-                if(plugin.getters().getConfigs().getPerViewMoney()) {
+                if(plugin.getters().getConfigs().getViewMoney()) {
                     if(this.eco.setupEconomy()) {
-                        EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getViewMoney());
+                        EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getPerViewMoney());
                         if(ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                         } else {
@@ -205,8 +205,8 @@ public class TutorialListener implements Listener {
             String playerName = player.getName().toLowerCase();
             
             if(this.eco.setupEconomy()) {
-                if(plugin.getters().getConfigs().getPerTutorialMoney()) {
-                    EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getTutorialMoney());
+                if(plugin.getters().getConfigs().getTutorialMoney()) {
+                    EconomyResponse ecoResponse = this.eco.getEcon().bankDeposit(player.getName(), plugin.getters().getConfigs().getPerTutorialMoney());
                     if(ecoResponse.transactionSuccess()) {
                         player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                     } else {
@@ -214,12 +214,12 @@ public class TutorialListener implements Listener {
                     }
                 }
             }
-            if(plugin.getters().getConfigs().getPerTutorialExp() || plugin.getters().getConfigs().getPerTutorialMoney()) {
+            if(plugin.getters().getConfigs().getTutorialExp() || plugin.getters().getConfigs().getTutorialMoney()) {
                 if (!plugin.dataLoad().getPlayerData().getBoolean("players." + plugin.caching().getUUID(player) + ".tutorials." + event.getTutorial().getName())) {
                     if(plugin.getters().getConfigs().getExpCountdown()) {
-                        player.setExp(plugin.getters().getConfigs().getTutorialExp() + this.expTracker.get(playerName).getExp());
+                        player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + this.expTracker.get(playerName).getExp());
                     } else {
-                        player.setExp(plugin.getters().getConfigs().getTutorialExp() + player.getExp());
+                        player.setExp(plugin.getters().getConfigs().getPerTutorialExp() + player.getExp());
                     }
                 }
             }
