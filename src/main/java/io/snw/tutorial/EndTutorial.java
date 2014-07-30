@@ -41,7 +41,7 @@ public class EndTutorial {
             }
         }.runTaskLater(plugin, 20L);
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        plugin.getServer().getPluginManager().callEvent(event);
     }
 
     public void reloadEndTutorial(final Player player) {

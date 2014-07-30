@@ -42,7 +42,6 @@ public class TutorialListener implements Listener {
     private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
     private Map<String, UUID> response;
 
-
     public TutorialListener(ServerTutorial plugin) {
         this.plugin = plugin;
     }
