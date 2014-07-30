@@ -83,6 +83,8 @@ public class ConfigConversation {
             } else if(input.equalsIgnoreCase("per view exp")) {
                 return new PerViewExp();
             } else if(input.equalsIgnoreCase("cancel")) {
+                plugin.saveConfig();
+                plugin.caching().reCacheConfigs();
                 return END_OF_CONVERSATION;
             }
             return new ConfigOption();
@@ -100,8 +102,6 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
                 plugin.getConfig().set("auto-update", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -119,9 +119,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("auto-update", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("metrics", input.toLowerCase());
                 return new Done();
             } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -141,8 +139,6 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!input.toLowerCase().equalsIgnoreCase("cancel") && input.length() <= 15) {
                 plugin.getConfig().set("sign", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -161,9 +157,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("first_join", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("first_join", input.toLowerCase());
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -176,7 +170,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join Tutorial: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -184,9 +178,9 @@ public class ConfigConversation {
             if(!input.equalsIgnoreCase("cancel")) {
                 if(plugin.caching().tutorial().containsKey(input)) {
                     plugin.getConfig().set("first_join_tutorial", input);
-                    plugin.saveConfig();
-                    plugin.caching().reCacheConfigs();
                     return new Done();
+                } else {
+                    return new FirstJoinTutorial();
                 }
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -205,9 +199,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("rewards", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("rewards", input.toLowerCase());
                 return new Done();
             } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
@@ -226,11 +218,9 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("exp_countdown", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("exp_countdown", input.toLowerCase());
                 return new Done();
-            } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
+            } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
             return new ExpCountDown();
@@ -247,11 +237,9 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if (input.toLowerCase().equalsIgnoreCase("true") || input.toLowerCase().equalsIgnoreCase("false")) {
-                plugin.getConfig().set("view_money", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("view_money", input.toLowerCase());
                 return new Done();
-            } else if(input.toLowerCase().equalsIgnoreCase("cancel")) {
+            } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
             return new ViewMoney();
@@ -268,9 +256,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("view_exp", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("view_exp", input.toLowerCase());
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -288,9 +274,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("tutorial_money", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("tutorial_money", input.toLowerCase());
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -308,9 +292,7 @@ public class ConfigConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("tutorial_exp", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                plugin.getConfig().set("tutorial_exp", input.toLowerCase());
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
             }
@@ -329,10 +311,10 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Double.isNaN(Double.valueOf(input))) {
                 plugin.getConfig().set("per_tutorial_money", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
             } else if (input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
+            } else {
+                return new PerTutorialMoney();
             }
             return new Done();
         }
@@ -349,10 +331,10 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Float.isNaN(Float.valueOf(input))) {
                 plugin.getConfig().set("per_tutorial_exp", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
+            } else {
+                return new PerTutorialExp();
             }
             return new Done();
         }
@@ -369,10 +351,10 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Double.isNaN(Double.valueOf(input))) {
                 plugin.getConfig().set("per_view_money", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
+            } else {
+                return new PerViewMoney();
             }
             return new Done();
         }
@@ -389,10 +371,10 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!Float.isNaN(Float.valueOf(input))) {
                 plugin.getConfig().set("per_view_exp", input);
-                plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
             } else if(input.equalsIgnoreCase("cancel")) {
                 return new ConfigOption();
+            } else {
+                return new PerViewExp();
             }
             return new Done();
         }
