@@ -26,7 +26,7 @@ public class TutorialCreate implements CommandExecutor {
 
         if (Permissions.CREATE.hasPerm(sender)) {
             if (args[0].equalsIgnoreCase("create")) {
-                if (!plugin.getters().getAllTutorials().contains(args[1])) {
+                if (!plugin.getters().getAllTutorials().contains(args[1].toLowerCase())) {
                     plugin.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
                     return true;
                 } else {
