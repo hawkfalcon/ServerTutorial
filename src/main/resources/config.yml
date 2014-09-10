@@ -27,8 +27,8 @@ tutorial_exp: false
 
 #per tutorial eco settings
 per_tutorial_money: "0.00"
-per_tutorial_exp: "0.0"
+per_tutorial_exp: "0"
 
 #per view eco settings
 per_view_money: "0.00"
-per_view_exp: "0.0"
+per_view_exp: "0"

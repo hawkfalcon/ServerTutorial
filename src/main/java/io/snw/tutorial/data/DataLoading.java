@@ -9,16 +9,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class DataLoading {
 
-    ServerTutorial plugin;
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static DataLoading instance;
     private File dataFile;
     private YamlConfiguration data;
     private File playerDataFile;
     private YamlConfiguration playerData;
-
-
-    public DataLoading(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
 
     public void loadData() {
         File f = new File(plugin.getDataFolder(), "data.yml");
@@ -75,5 +71,12 @@ public class DataLoading {
         } catch (IOException e) {
             plugin.getLogger().warning("Failed to save player data :(");
         }
+    }
+    
+    public static DataLoading getDataLoading() {
+        if (instance == null) {
+            instance = new DataLoading();
+        }
+        return instance;
     }
 }

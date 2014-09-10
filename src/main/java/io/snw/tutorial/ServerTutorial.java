@@ -1,12 +1,11 @@
 package io.snw.tutorial;
 
-import io.snw.tutorial.conversation.CreateTutorial;
-import io.snw.tutorial.conversation.ViewConversation;
-import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.conversation.ConfigConversation;
+import io.snw.tutorial.conversation.CreateTutorial;
+import io.snw.tutorial.conversation.ViewConversation;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
@@ -14,13 +13,12 @@ import io.snw.tutorial.data.Setters;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
+import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.Updater;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,32 +30,29 @@ public class ServerTutorial extends JavaPlugin {
 
     static boolean UPDATE;
     static String NEWVERSION;
-
+    private static ServerTutorial instance;
 
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
     private TutorialUtils tutorialUtils = new TutorialUtils(this);
-    private CreateTutorial createTutorial = new CreateTutorial(this);
-    private ViewConversation viewConversation = new ViewConversation(this);
+    private CreateTutorial createTutorial = new CreateTutorial();
+    private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
-    private DataLoading dataLoad = new DataLoading(this);
-    private Caching cache = new Caching(this);
-    private Getters getters = new Getters(this);
-    private Setters setters = new Setters(this);
     private TutorialTask tutorialTask = new TutorialTask(this);
-    private ConfigConversation configConversation = new ConfigConversation(this);
+    private ConfigConversation configConversation = new ConfigConversation();
 
     @Override
     public void onEnable() {
-        this.getServer().getPluginManager().registerEvents(new TutorialListener(this), this);
+        this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand(this));
         this.saveDefaultConfig();
-        this.dataLoad().loadData();
-        this.dataLoad().loadPlayerData();
-        this.caching().casheAllData();
-        this.caching().cacheConfigs();
+        DataLoading.getDataLoading().loadData();
+        DataLoading.getDataLoading().loadPlayerData();
+        Caching.getCaching().casheAllData();
+        Caching.getCaching().cacheConfigs();
+        Caching.getCaching().cachePlayerData();
         this.tutorialTask().tutorialTask();
         this.startMetrics();
         this.checkUpdate();
@@ -67,7 +62,7 @@ public class ServerTutorial extends JavaPlugin {
         if(getConfig().get("metrics") == null) {
             getConfig().set("metrics", true);
             saveConfig();
-            this.caching().reCacheConfigs();
+            Caching.getCaching().reCacheConfigs();
         }
         if(getConfig().getBoolean("metrics")) {
             try {
@@ -85,7 +80,7 @@ public class ServerTutorial extends JavaPlugin {
         if (getConfig().get("auto-update") == null) {
             getConfig().set("auto-update", true);
             saveConfig();
-            this.caching().reCacheConfigs();
+            Caching.getCaching().reCacheConfigs();
         }
         if (getConfig().getBoolean("auto-update")) {
             final ServerTutorial plugin = this;
@@ -110,16 +105,16 @@ public class ServerTutorial extends JavaPlugin {
  * @param player Player
  */
     public void startTutorial(String tutorialName, Player player) {
-        String name = this.getServer().getPlayer(this.caching().getUUID(player)).getName();
-        if (this.dataLoad().getData().getConfigurationSection("tutorials") == null) {
+        String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
+        if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
-        if (this.getters().getTutorial(tutorialName) == null) {
+        if (Getters.getGetters().getTutorial(tutorialName) == null) {
             player.sendMessage("Invalid tutorial");
             return;
         }
-        if (this.dataLoad().getData().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
+        if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
@@ -130,26 +125,28 @@ public class ServerTutorial extends JavaPlugin {
         player.setAllowFlight(true);
         player.setFlying(true);
         this.initializeCurrentView(name);
-        this.setters().addCurrentTutorial(name, tutorialName);
-        this.setters().addToTutorial(name);
+        Setters.getSetters().addCurrentTutorial(name, tutorialName);
+        Setters.getSetters().addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
             player.hidePlayer(online);
         }
-        this.getServer().getPlayer(this.caching().getUUID(player)).teleport(this.getters().getTutorialView(tutorialName, name).getLocation());
-        if (this.getters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
-            this.getters().getTutorialTimeTask(tutorialName, name);
+        this.getServer().getPlayer(Caching.getCaching().getUUID(player)).teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
+        if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
+            Getters.getGetters().getTutorialTimeTask(tutorialName, name);
         }
         this.getTutorialUtils().textUtils(player);
-        StartTutorialEvent event = new StartTutorialEvent(player, this.getters().getTutorial(tutorialName));
+        StartTutorialEvent event = new StartTutorialEvent(player, Getters.getGetters().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
-        if(this.dataLoad().getPlayerData().get("players." + this.caching().getUUID(player)) == null) {
-            this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".seen", "true");
-           this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName, "true");
-            this.dataLoad().savePlayerData();
-        } else if(this.dataLoad().getPlayerData().get("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName) == null) {
-            this.dataLoad().getPlayerData().set("players." + this.caching().getUUID(player) + ".tutorials." + tutorialName, "true");
-            this.dataLoad().savePlayerData();
+        if(DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
+            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".seen", "true");
+            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
+            DataLoading.getDataLoading().savePlayerData();
+            Caching.getCaching().reCachePlayerData();
+        } else if(DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName) == null) {
+            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
+            DataLoading.getDataLoading().savePlayerData();
+            Caching.getCaching().reCachePlayerData();
         }
     }
 /**
@@ -157,23 +154,23 @@ public class ServerTutorial extends JavaPlugin {
  * @param name Player name 
  */
     public void removeFromTutorial(String name) {
-        this.caching().playerInTutorial().remove(name);
+        Caching.getCaching().playerInTutorial().remove(name);
         this.startLoc.remove(name);
-        this.caching().currentTutorial().remove(name);
-        this.caching().currentTutorialView().remove(name);
+        Caching.getCaching().currentTutorial().remove(name);
+        Caching.getCaching().currentTutorialView().remove(name);
         this.flight.remove(name);
     }
 
     public void initializeCurrentView(String name) {
-        this.caching().currentTutorialView().put(name, 1);
+        Caching.getCaching().currentTutorialView().put(name, 1);
     }
 
     public void incrementCurrentView(String name) {
-        TutorialView fromTutorialView = this.getters().getTutorialView(name);
-        this.caching().currentTutorialView().put(name, this.getters().getCurrentView(name) + 1);
-        TutorialView toTutorialView = this.getters().getTutorialView(name);
+        TutorialView fromTutorialView = Getters.getGetters().getTutorialView(name);
+        Caching.getCaching().currentTutorialView().put(name, Getters.getGetters().getCurrentView(name) + 1);
+        TutorialView toTutorialView = Getters.getGetters().getTutorialView(name);
         @SuppressWarnings("deprecation")
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, this.getters.getCurrentTutorial(name));
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
@@ -234,49 +231,37 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void removeTutorial(String tutorialName) {
-        this.dataLoad().getData().set("tutorials." + tutorialName, null);
-        this.dataLoad().saveData();
-        this.caching().reCasheTutorials();
+        DataLoading.getDataLoading().getData().set("tutorials." + tutorialName, null);
+        DataLoading.getDataLoading().saveData();
+        Caching.getCaching().reCasheTutorials();
     }
 
     public void removeTutorialView(String tutorialName, int viewID) {
-        int viewsCount = this.getters().getTutorial(tutorialName).getTotalViews();
-        this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
-        this.dataLoad().saveData();
+        int viewsCount = Getters.getGetters().getTutorial(tutorialName).getTotalViews();
+        DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
+        DataLoading.getDataLoading().saveData();
         if(viewsCount != viewID) {
-            for(String vID : this.dataLoad().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            for(String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                 int currentID = Integer.parseInt(vID);
                 int newViewID = Integer.parseInt(vID) - 1;
-                String message = this.dataLoad().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".message");
-                String messageType = this.dataLoad().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
-                String location = this.dataLoad().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".location");
-                this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".message", message);
-                this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".messagetype", messageType);
-                this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".location" , location);
-                this.dataLoad().getData().set("tutorials." + tutorialName + ".views." + currentID, null);
+                String message = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".message");
+                String messageType = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
+                String location = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".location");
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".message", message);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".messagetype", messageType);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".location" , location);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + currentID, null);
                 }
         }
-        this.dataLoad().saveData();
-        this.caching().reCasheTutorials();
-    }
-
-    public Getters getters() {
-        return this.getters;
-    }
-
-    public Setters setters() {
-        return this.setters;
-    }
-
-    public Caching caching() {
-        return this.cache;
-    }
-
-    public DataLoading dataLoad() {
-        return this.dataLoad;
+        DataLoading.getDataLoading().saveData();
+        Caching.getCaching().reCasheTutorials();
     }
 
     public TutorialTask tutorialTask() {
         return this.tutorialTask;
+    }
+    
+    public static ServerTutorial getInstance() {
+        return instance;
     }
 }

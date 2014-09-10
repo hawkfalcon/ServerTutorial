@@ -1,9 +1,7 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.ViewType;
-
 import java.util.HashMap;
-
 import org.bukkit.Material;
 
 public class Tutorial {

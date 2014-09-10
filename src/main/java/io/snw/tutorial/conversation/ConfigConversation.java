@@ -2,6 +2,8 @@
 package io.snw.tutorial.conversation;
 
 import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.Getters;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -13,12 +15,8 @@ import org.bukkit.entity.Player;
 
 public class ConfigConversation {
 
-    ServerTutorial plugin;
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private ConversationFactory factory;
-
-    public ConfigConversation(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
 
     public void editConfig(Player player) {
         this.factory = new ConversationFactory(plugin)
@@ -84,7 +82,7 @@ public class ConfigConversation {
                 return new PerViewExp();
             } else if(input.equalsIgnoreCase("cancel")) {
                 plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                Caching.getCaching().reCacheConfigs();
                 return END_OF_CONVERSATION;
             }
             return new ConfigOption();
@@ -95,7 +93,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(plugin.getters().getConfigs().getUpdate()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Auto-Updater: " + String.valueOf(Getters.getGetters().getConfigs().getUpdate()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -113,7 +111,7 @@ public class ConfigConversation {
     private class Metrics extends StringPrompt {
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Metrics: " + String.valueOf(plugin.getters().getConfigs().getMetrics()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Metrics: " + String.valueOf(Getters.getGetters().getConfigs().getMetrics()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -132,7 +130,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(plugin.getters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes. Can only be 15 characters long");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Sign Text: " + String.valueOf(Getters.getGetters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes. Can only be 15 characters long");
         }
 
         @Override
@@ -151,7 +149,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join: " + String.valueOf(plugin.getters().getConfigs().firstJoin()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join: " + String.valueOf(Getters.getGetters().getConfigs().firstJoin()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -170,13 +168,13 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join Tutorial: " + String.valueOf(plugin.getters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for First Join Tutorial: " + String.valueOf(Getters.getGetters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             if(!input.equalsIgnoreCase("cancel")) {
-                if(plugin.caching().tutorial().containsKey(input)) {
+                if(Caching.getCaching().tutorial().containsKey(input)) {
                     plugin.getConfig().set("first_join_tutorial", input);
                     return new Done();
                 } else {
@@ -193,7 +191,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Rewards: " + String.valueOf(plugin.getters().getConfigs().getRewards()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Rewards: " + String.valueOf(Getters.getGetters().getConfigs().getRewards()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -212,7 +210,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Exp CountDown: " + String.valueOf(plugin.getters().getConfigs().getExpCountdown()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Exp CountDown: " + String.valueOf(Getters.getGetters().getConfigs().getExpCountdown()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -231,7 +229,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money: " + String.valueOf(plugin.getters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money: " + String.valueOf(Getters.getGetters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -250,7 +248,7 @@ public class ConfigConversation {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp: " + String.valueOf(plugin.getters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp: " + String.valueOf(Getters.getGetters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -268,7 +266,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money: " + String.valueOf(Getters.getGetters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -286,7 +284,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Tutorial Exp: " + String.valueOf(plugin.getters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Tutorial Exp: " + String.valueOf(Getters.getGetters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -304,7 +302,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs is a Number including decimal values or Cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Money Reward: " + String.valueOf(Getters.getGetters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs is a Number including decimal values or Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -324,7 +322,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for Turtorial Exp Reward: " + String.valueOf(Getters.getGetters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override
@@ -344,7 +342,7 @@ public class ConfigConversation {
         
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money Reward: " + String.valueOf(plugin.getters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Money Reward: " + String.valueOf(Getters.getGetters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting)");
         }
         
         @Override
@@ -364,7 +362,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp Reward: " + String.valueOf(plugin.getters().getConfigs().getViewExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
+            return ChatColor.translateAlternateColorCodes('&', "Current Setting for View Exp Reward: " + String.valueOf(Getters.getGetters().getConfigs().getViewExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override
@@ -391,7 +389,7 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if(input.equalsIgnoreCase("yes")) {
                 plugin.saveConfig();
-                plugin.caching().reCacheConfigs();
+                Caching.getCaching().reCacheConfigs();
                 return END_OF_CONVERSATION;
             } else if (input.equalsIgnoreCase("no")) {
                 return new ConfigOption();

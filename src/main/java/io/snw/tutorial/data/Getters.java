@@ -5,8 +5,8 @@ import io.snw.tutorial.PlayerData;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialConfigs;
-import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.TutorialView;
+import io.snw.tutorial.util.TutorialTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,65 +14,62 @@ import java.util.UUID;
 
 public class Getters {
 
-    ServerTutorial plugin;
-
-    public Getters(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static Getters instance;
 
     public Tutorial getCurrentTutorial(String name) {
-        return plugin.caching().tutorial().get(plugin.caching().currentTutorial().get(name));
+        return Caching.getCaching().tutorial().get(Caching.getCaching().currentTutorial().get(name));
     }
 
     public Tutorial getTutorial(String tutorialName) {
-        return plugin.caching().tutorial().get(tutorialName);
+        return Caching.getCaching().tutorial().get(tutorialName);
     }
 
     public TutorialView getTutorialView(String tutorialName, String name) {
-        return plugin.caching().tutorial().get(tutorialName).getView(getCurrentView(name));
+        return Caching.getCaching().tutorial().get(tutorialName).getView(getCurrentView(name));
     }
 
     public TutorialView getTutorialView(String name) {
-        return plugin.caching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
+        return Caching.getCaching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
     }
 
     public TutorialView getTutorialView(String tutorialName, int id) {
-        return plugin.caching().tutorial().get(this.getTutorial(tutorialName).getName()).getView(id);
+        return Caching.getCaching().tutorial().get(this.getTutorial(tutorialName).getName()).getView(id);
     }
     public TutorialConfigs getConfigs() {
-        return plugin.caching().configs().get("config");
+        return Caching.getCaching().configs().get("config");
     }
     
     public PlayerData getPlayerData(String name) {
-        return plugin.caching().playerDataMap().get(name);
+        return Caching.getCaching().playerDataMap().get(name);
     }
 
     public HashMap<String, PlayerData> getPlayerData() {
-        return plugin.caching().playerDataMap();
+        return Caching.getCaching().playerDataMap();
     }
 
     public boolean getPlayerSeenServer(String name) {
-        if (plugin.caching().playerDataMap().containsKey(name)) {
-            return plugin.caching().playerDataMap().get(name).getSeen();
+        if (Caching.getCaching().playerDataMap().containsKey(name)) {
+            return Caching.getCaching().playerDataMap().get(name).getSeen();
         } else {
             return false;
         }
     }
 
     public ArrayList<String> getAllTutorials() {
-        return plugin.caching().tutorialNames();
+        return Caching.getCaching().tutorialNames();
     }
 
     public ArrayList<String> getAllInTutorial() {
-        return plugin.caching().playerInTutorial();
+        return Caching.getCaching().playerInTutorial();
     }
 
     public int getCurrentView(String name) {
-        return plugin.caching().currentTutorialView().get(name);
+        return Caching.getCaching().currentTutorialView().get(name);
     }
 
     public boolean isInTutorial(String name) {
-        return plugin.caching().playerInTutorial().contains(name);
+        return Caching.getCaching().playerInTutorial().contains(name);
     }
     
     public TutorialTask getTutorialTask() {
@@ -84,6 +81,13 @@ public class Getters {
     }
     
     public Map<String, UUID> getResponse() {
-        return plugin.caching().getResponse();
+        return Caching.getCaching().getResponse();
+    }
+    
+    public static Getters getGetters() {
+        if (instance == null) {
+            instance = new Getters();
+        }
+        return instance;
     }
 }

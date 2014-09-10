@@ -2,6 +2,9 @@ package io.snw.tutorial.conversation;
 
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.api.AddViewEvent;
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.DataLoading;
+import io.snw.tutorial.data.Getters;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -13,12 +16,8 @@ import org.bukkit.entity.Player;
 
 public class ViewConversation {
 
-    ServerTutorial plugin;
-    String name;
-
-    public ViewConversation(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private String name;
 
     private ConversationFactory factory;
 
@@ -91,19 +90,19 @@ public class ViewConversation {
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
             int viewID = 1;
-            while (plugin.dataLoad().getData().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
+            while (DataLoading.getDataLoading().getData().get("tutorials." + context.getSessionData("name") + ".views." + viewID) != null) {
                 viewID++;
             }
             try {
-                plugin.dataLoad().getData().set("tutorials." + name + ".views." + viewID + ".message", message);
-                plugin.dataLoad().getData().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
-                plugin.dataLoad().getData().set("tutorials." + name + ".views." + viewID + ".location", location);
-                plugin.dataLoad().saveData();
-                plugin.caching().reCasheTutorials();
+                DataLoading.getDataLoading().getData().set("tutorials." + name + ".views." + viewID + ".message", message);
+                DataLoading.getDataLoading().getData().set("tutorials." + name + ".views." + viewID + ".messagetype", messageType);
+                DataLoading.getDataLoading().getData().set("tutorials." + name + ".views." + viewID + ".location", location);
+                DataLoading.getDataLoading().saveData();
+                Caching.getCaching().reCasheTutorials();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            AddViewEvent event = new AddViewEvent(player, plugin.getters().getTutorial(name), plugin.getters().getTutorialView(name, viewID));
+            AddViewEvent event = new AddViewEvent(player, Getters.getGetters().getTutorial(name), Getters.getGetters().getTutorialView(name, viewID));
             plugin.getServer().getPluginManager().callEvent(event);
             return END_OF_CONVERSATION;
         }

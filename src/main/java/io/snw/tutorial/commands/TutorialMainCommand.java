@@ -1,11 +1,8 @@
 package io.snw.tutorial.commands;
 
 import com.google.common.collect.Maps;
-
 import io.snw.tutorial.ServerTutorial;
-
 import java.util.Map;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -2,6 +2,9 @@ package io.snw.tutorial.conversation;
 
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.api.CreateTutorialEvent;
+import io.snw.tutorial.data.Caching;
+import io.snw.tutorial.data.DataLoading;
+import io.snw.tutorial.data.Getters;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
@@ -14,13 +17,9 @@ import org.bukkit.entity.Player;
 
 public class CreateTutorial {
 
-    ServerTutorial plugin;
-    String name;
-    Player player;
-
-    public CreateTutorial(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private String name;
+    private Player player;
 
     private ConversationFactory factory;
 
@@ -125,17 +124,17 @@ public class CreateTutorial {
     }
 
     public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName) {
-        plugin.dataLoad().getData().set("tutorials." + name + ".viewtype", viewType);
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
-            plugin.dataLoad().getData().set("tutorials." + name + ".timelength", timeLength.toString());
+            DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", timeLength.toString());
         } else {
-            plugin.dataLoad().getData().set("tutorials." + name + ".timelength", "0");
+            DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", "0");
         }
-        plugin.dataLoad().getData().set("tutorials." + name + ".endmessage", endMessage);
-        plugin.dataLoad().getData().set("tutorials." + name + ".item", "stick");
-        plugin.dataLoad().saveData();
-        plugin.caching().reCasheTutorials();
-        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), plugin.getters().getTutorial(name));
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".endmessage", endMessage);
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".item", "stick");
+        DataLoading.getDataLoading().saveData();
+        Caching.getCaching().reCasheTutorials();
+        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), Getters.getGetters().getTutorial(name));
         plugin.getServer().getPluginManager().callEvent(event);
     }
 }

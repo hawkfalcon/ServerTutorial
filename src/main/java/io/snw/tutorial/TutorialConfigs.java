@@ -19,13 +19,13 @@ public class TutorialConfigs {
     private boolean tutorialMoney;
     private boolean tutorialExp;
     private double perTutorialMoney;
-    private float perTutorialExp;
-    private float perViewExp;
+    private int perTutorialExp;
+    private int perViewExp;
     private double perViewMoney;
 
 
     public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, 
-            boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, float perTutorialExp, float perViewExp, double perViewMoney) {
+            boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp, int perViewExp, double perViewMoney) {
         
         this.autoUpdate = autoUpdate;
         this.metrics = metrics;
@@ -96,11 +96,11 @@ public class TutorialConfigs {
         return this.perViewMoney;
     }
 
-    public float getPerTutorialExp() {
+    public int getPerTutorialExp() {
         return this.perTutorialExp;
     }
 
-    public float getPerViewExp() {
+    public int getPerViewExp() {
         return this.perViewExp;
     }
 }

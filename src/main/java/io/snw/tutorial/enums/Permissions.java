@@ -3,7 +3,6 @@ package io.snw.tutorial.enums;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

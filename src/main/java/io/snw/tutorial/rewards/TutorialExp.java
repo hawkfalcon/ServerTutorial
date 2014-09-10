@@ -4,15 +4,15 @@ package io.snw.tutorial.rewards;
 
 public class TutorialExp {
 
-    private float exp;
+    private int exp;
     private String playerName;
     
-    public TutorialExp(String playerName, float exp) {
+    public TutorialExp(String playerName, int exp) {
         this.playerName = playerName;
         this.exp = exp;
     }
 
-    public float getExp() {
+    public int getExp() {
         return this.exp;
     }
 

@@ -17,3 +17,5 @@ permissions:
         default: OP
     tutorial.use:
         default: true
+    tutorial.config:
+        default: OP

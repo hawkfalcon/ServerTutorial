@@ -2,8 +2,8 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +22,7 @@ public class TutorialUse implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
         if (Permissions.USE.hasPerm(sender)){
-            if (plugin.getters().getAllTutorials().contains(args[0].toLowerCase())) {
+            if (Getters.getGetters().getAllTutorials().contains(args[0].toLowerCase())) {
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
@@ -30,7 +30,7 @@ public class TutorialUse implements CommandExecutor {
                 return true;
             }
         } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
-            if (plugin.getters().getAllTutorials().contains(args[0].toLowerCase())){
+            if (Getters.getGetters().getAllTutorials().contains(args[0].toLowerCase())){
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
