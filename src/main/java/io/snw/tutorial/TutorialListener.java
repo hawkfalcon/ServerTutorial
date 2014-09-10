@@ -1,7 +1,6 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
-import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
@@ -37,8 +36,6 @@ public class TutorialListener implements Listener {
 
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
-    private HashMap<String, TutorialExp> expTracker = new HashMap<String, TutorialExp>();
-    private TutorialEco eco = new TutorialEco();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -165,18 +162,12 @@ public class TutorialListener implements Listener {
         if (Getters.getGetters().getConfigs().getRewards()) {
             if (!seenTutorial(player.getName(), event.getTutorial().getName())) {
                 if (Getters.getGetters().getConfigs().getViewExp()) {
-                    if(!Getters.getGetters().getConfigs().getExpCountdown()) {
-                        player.setTotalExperience(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerViewExp());
-                    } else {
-                        TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), this.expTracker.get(player.getName()).getExp() + Getters.getGetters().getConfigs().getPerViewExp());
-                        this.expTracker.remove(player.getName().toLowerCase());
-                        this.expTracker.put(player.getName().toLowerCase(), tutorialExp);
-                        player.sendMessage(ChatColor.BLUE + "You recieved " + Getters.getGetters().getConfigs().getViewExp() + " Exp you have: " + this.expTracker.get(player.getName().toLowerCase()).getExp());
-                    }
+                    player.setTotalExperience(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerViewExp());
+                    player.sendMessage(ChatColor.BLUE + "You recieved " + Getters.getGetters().getConfigs().getViewExp());
                 }
                 if(Getters.getGetters().getConfigs().getViewMoney()) {
-                    if(eco.setupEconomy()) {
-                        EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer)player, Getters.getGetters().getConfigs().getPerViewMoney());
+                    if(TutorialEco.getTutorialEco().setupEconomy()) {
+                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer((OfflinePlayer)player, Getters.getGetters().getConfigs().getPerViewMoney());
                         if(ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + " New Balance: " + ecoResponse.balance);
                         } else {
@@ -194,24 +185,18 @@ public class TutorialListener implements Listener {
             Player player = event.getPlayer();
             String playerName = player.getName().toLowerCase();
             if (!seenTutorial(playerName, event.getTutorial().getName())) {
-                if(eco.setupEconomy()) {
+                if(TutorialEco.getTutorialEco().setupEconomy()) {
                     if(Getters.getGetters().getConfigs().getTutorialMoney()) {
-                        EconomyResponse ecoResponse = eco.getEcon().depositPlayer((OfflinePlayer) player, Getters.getGetters().getConfigs().getPerTutorialMoney());
+                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer((OfflinePlayer) player, Getters.getGetters().getConfigs().getPerTutorialMoney());
                         if(ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                         } else {
                             plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                         }
                     }
-                    if(Getters.getGetters().getConfigs().getTutorialExp() || Getters.getGetters().getConfigs().getTutorialMoney()) {
-                        if(Getters.getGetters().getConfigs().getExpCountdown()) {
-                            player.setTotalExperience(0);
-                            player.setTotalExperience(Getters.getGetters().getConfigs().getPerTutorialExp() + this.expTracker.get(playerName).getExp());
-                        } else {
-                            player.setExp(Getters.getGetters().getConfigs().getPerTutorialExp() + player.getTotalExperience());
-                        }
+                    if(Getters.getGetters().getConfigs().getTutorialExp()) {
+                            player.setExp(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerTutorialExp());
                     }
-                    this.expTracker.remove(playerName);
                 }
             } else {
                 player.sendMessage(ChatColor.BLUE + "You have been through this tutorial already. You will not collect rewards!");
@@ -220,17 +205,6 @@ public class TutorialListener implements Listener {
         DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(event.getPlayer()) + ".tutorials." + event.getTutorial().getName(), "true");
         DataLoading.getDataLoading().savePlayerData();
         Caching.getCaching().reCachePlayerData();
-    }
-
-    @EventHandler
-    public void onTutorialStart(StartTutorialEvent event) {
-        Player player = event.getPlayer();
-        if(Getters.getGetters().getConfigs().getExpCountdown()) {
-            TutorialExp tutorialExp = new TutorialExp(player.getName().toLowerCase(), player.getTotalExperience());
-            this.expTracker.put(player.getName(), tutorialExp);
-            int expCounter = event.getTutorial().getTotalViews();
-            player.setTotalExperience(expCounter);
-        }
     }
 
     public boolean seenTutorial(String name, String tutorial) {

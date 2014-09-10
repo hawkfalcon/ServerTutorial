@@ -8,6 +8,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class TutorialEco {
 
     private Economy econ;
+    private static TutorialEco instance;
 
 /**
  * 
@@ -29,5 +30,12 @@ public class TutorialEco {
             return rsp.getProvider();
         }
         return null;
+    }
+    
+    public static TutorialEco getTutorialEco() {
+        if (instance == null) {
+            instance = new TutorialEco();
+        }
+        return instance;
     }
 }
