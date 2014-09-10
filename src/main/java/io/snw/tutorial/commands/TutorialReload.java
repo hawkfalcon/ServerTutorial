@@ -14,11 +14,7 @@ import org.bukkit.entity.Player;
 
 public class TutorialReload implements CommandExecutor {
 
-    private ServerTutorial plugin;
-
-    public TutorialReload(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

@@ -2,6 +2,7 @@
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.conversation.CreateTutorial;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 import org.bukkit.ChatColor;
@@ -13,11 +14,7 @@ import org.bukkit.entity.Player;
 
 public class TutorialCreate implements CommandExecutor {
 
-    private ServerTutorial plugin;
-
-    public TutorialCreate(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -27,7 +24,7 @@ public class TutorialCreate implements CommandExecutor {
         if (Permissions.CREATE.hasPerm(sender)) {
             if (args[0].equalsIgnoreCase("create")) {
                 if (!Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
-                    plugin.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
+                    CreateTutorial.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
                     return true;
                 } else {
                     sender.sendMessage(ChatColor.RED + "This tutorial already exists!");

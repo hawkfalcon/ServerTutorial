@@ -36,24 +36,21 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
     private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
-    private TutorialUtils tutorialUtils = new TutorialUtils(this);
-    private CreateTutorial createTutorial = new CreateTutorial();
     private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
-    private TutorialTask tutorialTask = new TutorialTask(this);
     private ConfigConversation configConversation = new ConfigConversation();
 
     @Override
     public void onEnable() {
         this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
-        this.getCommand("tutorial").setExecutor(new TutorialMainCommand(this));
+        this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
         DataLoading.getDataLoading().loadData();
         DataLoading.getDataLoading().loadPlayerData();
         Caching.getCaching().casheAllData();
         Caching.getCaching().cacheConfigs();
         Caching.getCaching().cachePlayerData();
-        this.tutorialTask().tutorialTask();
+        TutorialTask.getTutorialTask().tutorialTask();
         this.startMetrics();
         this.checkUpdate();
     }
@@ -135,7 +132,7 @@ public class ServerTutorial extends JavaPlugin {
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             Getters.getGetters().getTutorialTimeTask(tutorialName, name);
         }
-        this.getTutorialUtils().textUtils(player);
+        TutorialUtils.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, Getters.getGetters().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
         if(DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
@@ -206,20 +203,12 @@ public class ServerTutorial extends JavaPlugin {
         this.flight.remove(name);
     }
 
-    public TutorialUtils getTutorialUtils() {
-        return tutorialUtils;
-    }
-
     public EndTutorial getEndTutorial() {
         return endTutorial;
     }
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
-    public CreateTutorial getCreateTutorial() {
-        return createTutorial;
     }
 
     public ViewConversation getViewConversation() {
@@ -257,10 +246,6 @@ public class ServerTutorial extends JavaPlugin {
         Caching.getCaching().reCasheTutorials();
     }
 
-    public TutorialTask tutorialTask() {
-        return this.tutorialTask;
-    }
-    
     public static ServerTutorial getInstance() {
         return instance;
     }

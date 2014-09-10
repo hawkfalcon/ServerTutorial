@@ -10,11 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialTask {
-    ServerTutorial plugin;
-
-    public TutorialTask(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static TutorialTask instance;
 
     public void tutorialTask() {
         new BukkitRunnable() {
@@ -53,7 +50,7 @@ public class TutorialTask {
                     setPlayerItemName(player);
                 }
                 plugin.incrementCurrentView(name);
-                plugin.getTutorialUtils().textUtils(player);
+                TutorialUtils.getTutorialUtils().textUtils(player);
                 player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
             }
 
@@ -81,5 +78,12 @@ public class TutorialTask {
 
         i.setItemMeta(data);
         player.setItemInHand(i);
+    }
+    
+    public static TutorialTask getTutorialTask() {
+        if (instance == null) {
+            instance = new TutorialTask();
+        }
+        return instance;
     }
 }

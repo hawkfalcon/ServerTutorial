@@ -9,6 +9,7 @@ import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.rewards.TutorialExp;
+import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.UUIDFetcher;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -50,10 +51,10 @@ public class TutorialListener implements Listener {
                             plugin.getEndTutorial().endTutorial(player);
                         } else {
                             plugin.incrementCurrentView(name);
-                            plugin.getTutorialUtils().textUtils(player);
+                            TutorialUtils.getTutorialUtils().textUtils(player);
                             player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
                             if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                                player.sendMessage(plugin.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
+                                player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
                             }
                         }
                 }

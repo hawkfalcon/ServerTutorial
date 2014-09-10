@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 public class CreateTutorial {
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static CreateTutorial instance;
     private String name;
     private Player player;
 
@@ -136,5 +137,12 @@ public class CreateTutorial {
         Caching.getCaching().reCasheTutorials();
         CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), Getters.getGetters().getTutorial(name));
         plugin.getServer().getPluginManager().callEvent(event);
+    }
+    
+    public static CreateTutorial getCreateTutorial() {
+        if (instance == null) {
+            instance = new CreateTutorial();
+        }
+        return instance;
     }
 }

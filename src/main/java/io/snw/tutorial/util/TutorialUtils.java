@@ -13,11 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class TutorialUtils {
-    ServerTutorial plugin;
-
-    public TutorialUtils(ServerTutorial plugin) {
-        this.plugin = plugin;
-    }
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static TutorialUtils instance;
 
     public Location getLocation(String tutorialName, int viewID) {
         String[] loc = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split(",");
@@ -45,5 +42,12 @@ public class TutorialUtils {
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+    
+    public static TutorialUtils getTutorialUtils() {
+        if (instance == null) {
+            instance = new TutorialUtils();
+        }
+        return instance;
     }
 }

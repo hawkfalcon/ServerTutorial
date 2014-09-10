@@ -71,13 +71,9 @@ public class Getters {
     public boolean isInTutorial(String name) {
         return Caching.getCaching().playerInTutorial().contains(name);
     }
-    
-    public TutorialTask getTutorialTask() {
-        return plugin.tutorialTask();
-    }
 
     public void getTutorialTimeTask(String tutorialName, String name) {
-        getTutorialTask().tutorialTimeTask(tutorialName, name);
+        TutorialTask.getTutorialTask().tutorialTimeTask(tutorialName, name);
     }
     
     public Map<String, UUID> getResponse() {

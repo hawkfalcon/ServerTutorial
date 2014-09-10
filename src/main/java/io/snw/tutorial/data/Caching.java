@@ -9,6 +9,7 @@ import io.snw.tutorial.TutorialConfigs;
 import io.snw.tutorial.TutorialView;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
+import io.snw.tutorial.util.TutorialUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class Caching {
                 for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
                     MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(viewID, DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), plugin.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    TutorialView view = new TutorialView(viewID, DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }

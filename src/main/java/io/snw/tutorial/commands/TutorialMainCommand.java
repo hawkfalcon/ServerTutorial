@@ -11,18 +11,17 @@ import org.bukkit.entity.Player;
 
 public class TutorialMainCommand implements CommandExecutor {
 
-    private ServerTutorial plugin;
+    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private Map<String, CommandExecutor> subCommandMap = Maps.newHashMap();
 
-    public TutorialMainCommand(ServerTutorial plugin) {
-        this.plugin = plugin;
-        subCommandMap.put("create", new TutorialCreate(plugin));
-        subCommandMap.put("use", new TutorialUse(plugin));
-        subCommandMap.put("view", new TutorialView(plugin));
-        subCommandMap.put("remove", new TutorialRemove(plugin));
-        subCommandMap.put("addview", new TutorialCreate(plugin));
-        subCommandMap.put("reload", new TutorialReload(plugin));
-        subCommandMap.put("config", new TutorialConfig(plugin));
+    public TutorialMainCommand() {
+        subCommandMap.put("create", new TutorialCreate());
+        subCommandMap.put("use", new TutorialUse());
+        subCommandMap.put("view", new TutorialView());
+        subCommandMap.put("remove", new TutorialRemove());
+        subCommandMap.put("addview", new TutorialCreate());
+        subCommandMap.put("reload", new TutorialReload());
+        subCommandMap.put("config", new TutorialConfig());
     }
 
     @Override
