@@ -108,7 +108,9 @@ public class ServerTutorial extends JavaPlugin {
  * @param player Player
  */
     public void startTutorial(String tutorialName, Player player) {
-        String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
+        //String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
+
+        String name = player.getName();
         if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
@@ -121,6 +123,7 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
+
         this.startLoc.put(name, player.getLocation());
         this.addInventory(name, player.getInventory().getContents());
         this.addFlight(name, player.getAllowFlight());
