@@ -1,8 +1,8 @@
 name: ServerTutorial
 main: io.snw.tutorial.ServerTutorial
 version: maven-version-number
-description: Tutorial plugin
-authors: [hawkfalcon, gomeow, Frostalf]
+description: Tutorial plugin modified for Adventuria
+authors: [hawkfalcon, gomeow, Frostalf, Trojaner]
 website: snw.io
 softdepend: [Vault]
 commands:

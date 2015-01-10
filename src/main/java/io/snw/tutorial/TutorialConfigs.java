@@ -1,7 +1,7 @@
 
 package io.snw.tutorial;
 
-/**
+/*
  *
  * @author Frostalf
  */

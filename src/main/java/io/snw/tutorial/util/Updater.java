@@ -1,5 +1,11 @@
 package io.snw.tutorial.util;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -14,13 +20,8 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
-/**
+/*
  * Check dev.bukkit.org to find updates for a given plugin, and download the updates if needed.
  * <p>
  * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
@@ -72,67 +73,67 @@ public class Updater {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
+    /*
      * Gives the dev the result of the update process. Can be obtained by called getResult().
      */
     public enum UpdateResult {
-        /**
+        /*
          * The updater found an update, and has readied it to be loaded the next time the server restarts/reloads.
          */
         SUCCESS,
-        /**
+        /*
          * The updater did not find an update, and nothing was downloaded.
          */
         NO_UPDATE,
-        /**
+        /*
          * The server administrator has disabled the updating system
          */
         DISABLED,
-        /**
+        /*
          * The updater found an update, but was unable to download it.
          */
         FAIL_DOWNLOAD,
-        /**
+        /*
          * For some reason, the updater was unable to contact dev.bukkit.org to download the file.
          */
         FAIL_DBO,
-        /**
+        /*
          * When running the version check, the file on DBO did not contain the a version in the format 'vVersion' such as 'v1.0'.
          */
         FAIL_NOVERSION,
-        /**
+        /*
          * The id provided by the plugin running the updater was invalid and doesn't exist on DBO.
          */
         FAIL_BADID,
-        /**
+        /*
          * The server administrator has improperly configured their API key in the configuration
          */
         FAIL_APIKEY,
-        /**
+        /*
          * The updater found an update, but because of the UpdateType being set to NO_DOWNLOAD, it wasn't downloaded.
          */
         UPDATE_AVAILABLE
     }
 
-    /**
+    /*
      * Allows the dev to specify the type of update that will be run.
      */
     public enum UpdateType {
-        /**
+        /*
          * Run a version check, and then if the file is out of date, download the newest version.
          */
         DEFAULT,
-        /**
+        /*
          * Don't run a version check, just find the latest update and download it.
          */
         NO_VERSION_CHECK,
-        /**
+        /*
          * Get information about the version and the download size, but don't actually download anything.
          */
         NO_DOWNLOAD
     }
 
-    /**
+    /*
      * Initialize the updater
      *
      * @param plugin   The plugin that is checking for an update.
@@ -202,7 +203,7 @@ public class Updater {
         thread.start();
     }
 
-    /**
+    /*
      * Get the result of the update process.
      * @return result
      */
@@ -211,7 +212,7 @@ public class Updater {
         return result;
     }
 
-    /**
+    /*
      * Get the latest version's release type (release, beta, or alpha)
      * @return versionType
      */
@@ -220,7 +221,7 @@ public class Updater {
         return versionType;
     }
 
-    /**
+    /*
      * Get the latest version's game version
      * @return versionGameVersion
      */
@@ -229,7 +230,7 @@ public class Updater {
         return versionGameVersion;
     }
 
-    /**
+    /*
      * Get the latest version's name
      * @return versionName
      */
@@ -238,7 +239,7 @@ public class Updater {
         return versionName;
     }
 
-    /**
+    /*
      * As the result of Updater output depends on the thread's completion, it is necessary to wait for the thread to finish
      * before allowing anyone to check the result.
      */
@@ -252,7 +253,7 @@ public class Updater {
         }
     }
 
-    /**
+    /*
      * Save an update from dev.bukkit.org into the server's update folder.
      */
     private void saveFile(File folder, String file, String u) {
@@ -309,7 +310,7 @@ public class Updater {
         }
     }
 
-    /**
+    /*
      * Part of Zip-File-Extractor, modified by H31IX for use with Bukkit
      */
     private void unzip(String file) {
@@ -386,7 +387,7 @@ public class Updater {
         new File(file).delete();
     }
 
-    /**
+    /*
      * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files out of a zip.
      */
     private boolean pluginFile(String name) {
@@ -398,7 +399,7 @@ public class Updater {
         return false;
     }
 
-    /**
+    /*
      * Check to see if the program should continue by evaluation whether the plugin is already updated, or shouldn't be updated
      */
     private boolean versionCheck(String title) {
@@ -430,7 +431,7 @@ public class Updater {
         return true;
     }
 
-    /**
+    /*
      * Used to calculate the version string as an Integer
      */
     private Integer calVer(String s) throws NumberFormatException {
@@ -447,7 +448,7 @@ public class Updater {
         return Integer.parseInt(s);
     }
 
-    /**
+    /*
      * Evaluate whether the version number is marked showing that it should not be updated by this program
      */
     private boolean hasTag(String version) {

@@ -52,10 +52,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.*;
+import org.bukkit.configuration.*;
+import org.bukkit.configuration.file.*;
+import org.bukkit.plugin.*;
+import org.bukkit.scheduler.*;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.logging.*;
+import java.util.zip.*;
 
 public class Metrics {
 
-    /**
+    /*
      * The current revision number
      */
     private final static int REVISION = 7;
@@ -559,9 +570,6 @@ public class Metrics {
 
     /**
      * Escape a string to create a valid JSON string
-     *
-     * @param text
-     * @return
      */
     private static String escapeJSON(String text) {
         StringBuilder builder = new StringBuilder();

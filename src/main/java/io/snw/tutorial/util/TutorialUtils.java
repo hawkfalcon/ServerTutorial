@@ -1,5 +1,7 @@
 package io.snw.tutorial.util;
 
+import io.github.andrepl.chatlib.ChatPosition;
+import io.github.andrepl.chatlib.Text;
 import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
@@ -29,14 +31,36 @@ public class TutorialUtils {
 
     public void textUtils(Player player) {
         String name = player.getName();
-        if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
+        MessageType type = Getters.getGetters().getTutorialView(name).getMessageType();
+        if (type == MessageType.TEXT || type == MessageType.ACTION) {
             player.getInventory().clear();
             ItemStack i = new ItemStack(Getters.getGetters().getCurrentTutorial(name).getItem());
             ItemMeta data = i.getItemMeta();
             data.setDisplayName(" ");
             i.setItemMeta(data);
             player.setItemInHand(i);
-            player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
+
+            String lines[] = tACC(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
+
+            if(type == MessageType.TEXT) {
+                for (String msg : lines) {
+                    player.sendMessage(msg);
+                }
+            } else {
+                String msg = "";
+                for (String line: lines) {
+                    if(msg.equalsIgnoreCase("")) {
+                        msg = line;
+                    } else {
+                        msg += "\n" + line;
+                    }
+                }
+
+                Text text = new Text(msg);
+                text.send(player, ChatPosition.ACTION);
+            }
+            //Todo
+            //player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
         }
     }
 

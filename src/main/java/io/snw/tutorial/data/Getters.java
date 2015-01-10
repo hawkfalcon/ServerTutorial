@@ -69,6 +69,11 @@ public class Getters {
     }
 
     public boolean isInTutorial(String name) {
+        if (getCurrentTutorial(name) == null && Caching.getCaching().playerInTutorial().contains(name))
+        {
+            Caching.getCaching().playerInTutorial().remove(name);
+            return false;
+        }
         return Caching.getCaching().playerInTutorial().contains(name);
     }
 

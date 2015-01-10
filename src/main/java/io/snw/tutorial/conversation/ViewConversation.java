@@ -50,7 +50,11 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7First, Choose a MessageType: META or TEXT\n&8>&6META &7- uses the item name\n&8>&6TEXT &7- normal text message\n&8>&7>&6> &7Type a MessageType to continue!");
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7First, Choose a MessageType: META, TEXT or ACTION\n"
+                                                               + "&8>&6META &7- uses the item name\n"
+                                                               + "&8>&6TEXT &7- normal text message\n"
+                                                               + "&8>&6ACTION &7- uses 1.8 action text messages\n"
+                                                               + "&8>&7>&6> &7Type a MessageType to continue!");
         }
 
         @Override

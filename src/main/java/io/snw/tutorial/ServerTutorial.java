@@ -4,7 +4,6 @@ import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.conversation.ConfigConversation;
-import io.snw.tutorial.conversation.CreateTutorial;
 import io.snw.tutorial.conversation.ViewConversation;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
@@ -15,16 +14,17 @@ import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.Updater;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -42,6 +42,7 @@ public class ServerTutorial extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
@@ -53,6 +54,11 @@ public class ServerTutorial extends JavaPlugin {
         TutorialTask.getTutorialTask().tutorialTask();
         this.startMetrics();
         this.checkUpdate();
+    }
+
+    @Override
+    public void onDisable() {
+        instance = null;
     }
 
     private void startMetrics() {
@@ -126,7 +132,6 @@ public class ServerTutorial extends JavaPlugin {
         Setters.getSetters().addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
-            player.hidePlayer(online);
         }
         this.getServer().getPlayer(Caching.getCaching().getUUID(player)).teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {

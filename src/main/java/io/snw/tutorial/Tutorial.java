@@ -1,8 +1,10 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.enums.ViewType;
-import java.util.HashMap;
 import org.bukkit.Material;
+
+import java.util.HashMap;
+
 
 public class Tutorial {
     private final String name;
@@ -11,14 +13,16 @@ public class Tutorial {
     private final int timeLength;
     private final String endMessage;
     private final Material item;
-
-    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item) {
+    private final String command;
+    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item, String command) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;
         this.timeLength = timeLength;
         this.endMessage = endMessage;
         this.item = item;
+
+        this.command = command;
     }
 
     public String getName() {
@@ -51,5 +55,10 @@ public class Tutorial {
 
     public Material getItem() {
         return this.item;
+    }
+
+    public String getCommand()
+    {
+        return command;
     }
 }

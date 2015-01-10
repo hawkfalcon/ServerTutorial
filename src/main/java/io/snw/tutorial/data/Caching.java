@@ -10,12 +10,13 @@ import io.snw.tutorial.TutorialView;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.TutorialUtils;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
 public class Caching {
 
@@ -27,7 +28,7 @@ public class Caching {
     private HashMap<String, String> currentTutorial = new HashMap<String, String>();
     private HashMap<String, Integer> currentTutorialView = new HashMap<String, Integer>();
     private ArrayList<String> playerInTutorial = new ArrayList<String>();
-    private Map<String, UUID> response = null;
+    private Map<String, UUID> response = new HashMap<String, UUID>();
     private HashMap<String, PlayerData> playerDataMap = new HashMap<String, PlayerData>();
     private static Caching instance;
 
@@ -51,8 +52,16 @@ public class Caching {
             int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
             Material item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "stick"));
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
+
+            String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".command", "");
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command);
             Setters.getSetters().addTutorial(tutorialName, tutorial);
+            
+            //Todo
+            //String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            //Material item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "stick"));
+            //Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
+            //Setters.getSetters().addTutorial(tutorialName, tutorial);
         }
     }
     
@@ -110,8 +119,11 @@ public class Caching {
 
     public void cacheConfigs() {
         TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), 
-        plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"), 
-        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
+        plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean(
+                "view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"),
+        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(
+                plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(
+                plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 
@@ -136,11 +148,18 @@ public class Caching {
     }
     
     public UUID getUUID(Player player) {
+        UUID uuid;
         if(plugin.getServer().getOnlineMode()) {
-            return player.getUniqueId();
+            uuid = player.getUniqueId();
         } else {
-            return this.getResponse().get(player.getName());
+            uuid = this.getResponse().get(player.getName());
         }
+
+        if(uuid == null) {
+            uuid = player.getUniqueId();
+        }
+
+        return uuid;
     }
     
     public static Caching getCaching() {

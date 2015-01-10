@@ -1,7 +1,6 @@
 
 package io.snw.tutorial.commands;
 
-import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.Permissions;
 import org.bukkit.ChatColor;
@@ -11,9 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class TutorialView implements CommandExecutor {
-
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;

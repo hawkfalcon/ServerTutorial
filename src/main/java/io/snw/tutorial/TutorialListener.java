@@ -1,5 +1,7 @@
 package io.snw.tutorial;
 
+import io.github.andrepl.chatlib.ChatPosition;
+import io.github.andrepl.chatlib.Text;
 import io.snw.tutorial.api.EndTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.data.Caching;
@@ -7,11 +9,8 @@ import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.rewards.TutorialEco;
-import io.snw.tutorial.rewards.TutorialExp;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.UUIDFetcher;
-import java.util.HashMap;
-import java.util.logging.Level;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,6 +30,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
 
@@ -52,6 +53,9 @@ public class TutorialListener implements Listener {
                             player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
                             if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
                                 player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
+                            } else if(Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.ACTION) {
+                                Text text = new Text(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
+                                text.send(player, ChatPosition.ACTION);
                             }
                         }
                 }
@@ -73,7 +77,13 @@ public class TutorialListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (Getters.getGetters().isInTutorial(player.getName())) {
-            player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());               
+            player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());
+            try {
+                if (Getters.getGetters().isInTutorial(player.getName())) {
+                    player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());
+                }
+            } catch (NullPointerException ignored) {
+            }
         }
     }
 
@@ -84,7 +94,11 @@ public class TutorialListener implements Listener {
             plugin.removeFromTutorial(event.getPlayer().getName());
         }
         if (!plugin.getServer().getOnlineMode()) {
-            Caching.getCaching().getResponse().remove(player.getName());
+            try {
+                Caching.getCaching().getResponse().remove(player.getName());
+            } catch (Exception ignored) {
+
+            }
         }
     }
 
@@ -143,8 +157,8 @@ public class TutorialListener implements Listener {
         }
         for (String name : Getters.getGetters().getAllInTutorial()) {
             Player tut = plugin.getServer().getPlayerExact(name);
-            tut.hidePlayer(player);
-            player.hidePlayer(tut);
+            if (tut != null)
+                player.hidePlayer(tut);
         }
         if (!player.hasPlayedBefore()) {
             if (Getters.getGetters().getConfigs().firstJoin()) {
