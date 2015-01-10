@@ -136,7 +136,7 @@ public class ServerTutorial extends JavaPlugin {
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
         }
-        this.getServer().getPlayer(Caching.getCaching().getUUID(player)).teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
+        player.teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             Getters.getGetters().getTutorialTimeTask(tutorialName, name);
         }
