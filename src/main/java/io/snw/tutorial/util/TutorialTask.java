@@ -1,6 +1,7 @@
 package io.snw.tutorial.util;
 
 import io.snw.tutorial.ServerTutorial;
+import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
 import org.bukkit.Bukkit;
@@ -56,6 +57,8 @@ public class TutorialTask {
         if (player == null) {
             return;
         }
+
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
         player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
 
         final int modifier = 2; //Todo: make configurable

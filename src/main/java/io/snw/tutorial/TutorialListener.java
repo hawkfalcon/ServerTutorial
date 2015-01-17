@@ -8,6 +8,7 @@ import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
+import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.UUIDFetcher;
@@ -24,13 +25,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.HashSet;
 import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
@@ -50,6 +54,7 @@ public class TutorialListener implements Listener {
                         } else {
                             plugin.incrementCurrentView(name);
                             TutorialUtils.getTutorialUtils().textUtils(player);
+                            Caching.getCaching().setTeleport(player.getUniqueId(), true);
                             player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
                             if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
                                 player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
@@ -74,16 +79,44 @@ public class TutorialListener implements Listener {
     }
 
     @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        Player p = event.getPlayer();
+        if(Getters.getGetters().isInTutorial(p.getName())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        HashSet<Player> set  = new HashSet<Player>(event.getRecipients());
+        for(Player setPlayer : set) {
+            if(setPlayer == null) continue;
+
+            Tutorial tut = Getters.getGetters().getCurrentTutorial(setPlayer.getName());;
+            if(tut != null && tut.getViewType() == ViewType.TIME && Getters.getGetters().isInTutorial(setPlayer.getName())) {
+                event.getRecipients().remove(setPlayer);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        Player p = event.getPlayer();
+        if(!Getters.getGetters().isInTutorial(p.getName())) {
+            return;
+        }
+
+        if(Caching.getCaching().canTeleport(p.getUniqueId())) {
+            Caching.getCaching().setTeleport(p.getUniqueId(), false);
+        } else  {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (Getters.getGetters().isInTutorial(player.getName())) {
+            Caching.getCaching().setTeleport(player.getUniqueId(), true);
             player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());
-            try {
-                if (Getters.getGetters().isInTutorial(player.getName())) {
-                    player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());
-                }
-            } catch (NullPointerException ignored) {
-            }
         }
     }
 

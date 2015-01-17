@@ -1,9 +1,11 @@
 package io.snw.tutorial;
 
 import io.snw.tutorial.api.EndTutorialEvent;
+import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.Getters;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,6 +27,9 @@ public class EndTutorial {
         player.setAllowFlight(plugin.getFlight(name));
         player.setFlying(false);
         plugin.removeFlight(name);
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+        //Todo: Cache players gamemode
+        player.setGameMode(GameMode.SURVIVAL);
         player.teleport(plugin.getFirstLoc(name));
         plugin.cleanFirstLoc(name);
         plugin.removeFromTutorial(name);
@@ -62,7 +67,10 @@ public class EndTutorial {
         player.setAllowFlight(plugin.getFlight(name));
         player.setFlying(false);
         plugin.removeFlight(name);
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
         player.teleport(plugin.getFirstLoc(name));
+        //Todo: Cache players gamemode
+        player.setGameMode(GameMode.SURVIVAL);
         plugin.cleanFirstLoc(name);
         plugin.removeFromTutorial(name);
         new BukkitRunnable() {

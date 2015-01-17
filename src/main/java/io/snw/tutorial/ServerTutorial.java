@@ -16,6 +16,7 @@ import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -130,12 +131,15 @@ public class ServerTutorial extends JavaPlugin {
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
+        //Todo: Make this configurable
+        player.setGameMode(GameMode.SPECTATOR);
         this.initializeCurrentView(name);
         Setters.getSetters().addCurrentTutorial(name, tutorialName);
         Setters.getSetters().addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
         }
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
         player.teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             Getters.getGetters().getTutorialTimeTask(tutorialName, name);

@@ -31,6 +31,7 @@ public class Caching {
     private Map<String, UUID> response = new HashMap<String, UUID>();
     private HashMap<String, PlayerData> playerDataMap = new HashMap<String, PlayerData>();
     private static Caching instance;
+    private HashMap<UUID, Boolean> allowedTeleports = new HashMap<UUID, Boolean>();
 
     public void casheAllData() {
         if (DataLoading.getDataLoading().getData().getString("tutorials") == null) {
@@ -115,6 +116,14 @@ public class Caching {
 
     public Map<String, UUID> getResponse() {
         return this.response;
+    }
+
+    public boolean canTeleport(UUID uuid) {
+        return allowedTeleports.get(uuid);
+    }
+
+    public void setTeleport(UUID uuid, boolean value) {
+        allowedTeleports.put(uuid, value);
     }
 
     public void cacheConfigs() {
