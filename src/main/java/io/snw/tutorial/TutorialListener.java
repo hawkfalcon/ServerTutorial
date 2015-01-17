@@ -47,7 +47,7 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (event.getAction() != Action.PHYSICAL) {
-            if (Getters.getGetters().isInTutorial(name)) {
+            if (Getters.getGetters().isInTutorial(name) && Getters.getGetters().getCurrentTutorial(name).getViewType() != ViewType.TIME) {
                 if (player.getItemInHand().getType() == Getters.getGetters().getCurrentTutorial(name).getItem()) {
                     if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
                             plugin.getEndTutorial().endTutorial(player);
@@ -90,7 +90,7 @@ public class TutorialListener implements Listener {
         for(Player setPlayer : set) {
             if(setPlayer == null) continue;
 
-            Tutorial tut = Getters.getGetters().getCurrentTutorial(setPlayer.getName());;
+            Tutorial tut = Getters.getGetters().getCurrentTutorial(setPlayer.getName());
             if(tut != null && tut.getViewType() == ViewType.TIME && Getters.getGetters().isInTutorial(setPlayer.getName())) {
                 event.getRecipients().remove(setPlayer);
             }
