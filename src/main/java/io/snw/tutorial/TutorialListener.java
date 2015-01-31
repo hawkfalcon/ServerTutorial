@@ -19,6 +19,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -32,6 +33,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -124,19 +126,38 @@ public class TutorialListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        if (Getters.getGetters().isInTutorial(event.getPlayer().getName())) {
-            plugin.removeFromTutorial(event.getPlayer().getName());
-        }
-        if (!plugin.getServer().getOnlineMode()) {
-            try {
-                Caching.getCaching().getResponse().remove(player.getName());
-            } catch (Exception ignored) {
+        final Player player = event.getPlayer();
+        try {
+            if (Getters.getGetters().isInTutorial(event.getPlayer().getName())) {
+                plugin.removeFromTutorial(event.getPlayer().getName());
+                player.closeInventory();
+                player.getInventory().clear();
+                player.setGameMode(Caching.getCaching().getGameMode(player.getUniqueId()));
+                player.setAllowFlight(plugin.getFlight(player.getName()));
+                player.setFlying(false);
+                plugin.removeFlight(player.getName());
+                Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                player.teleport(plugin.getFirstLoc(player.getName()));
+                plugin.cleanFirstLoc(player.getName());
+                plugin.removeFromTutorial(player.getName());
+                new BukkitRunnable() {
 
+                    @Override
+                    public void run() {
+                        for (Player online : plugin.getServer().getOnlinePlayers()) {
+                            online.showPlayer(player);
+                        }
+                        player.getInventory().setContents(plugin.getInventory(player.getName()));
+                        plugin.cleanInventory(player.getName());
+                    }
+                }.runTaskLater(plugin, 20L);
             }
-        }
+            if (!plugin.getServer().getOnlineMode()) {
+                Caching.getCaching().getResponse().remove(player.getName());
+            }
+        } catch (Exception ignored) {}
     }
 
     @EventHandler
