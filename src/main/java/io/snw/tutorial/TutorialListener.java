@@ -13,13 +13,15 @@ import io.snw.tutorial.rewards.TutorialEco;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.UUIDFetcher;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,14 +35,24 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
 
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static Map<UUID, BukkitRunnable> restoreQueue = new HashMap<UUID, BukkitRunnable>();
+
+    public static Map<UUID, BukkitRunnable> getRestoreQueue() {
+        return restoreQueue;
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -125,29 +137,42 @@ public class TutorialListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
-        try {
-            if (Getters.getGetters().isInTutorial(event.getPlayer().getName())) {
-                plugin.removeFromTutorial(event.getPlayer().getName());
-                player.closeInventory();
-                player.getInventory().clear();
-                player.setGameMode(Caching.getCaching().getGameMode(player.getUniqueId()));
-                player.setAllowFlight(plugin.getFlight(player.getName()));
-                player.setFlying(false);
-                plugin.removeFlight(player.getName());
-                Caching.getCaching().setTeleport(player.getUniqueId(), true);
-                player.teleport(plugin.getFirstLoc(player.getName()));
-                plugin.cleanFirstLoc(player.getName());
-                plugin.removeFromTutorial(player.getName());
-                player.getInventory().setContents(plugin.getInventory(player.getName()));
-                plugin.cleanInventory(player.getName());
-            }
-            if (!plugin.getServer().getOnlineMode()) {
+        if (Getters.getGetters().isInTutorial(event.getPlayer().getName())) {
+            final GameMode gm = Caching.getCaching().getGameMode(player.getUniqueId());
+            final boolean allowFlight = plugin.getFlight(player.getName());
+            final String name = player.getName();
+            final Location loc = plugin.getFirstLoc(player.getName());
+            final ItemStack[] contents = plugin.getInventory(player.getName());
+            restoreQueue.put(player.getUniqueId(),
+                             new BukkitRunnable() {
+                                 @Override
+                                 public void run() {
+                                     Player player = Bukkit.getPlayerExact(name);
+                                     player.closeInventory();
+                                     player.getInventory().clear();
+                                     player.setGameMode(gm);
+                                     player.setAllowFlight(allowFlight);
+                                     player.setFlying(false);
+                                     plugin.removeFlight(name);
+                                     Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                                     player.teleport(loc);
+                                     plugin.cleanFirstLoc(name);
+                                     player.getInventory().setContents(contents);
+                                     plugin.cleanInventory(name);
+                                 }
+                             });
+            plugin.removeFromTutorial(event.getPlayer().getName());
+        }
+        if (!plugin.getServer().getOnlineMode()) {
+            try {
                 Caching.getCaching().getResponse().remove(player.getName());
+            } catch (Exception ignored) {
+
             }
-        } catch (Exception ignored) {}
+        }
     }
 
     @EventHandler
@@ -189,7 +214,11 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        if (plugin.isAuthmeSupportEnabled()) {
+            return;
+        }
+
+        final Player player = event.getPlayer();
         final String playerName = player.getName();
         if (!plugin.getServer().getOnlineMode()) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -214,6 +243,12 @@ public class TutorialListener implements Listener {
                 plugin.startTutorial(Getters.getGetters().getConfigs().firstJoinTutorial(), player);
             }
         }
+
+        BukkitRunnable runnable = restoreQueue.get(player.getUniqueId());
+        if(runnable != null) {
+            runnable.runTaskLater(plugin, 20L);
+        }
+        restoreQueue.remove(player.getUniqueId());
     }
 
     @EventHandler

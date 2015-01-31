@@ -38,10 +38,15 @@ public class ServerTutorial extends JavaPlugin {
     private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
     private ConfigConversation configConversation = new ConfigConversation();
+    private boolean authmeAvailable;
 
     @Override
     public void onEnable() {
         instance = this;
+        authmeAvailable = Bukkit.getPluginManager().getPlugin("AuthMe") != null;
+        if(authmeAvailable) {
+            this.getServer().getPluginManager().registerEvents(new AuthmeListener(), this);
+        }
         this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
@@ -269,5 +274,9 @@ public class ServerTutorial extends JavaPlugin {
 
     public static ServerTutorial getInstance() {
         return instance;
+    }
+
+    public boolean isAuthmeSupportEnabled() {
+        return authmeAvailable;
     }
 }

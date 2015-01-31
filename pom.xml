@@ -36,6 +36,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>fr.xephi.authme.AuthMe</groupId>
+            <artifactId>AuthMe</artifactId>
+            <version>3.5-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/AuthMe.jar</systemPath>
+        </dependency>
+
         <!-- You need to get spigot by yourself -->
         <dependency>
             <groupId>org.bukkit</groupId>
