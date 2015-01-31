@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.rewards;
 
 import net.milkbowl.vault.economy.Economy;
@@ -7,18 +6,18 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class TutorialEco {
 
-    private Economy econ;
     private static TutorialEco instance;
 
-/**
- * 
- * @return boolean returns true if vault is enabled and there is an economy plugin, otherwise false if either is not present 
- */
+    /**
+     *
+     * @return boolean returns true if vault is enabled and there is an economy plugin, otherwise false if either is not present
+     */
     public boolean setupEconomy() {
         return getEcon() != null;
     }
+
     /**
-     * 
+     *
      * @return Economy returns Economy instance otherwise null if none found 
      */
     public Economy getEcon() {
@@ -31,7 +30,7 @@ public class TutorialEco {
         }
         return null;
     }
-    
+
     public static TutorialEco getTutorialEco() {
         if (instance == null) {
             instance = new TutorialEco();

@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.api;
 
 import io.snw.tutorial.Tutorial;
@@ -44,6 +43,7 @@ public class AddViewEvent extends Event {
     public Tutorial getTutorial() {
         return this.tutorial;
     }
+
     /*
      * View which was created
      * @return view

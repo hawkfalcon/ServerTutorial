@@ -1,10 +1,10 @@
-
 package io.snw.tutorial.enums;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public enum Permissions {
     VIEW("tutorial.view", "tutorial.*"),
@@ -21,22 +21,22 @@ public enum Permissions {
     Permissions(String perm, String... hierarchy) {
         this.perm = perm;
         this.hierarchy.addAll(Arrays.asList(hierarchy));
-        
+
     }
 
-    public boolean hasPerm(CommandSender sender){
-        if(sender instanceof Player){
-        return hasPerm((Player) sender);
+    public boolean hasPerm(CommandSender sender) {
+        if (sender instanceof Player) {
+            return hasPerm((Player) sender);
         } else {
             sender.sendMessage("Commands can only be done in game!");
             return false;
         }
     }
 
-    public boolean hasPerm(Player player){
-        if(!(player.hasPermission(this.perm))) {
-            for(String s : this.hierarchy){
-                if(player.hasPermission(s)){
+    public boolean hasPerm(Player player) {
+        if (!(player.hasPermission(this.perm))) {
+            for (String s : this.hierarchy) {
+                if (player.hasPermission(s)) {
                     return true;
                 }
             }

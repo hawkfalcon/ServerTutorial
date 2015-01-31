@@ -46,26 +46,30 @@ public class EndTutorial {
             }
         }.runTaskLater(plugin, 20L);
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
-        
+
         plugin.getServer().getPluginManager().callEvent(event);
 
         String command = tutorial.getCommand();
         CommandType type = tutorial.getCommandType();
-        if (type == CommandType.NONE || command == null ||command.isEmpty()) return;
-        if (command.startsWith("/")) command = command.replaceFirst("/", "");
+        if (type == CommandType.NONE || command == null || command.isEmpty()) {
+            return;
+        }
+        if (command.startsWith("/")) {
+            command = command.replaceFirst("/", "");
+        }
         command = command.replace("%player%", player.getName());
 
-        switch(type) {
+        switch (type) {
             case PLAYER:
                 Bukkit.dispatchCommand(player, command);
                 break;
             case SUDO:
                 boolean shouldBeOp = !player.isOp();
-                if(shouldBeOp) {
+                if (shouldBeOp) {
                     player.setOp(true);
                 }
                 Bukkit.dispatchCommand(player, command);
-                if(shouldBeOp) {
+                if (shouldBeOp) {
                     player.setOp(false);
                 }
                 break;

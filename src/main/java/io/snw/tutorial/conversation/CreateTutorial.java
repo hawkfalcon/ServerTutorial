@@ -37,6 +37,7 @@ public class CreateTutorial {
     }
 
     private class Welcome extends MessagePrompt {
+
         @Override
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
@@ -78,6 +79,7 @@ public class CreateTutorial {
     }
 
     private class TimeLength extends NumericPrompt {
+
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type how long should each view last (in seconds):");
@@ -110,10 +112,12 @@ public class CreateTutorial {
         public Prompt acceptInput(ConversationContext context, String input) {
             try {
                 CommandType type = CommandType.valueOf(input);
-                if(type == null) throw  new NullPointerException();
+                if (type == null) {
+                    throw new NullPointerException();
+                }
                 context.setSessionData("commandtype", type.toString());
 
-                if(type == CommandType.NONE) {
+                if (type == CommandType.NONE) {
                     context.setSessionData("command", "");
                     return new EndMessage();
                 }
@@ -130,12 +134,13 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type what command should be executed when the tutorial ends (use %player% as placeholder):");
+            return ChatColor.translateAlternateColorCodes('&',
+                                                          "&8>&7>&6> &7Type what command should be executed when the tutorial ends (use %player% as placeholder):");
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if(input == null || input.trim().isEmpty()) {
+            if (input == null || input.trim().isEmpty()) {
                 return new EndCommandMessage();
             }
             context.setSessionData("command", input);
@@ -144,6 +149,7 @@ public class CreateTutorial {
     }
 
     private class EndMessage extends StringPrompt {
+
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type what message this tutorial should have at the end:");
@@ -157,17 +163,21 @@ public class CreateTutorial {
     }
 
     private class FinishMessage extends MessagePrompt {
+
         @Override
         public String getPromptText(ConversationContext context) {
             return ChatColor.translateAlternateColorCodes('&', "&8>&7The Tutorial &b" + name + "&7 has been successfully created!\n"
                                                                + "&8>&7It is a &f" + context.getSessionData("viewtype").toString()
-                                                               + " &7based tutorial with end message &f" + context.getSessionData("endmessage").toString() + "&7!\n"
+                                                               + " &7based tutorial with end message &f" + context.getSessionData("endmessage")
+                                                                       .toString() + "&7!\n"
                                                                + "&6-------------------------------");
         }
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength"), context.getSessionData("player").toString(), context.getSessionData("command").toString(), context.getSessionData("commandtype").toString());
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(),
+                             context.getSessionData("timelength"), context.getSessionData("player").toString(),
+                             context.getSessionData("command").toString(), context.getSessionData("commandtype").toString());
             return END_OF_CONVERSATION;
         }
     }
@@ -180,7 +190,8 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName, String command, String commandType) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName, String command,
+                                 String commandType) {
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
             DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", timeLength.toString());
@@ -196,7 +207,7 @@ public class CreateTutorial {
         CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), Getters.getGetters().getTutorial(name));
         plugin.getServer().getPluginManager().callEvent(event);
     }
-    
+
     public static CreateTutorial getCreateTutorial() {
         if (instance == null) {
             instance = new CreateTutorial();

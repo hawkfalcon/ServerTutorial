@@ -4,6 +4,7 @@ import io.snw.tutorial.enums.MessageType;
 import org.bukkit.Location;
 
 public class TutorialView {
+
     private final int viewId;
     private final String message;
     private final Location location;

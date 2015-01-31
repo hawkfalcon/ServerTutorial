@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.data;
 
 import io.snw.tutorial.MapPlayerTutorial;
@@ -42,14 +41,24 @@ public class Caching {
             this.tutorialNames.add(tutorialName.toLowerCase());
             HashMap<Integer, TutorialView> tutorialViews = new HashMap<Integer, TutorialView>();
             if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
-                for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+                for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views")
+                        .getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(viewID, DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType
+                            messageType =
+                            MessageType.valueOf(DataLoading.getDataLoading().getData()
+                                                        .getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
+                    TutorialView
+                            view =
+                            new TutorialView(viewID, DataLoading.getDataLoading().getData()
+                                    .getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"),
+                                             TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
-            ViewType viewType = ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            ViewType
+                    viewType =
+                    ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
             String timeLengthS = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
@@ -57,28 +66,34 @@ public class Caching {
 
             String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".command", "");
             CommandType
-                    commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
+                    commandType =
+                    CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command, commandType);
             Setters.getSetters().addTutorial(tutorialName, tutorial);
         }
     }
-    
+
     public void cachePlayerData() {
-        if (DataLoading.getDataLoading().getPlayerData().getString("players") != null) {
-            for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
-                UUID playerUUID = UUID.fromString(uuid);
-                boolean seenOnServer = Boolean.valueOf(DataLoading.getDataLoading().getData().getString("players." + uuid + ".seen"));
-                HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
-                if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
-                    for (String playerTutorial : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false)) {
-                        boolean seen = Boolean.valueOf(DataLoading.getDataLoading().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorial));
+        if (DataLoading.getDataLoading().getPlayerData().getString("players") == null) {
+            return;
+        }
+        for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
+            UUID playerUUID = UUID.fromString(uuid);
+            boolean seenOnServer = Boolean.valueOf(DataLoading.getDataLoading().getData().getString("players." + uuid + ".seen"));
+            HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
+            if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
+                for (String playerTutorial : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials")
+                        .getKeys(false)) {
+                    boolean
+                            seen =
+                            Boolean.valueOf(
+                                    DataLoading.getDataLoading().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorial));
                     MapPlayerTutorial mapPlayerTutorial = new MapPlayerTutorial(playerTutorial, seen);
                     playerTutorials.put(playerTutorial, mapPlayerTutorial);
-                    }
                 }
-                PlayerData playerData = new PlayerData(playerUUID, seenOnServer,  playerTutorials);
-                this.playerDataMap.put(plugin.getServer().getOfflinePlayer(playerUUID).getName(), playerData);
             }
+            PlayerData playerData = new PlayerData(playerUUID, seenOnServer, playerTutorials);
+            this.playerDataMap.put(plugin.getServer().getOfflinePlayer(playerUUID).getName(), playerData);
         }
     }
 
@@ -101,7 +116,7 @@ public class Caching {
     public HashMap<String, TutorialConfigs> configs() {
         return this.configs;
     }
-    
+
     public HashMap<String, PlayerData> playerDataMap() {
         return this.playerDataMap;
     }
@@ -123,12 +138,18 @@ public class Caching {
     }
 
     public void cacheConfigs() {
-        TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), 
-        plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean(
-                "view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"),
-        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(
-                plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(
-                plugin.getConfig().getString("per_view_money")));
+        TutorialConfigs
+                configOptions =
+                new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"),
+                                    plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"),
+                                    plugin.getConfig().getString("first_join_tutorial"),
+                                    plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"),
+                                    plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean(
+                        "view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"),
+                                    Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(
+                        plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")),
+                                    Double.valueOf(
+                                            plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 
@@ -146,27 +167,27 @@ public class Caching {
         this.configs.clear();
         cacheConfigs();
     }
-    
+
     public void reCachePlayerData() {
         this.playerDataMap().clear();
         cachePlayerData();
     }
-    
+
     public UUID getUUID(Player player) {
         UUID uuid;
-        if(plugin.getServer().getOnlineMode()) {
+        if (plugin.getServer().getOnlineMode()) {
             uuid = player.getUniqueId();
         } else {
             uuid = this.getResponse().get(player.getName());
         }
 
-        if(uuid == null) {
+        if (uuid == null) {
             uuid = player.getUniqueId();
         }
 
         return uuid;
     }
-    
+
     public static Caching getCaching() {
         if (instance == null) {
             instance = new Caching();

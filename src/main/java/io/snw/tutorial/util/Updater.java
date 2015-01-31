@@ -66,7 +66,10 @@ public class Updater {
     private String[] noUpdateTag = {"-DEV", "-PRE", "-SNAPSHOT"}; // If the version number contains one of these, don't update.
     private static final int BYTE_SIZE = 1024; // Used for downloading files
     private YamlConfiguration config; // Config file
-    private String updateFolder = YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder"); // The folder that downloads will be placed in
+    private String
+            updateFolder =
+            YamlConfiguration.loadConfiguration(new File("bukkit.yml")).getString("settings.update-folder");
+            // The folder that downloads will be placed in
     private Updater.UpdateResult result = Updater.UpdateResult.SUCCESS; // Used for determining the outcome of the update process
 
     public Updater(Runnable aThis, int i, File file, UpdateType updateType, boolean b) {
@@ -271,7 +274,9 @@ public class Updater {
 
             byte[] data = new byte[BYTE_SIZE];
             int count;
-            if (announce) plugin.getLogger().log(Level.INFO, "About to download a new update: {0}", versionName);
+            if (announce) {
+                plugin.getLogger().log(Level.INFO, "About to download a new update: {0}", versionName);
+            }
             long downloaded = 0;
             while ((count = in.read(data, 0, BYTE_SIZE)) != -1) {
                 downloaded += count;
@@ -282,9 +287,12 @@ public class Updater {
                 }
             }
             //Just a quick check to make sure we didn't leave any files from last time...
-            for (File xFile : new File("plugins/" + updateFolder).listFiles()) {
-                if (xFile.getName().endsWith(".zip")) {
-                    xFile.delete();
+            File[] files = new File("plugins/" + updateFolder).listFiles();
+            if (files != null) {
+                for (File xFile : files) {
+                    if (xFile.getName().endsWith(".zip")) {
+                        xFile.delete();
+                    }
                 }
             }
             // Check to see if it's a zip file, if it is, unzip it.
@@ -293,7 +301,9 @@ public class Updater {
                 // Unzip
                 unzip(dFile.getCanonicalPath());
             }
-            if (announce) plugin.getLogger().info("Finished updating.");
+            if (announce) {
+                plugin.getLogger().info("Finished updating.");
+            }
         } catch (Exception ex) {
             plugin.getLogger().warning("The auto-updater tried to download a new update, but was unsuccessful.");
             result = Updater.UpdateResult.FAIL_DOWNLOAD;
@@ -305,7 +315,7 @@ public class Updater {
                 if (fout != null) {
                     fout.close();
                 }
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -342,40 +352,40 @@ public class Updater {
                         destinationFilePath.renameTo(new File("plugins/" + updateFolder + "/" + name));
                     }
                 }
-                entry = null;
-                destinationFilePath = null;
             }
-            e = null;
             zipFile.close();
-            zipFile = null;
 
             // Move any plugin data folders that were included to the right place, Bukkit won't do this for us.
-            for (File dFile : new File(zipPath).listFiles()) {
-                if (dFile.isDirectory()) {
-                    if (pluginFile(dFile.getName())) {
-                        File oFile = new File("plugins/" + dFile.getName()); // Get current dir
-                        File[] contents = oFile.listFiles(); // List of existing files in the current dir
-                        for (File cFile : dFile.listFiles()) // Loop through all the files in the new dir
-                        {
-                            boolean found = false;
-                            for (File xFile : contents) // Loop through contents to see if it exists
+            File[] files = new File(zipPath).listFiles();
+
+            if (files != null) {
+                for (File dFile : files) {
+                    if (dFile.isDirectory()) {
+                        if (pluginFile(dFile.getName())) {
+                            File oFile = new File("plugins/" + dFile.getName()); // Get current dir
+                            File[] contents = oFile.listFiles(); // List of existing files in the current dir
+                            for (File cFile : dFile.listFiles()) // Loop through all the files in the new dir
                             {
-                                if (xFile.getName().equals(cFile.getName())) {
-                                    found = true;
-                                    break;
+                                boolean found = false;
+                                for (File xFile : contents) // Loop through contents to see if it exists
+                                {
+                                    if (xFile.getName().equals(cFile.getName())) {
+                                        found = true;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (!found) {
-                                // Move the new file into the current dir
-                                cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
-                            } else {
-                                // This file already exists, so we don't need it anymore.
-                                cFile.delete();
+                                if (!found) {
+                                    // Move the new file into the current dir
+                                    cFile.renameTo(new File(oFile.getCanonicalFile() + "/" + cFile.getName()));
+                                } else {
+                                    // This file already exists, so we don't need it anymore.
+                                    cFile.delete();
+                                }
                             }
                         }
                     }
+                    dFile.delete();
                 }
-                dFile.delete();
             }
             new File(zipPath).delete();
             fSourceZip.delete();
@@ -391,9 +401,12 @@ public class Updater {
      * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files out of a zip.
      */
     private boolean pluginFile(String name) {
-        for (File file : new File("plugins").listFiles()) {
-            if (file.getName().equals(name)) {
-                return true;
+        File[] files = new File("plugins").listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().equals(name)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -407,7 +420,7 @@ public class Updater {
             String version = plugin.getDescription().getVersion();
             if (title.split(" v").length == 2) {
                 String remoteVersion = title.split(" v")[1].split(" ")[0]; // Get the newest file's version number
-                int remVer = -1, curVer = 0;
+                int remVer, curVer = 0;
                 try {
                     remVer = calVer(remoteVersion);
                     curVer = calVer(version);
@@ -421,8 +434,10 @@ public class Updater {
                 }
             } else {
                 // The file's name did not contain the string 'vVersion'
-                plugin.getLogger().log(Level.WARNING, "The author of this plugin ({0}) has misconfigured their Auto Update system", plugin.getDescription().getAuthors().get(0));
-                plugin.getLogger().warning("Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
+                plugin.getLogger().log(Level.WARNING, "The author of this plugin ({0}) has misconfigured their Auto Update system",
+                                       plugin.getDescription().getAuthors().get(0));
+                plugin.getLogger().warning(
+                        "Files uploaded to BukkitDev should contain the version number, seperated from the name by a 'v', such as PluginName v1.0");
                 plugin.getLogger().warning("Please notify the author of this error.");
                 result = Updater.UpdateResult.FAIL_NOVERSION;
                 return false;
@@ -496,7 +511,8 @@ public class Updater {
                 result = Updater.UpdateResult.FAIL_APIKEY;
             } else {
                 plugin.getLogger().warning("The updater could not contact dev.bukkit.org for updating.");
-                plugin.getLogger().warning("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+                plugin.getLogger().warning(
+                        "If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
                 result = Updater.UpdateResult.FAIL_DBO;
             }
             e.printStackTrace();

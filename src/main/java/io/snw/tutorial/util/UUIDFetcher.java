@@ -1,7 +1,10 @@
-
 package io.snw.tutorial.util;
 
 import com.google.common.collect.ImmutableList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -13,16 +16,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 /**
- * 
+ *
  * evilmidget38's UUIDFetcher
  */
 
 public class UUIDFetcher implements Callable<Map<String, UUID>> {
+
     private static final double PROFILES_PER_REQUEST = 100;
     private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
     private final JSONParser jsonParser = new JSONParser();
@@ -33,18 +34,20 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         this.names = ImmutableList.copyOf(names);
         this.rateLimiting = rateLimiting;
     }
-/**
- * 
- * @param names Player Names
- */
+
+    /**
+     *
+     * @param names Player Names
+     */
     public UUIDFetcher(List<String> names) {
         this(names, true);
     }
-/**
- * 
- * @return Map Mapping of String, UUID
- * @throws Exception [Exception thrown if no connection or invalid json]
- */
+
+    /**
+     *
+     * @return Map Mapping of String, UUID
+     * @throws Exception [Exception thrown if no connection or invalid json]
+     */
     @Override
     public Map<String, UUID> call() throws Exception {
         Map<String, UUID> uuidMap = new HashMap<String, UUID>();
@@ -87,7 +90,8 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
     }
 
     private static UUID getUUID(String id) {
-        return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" +id.substring(20, 32));
+        return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id
+                .substring(20, 32));
     }
 
     public static byte[] toBytes(UUID uuid) {
@@ -106,12 +110,13 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
     }
-/**
- * 
- * @param name Player Name
- * @return UUID UUID of Player
- * @throws Exception [Exception thrown if no connection or invalid json]
- */
+
+    /**
+     *
+     * @param name Player Name
+     * @return UUID UUID of Player
+     * @throws Exception [Exception thrown if no connection or invalid json]
+     */
     public static UUID getUUIDOf(String name) throws Exception {
         return new UUIDFetcher(Arrays.asList(name)).call().get(name);
     }

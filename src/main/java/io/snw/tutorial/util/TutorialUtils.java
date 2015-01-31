@@ -2,7 +2,6 @@ package io.snw.tutorial.util;
 
 import io.github.andrepl.chatlib.ChatPosition;
 import io.github.andrepl.chatlib.Text;
-import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
@@ -15,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class TutorialUtils {
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
+
     private static TutorialUtils instance;
 
     public Location getLocation(String tutorialName, int viewID) {
@@ -42,14 +41,14 @@ public class TutorialUtils {
 
             String lines[] = tACC(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
 
-            if(type == MessageType.TEXT) {
+            if (type == MessageType.TEXT) {
                 for (String msg : lines) {
                     player.sendMessage(msg);
                 }
             } else {
                 String msg = "";
-                for (String line: lines) {
-                    if(msg.equalsIgnoreCase("")) {
+                for (String line : lines) {
+                    if (msg.equalsIgnoreCase("")) {
                         msg = line;
                     } else {
                         msg += "\n" + line;
@@ -67,7 +66,7 @@ public class TutorialUtils {
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-    
+
     public static TutorialUtils getTutorialUtils() {
         if (instance == null) {
             instance = new TutorialUtils();

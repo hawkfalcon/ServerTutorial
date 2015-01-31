@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 
 public class Tutorial {
+
     private final String name;
     private final HashMap<Integer, TutorialView> tutorialViews;
     private final ViewType viewType;
@@ -61,8 +62,7 @@ public class Tutorial {
         return this.item;
     }
 
-    public String getCommand()
-    {
+    public String getCommand() {
         return command;
     }
 

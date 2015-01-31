@@ -53,7 +53,7 @@ public class ViewSwitchEvent extends Event {
     public TutorialView getToTutorialView() {
         return this.toTutorialView;
     }
-    
+
     /**
      * Tutorial from which view is part of
      * @return Tutorial

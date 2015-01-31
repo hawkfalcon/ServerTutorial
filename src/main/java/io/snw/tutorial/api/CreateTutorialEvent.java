@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.api;
 
 import io.snw.tutorial.Tutorial;

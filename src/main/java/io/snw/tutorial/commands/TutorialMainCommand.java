@@ -2,12 +2,13 @@ package io.snw.tutorial.commands;
 
 import com.google.common.collect.Maps;
 import io.snw.tutorial.ServerTutorial;
-import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Map;
 
 public class TutorialMainCommand implements CommandExecutor {
 
@@ -34,30 +35,26 @@ public class TutorialMainCommand implements CommandExecutor {
             return false;
         }
         Player player = (Player) sender;
-        if (cmd.getName().equalsIgnoreCase("tutorial")) {
-            if (args.length == 1) {
-                if (args[0].equalsIgnoreCase("help")) {
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
-                } else if(args[0].equalsIgnoreCase("reload")) {
-                    return subCommandReload.onCommand(sender, cmd, commandLabel, args);
-                } else {
-                    return subCommandUse.onCommand(sender, cmd, commandLabel, args);
-                }
-                return true;
-            }
-            if (args.length > 1) {
-                String subCommandName = args[0].toLowerCase();
-                CommandExecutor subCommand = subCommandMap.get(subCommandName);
-                if(subCommandMap.containsKey(subCommandName)) {
-                    return subCommand.onCommand(sender, cmd, commandLabel, args);
-                }
-                return true;
-            }
-            if (args.length == 0) {
-                return subCommandView.onCommand(sender, cmd, commandLabel, args);
+        if (!cmd.getName().equalsIgnoreCase("tutorial")) {
+            return false;
+        }
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("help")) {
+                player.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                                                          "&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
+            } else if (args[0].equalsIgnoreCase("reload")) {
+                return subCommandReload.onCommand(sender, cmd, commandLabel, args);
+            } else {
+                return subCommandUse.onCommand(sender, cmd, commandLabel, args);
             }
             return true;
+        } else if (args.length > 1) {
+            String subCommandName = args[0].toLowerCase();
+            CommandExecutor subCommand = subCommandMap.get(subCommandName);
+            return !subCommandMap.containsKey(subCommandName) || subCommand.onCommand(sender, cmd, commandLabel, args);
+        } else if (args.length == 0) {
+            return subCommandView.onCommand(sender, cmd, commandLabel, args);
         }
-        return false;
+        return true;
     }
 }
