@@ -33,7 +33,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -142,17 +141,8 @@ public class TutorialListener implements Listener {
                 player.teleport(plugin.getFirstLoc(player.getName()));
                 plugin.cleanFirstLoc(player.getName());
                 plugin.removeFromTutorial(player.getName());
-                new BukkitRunnable() {
-
-                    @Override
-                    public void run() {
-                        for (Player online : plugin.getServer().getOnlinePlayers()) {
-                            online.showPlayer(player);
-                        }
-                        player.getInventory().setContents(plugin.getInventory(player.getName()));
-                        plugin.cleanInventory(player.getName());
-                    }
-                }.runTaskLater(plugin, 20L);
+                player.getInventory().setContents(plugin.getInventory(player.getName()));
+                plugin.cleanInventory(player.getName());
             }
             if (!plugin.getServer().getOnlineMode()) {
                 Caching.getCaching().getResponse().remove(player.getName());
