@@ -80,11 +80,11 @@ public class Caching {
                 item = Material.STICK;
             }
 
-            String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".command", "");
+            String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endcommand", "");
 
             CommandType commandType;
             try {
-                commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
+                commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endcommandtype", "NONE"));
             } catch (IllegalArgumentException e) {
                 commandType = CommandType.NONE;
             }

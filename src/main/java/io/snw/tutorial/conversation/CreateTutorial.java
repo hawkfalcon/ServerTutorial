@@ -130,14 +130,12 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            String s = "&8>&7Choose a type for the end-command: PLAYER, SUDO, CONSOLE or NONE\n"
-                       + "&8>&6PLAYER &7- the tutorial player will execute the command\n"
-                       + "&8>&6SUDO &7- like PLAYER, but the user will execute it with * permission\n"
-                       + "&8>&6CONSOLE &7- execute command as console\n"
-                       + "&8>&6NONE &7- Dont execute any commands\n"
-                       + "&8>&7>&6> &7Type a Command Type to continue:";
-
-            return ChatColor.translateAlternateColorCodes('&', s);
+            return ChatColor.translateAlternateColorCodes('&', "&8>&7Choose a type for the end-command: PLAYER, SUDO, CONSOLE or NONE\n"
+                                                               + "&8>&6PLAYER &7- the tutorial player will execute the command\n"
+                                                               + "&8>&6SUDO &7- like PLAYER, but the user will execute it with * permission\n"
+                                                               + "&8>&6CONSOLE &7- execute command as console\n"
+                                                               + "&8>&6NONE &7- Dont execute any commands\n"
+                                                               + "&8>&7>&6> &7Type a Command Type to continue:");
         }
 
         @Override
@@ -229,8 +227,8 @@ public class CreateTutorial {
         }
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".endmessage", endMessage);
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".item", "STICK");
-        DataLoading.getDataLoading().getData().set("tutorials." + name + ".command", command);
-        DataLoading.getDataLoading().getData().set("tutorials." + name + ".commandtype", commandType);
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".endcommand", command);
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".endcommandtype", commandType);
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".gamemode", gamemode);
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
