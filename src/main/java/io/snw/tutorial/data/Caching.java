@@ -10,6 +10,7 @@ import io.snw.tutorial.enums.CommandType;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.TutorialUtils;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -32,6 +33,7 @@ public class Caching {
     private HashMap<String, PlayerData> playerDataMap = new HashMap<String, PlayerData>();
     private static Caching instance;
     private HashMap<UUID, Boolean> allowedTeleports = new HashMap<UUID, Boolean>();
+    private HashMap<UUID, GameMode> gameModes = new HashMap<UUID, GameMode>();
 
     public void casheAllData() {
         if (DataLoading.getDataLoading().getData().getString("tutorials") == null) {
@@ -56,19 +58,45 @@ public class Caching {
                     tutorialViews.put(viewID, view);
                 }
             }
-            ViewType
-                    viewType =
-                    ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+
+            ViewType viewType;
+            try {
+                viewType = ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+            } catch (IllegalArgumentException e) {
+                viewType = ViewType.CLICK;
+            }
+
             String timeLengthS = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
-            Material item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "stick"));
+
+            Material item;
+            try {
+                item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "STICK"));
+                if(item == null) {
+                    throw new NullPointerException();
+                }
+            } catch (Exception e) {
+                item = Material.STICK;
+            }
 
             String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".command", "");
-            CommandType
-                    commandType =
-                    CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command, commandType);
+
+            CommandType commandType;
+            try {
+                commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
+            } catch (IllegalArgumentException e) {
+                commandType = CommandType.NONE;
+            }
+
+            GameMode gm;
+            try {
+                gm = GameMode.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".gamemode", "SPECTATOR"));
+            } catch (IllegalArgumentException e) {
+                gm = GameMode.SPECTATOR;
+            }
+
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command, commandType, gm);
             Setters.getSetters().addTutorial(tutorialName, tutorial);
         }
     }
@@ -193,5 +221,13 @@ public class Caching {
             instance = new Caching();
         }
         return instance;
+    }
+
+    public void setGameMode(UUID uniqueId, GameMode gameMode) {
+        gameModes.put(uniqueId, gameMode);
+    }
+
+    public GameMode getGameMode(UUID uniqueId) {
+        return gameModes.get(uniqueId);
     }
 }

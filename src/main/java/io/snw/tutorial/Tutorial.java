@@ -2,6 +2,7 @@ package io.snw.tutorial;
 
 import io.snw.tutorial.enums.CommandType;
 import io.snw.tutorial.enums.ViewType;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -17,9 +18,10 @@ public class Tutorial {
     private final Material item;
     private final String command;
     private final CommandType commandType;
+    private GameMode gamemode;
 
     public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item,
-                    String command, CommandType commandType) {
+                    String command, CommandType commandType, GameMode gamemode) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;
@@ -28,6 +30,7 @@ public class Tutorial {
         this.item = item;
         this.command = command;
         this.commandType = commandType;
+        this.gamemode = gamemode;
     }
 
     public String getName() {
@@ -68,5 +71,9 @@ public class Tutorial {
 
     public CommandType getCommandType() {
         return commandType;
+    }
+
+    public GameMode getGameMode() {
+        return gamemode;
     }
 }

@@ -6,7 +6,9 @@ import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.CommandType;
+import io.snw.tutorial.enums.ViewType;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.conversations.ConversationContext;
 import org.bukkit.conversations.ConversationFactory;
 import org.bukkit.conversations.ConversationPrefix;
@@ -66,15 +68,17 @@ public class CreateTutorial {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if (input.equalsIgnoreCase("time") || input.equalsIgnoreCase("click")) {
-                context.setSessionData("viewtype", input.toUpperCase());
-                if (input.equalsIgnoreCase("time")) {
+            try {
+                ViewType type = ViewType.valueOf(input.toUpperCase());
+                context.setSessionData("viewtype", type.toString().toUpperCase());
+                if(type == ViewType.TIME) {
                     return new TimeLength();
                 } else {
-                    return new EndMessage();
+                    return new GamemodeMessage();
                 }
+            } catch (IllegalArgumentException e) {
+                return new ChooseViewType();
             }
-            return new ChooseViewType();
         }
     }
 
@@ -92,7 +96,33 @@ public class CreateTutorial {
             } else {
                 context.setSessionData("timelength", "10");
             }
-            return new EndCommandTypeMessage();
+            return new GamemodeMessage();
+        }
+    }
+
+    private class GamemodeMessage extends StringPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext conversationContext) {
+            String s = "&8>&7Choose a gamemode for the tutorial (it will be restored after the tutorial)\n";
+
+            for(GameMode gm : GameMode.values()) {
+                s+= "&8>&6" + gm.toString().toUpperCase() + "\n";
+            }
+
+            s+= "&8>&7>&6> &7Type a gamemode to continue:";
+            return ChatColor.translateAlternateColorCodes('&', s);
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String input) {
+            try {
+                GameMode gm = GameMode.valueOf(input.toUpperCase());
+                context.setSessionData("gamemode", gm.toString().toUpperCase());
+                return new EndCommandTypeMessage();
+            } catch (IllegalArgumentException e) {
+                return new GamemodeMessage();
+            }
         }
     }
 
@@ -100,22 +130,21 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7Choose a type for the end-command: PLAYER, SUDO, CONSOLE or NONE\n"
-                                                               + "&8>&6PLAYER &7- the tutorial player will execute the command\n"
-                                                               + "&8>&6SUDO &7- like PLAYER, but the user will execute it with * permission\n"
-                                                               + "&8>&6CONSOLE &7- execute command as console\n"
-                                                               + "&8>&6NONE &7- Dont execute any commands\n"
-                                                               + "&8>&7>&6> &7Type a Command Type to continue:");
+            String s = "&8>&7Choose a type for the end-command: PLAYER, SUDO, CONSOLE or NONE\n"
+                       + "&8>&6PLAYER &7- the tutorial player will execute the command\n"
+                       + "&8>&6SUDO &7- like PLAYER, but the user will execute it with * permission\n"
+                       + "&8>&6CONSOLE &7- execute command as console\n"
+                       + "&8>&6NONE &7- Dont execute any commands\n"
+                       + "&8>&7>&6> &7Type a Command Type to continue:";
+
+            return ChatColor.translateAlternateColorCodes('&', s);
         }
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             try {
-                CommandType type = CommandType.valueOf(input);
-                if (type == null) {
-                    throw new NullPointerException();
-                }
-                context.setSessionData("commandtype", type.toString());
+                CommandType type = CommandType.valueOf(input.toUpperCase());
+                context.setSessionData("commandtype", type.toString().toUpperCase());
 
                 if (type == CommandType.NONE) {
                     context.setSessionData("command", "");
@@ -123,7 +152,7 @@ public class CreateTutorial {
                 }
 
                 return new EndCommandMessage();
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
                 return new EndCommandTypeMessage();
             }
         }
@@ -143,7 +172,7 @@ public class CreateTutorial {
             if (input == null || input.trim().isEmpty()) {
                 return new EndCommandMessage();
             }
-            context.setSessionData("command", input);
+            context.setSessionData("command", input.trim());
             return new EndMessage();
         }
     }
@@ -177,7 +206,7 @@ public class CreateTutorial {
         public Prompt getNextPrompt(ConversationContext context) {
             writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(),
                              context.getSessionData("timelength"), context.getSessionData("player").toString(),
-                             context.getSessionData("command").toString(), context.getSessionData("commandtype").toString());
+                             context.getSessionData("command").toString(), context.getSessionData("commandtype").toString(), context.getSessionData("gamemode").toString());
             return END_OF_CONVERSATION;
         }
     }
@@ -191,7 +220,7 @@ public class CreateTutorial {
     }
 
     public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName, String command,
-                                 String commandType) {
+                                 String commandType, String gamemode) {
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
             DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", timeLength.toString());
@@ -199,9 +228,10 @@ public class CreateTutorial {
             DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", "0");
         }
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".endmessage", endMessage);
-        DataLoading.getDataLoading().getData().set("tutorials." + name + ".item", "stick");
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".item", "STICK");
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".command", command);
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".commandtype", commandType);
+        DataLoading.getDataLoading().getData().set("tutorials." + name + ".gamemode", gamemode);
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
         CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), Getters.getGetters().getTutorial(name));

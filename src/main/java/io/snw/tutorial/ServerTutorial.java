@@ -16,7 +16,6 @@ import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -117,7 +116,8 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
-        if (Getters.getGetters().getTutorial(tutorialName) == null) {
+        Tutorial tut = Getters.getGetters().getTutorial(tutorialName);
+        if (tut == null) {
             player.sendMessage("Invalid tutorial");
             return;
         }
@@ -132,8 +132,8 @@ public class ServerTutorial extends JavaPlugin {
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
-        //Todo: Make this configurable
-        player.setGameMode(GameMode.SPECTATOR);
+        Caching.getCaching().setGameMode(player.getUniqueId(), player.getGameMode());
+        player.setGameMode(tut.getGameMode());
         this.initializeCurrentView(name);
         Setters.getSetters().addCurrentTutorial(name, tutorialName);
         Setters.getSetters().addToTutorial(name);
