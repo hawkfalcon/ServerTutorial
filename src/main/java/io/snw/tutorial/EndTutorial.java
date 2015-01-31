@@ -48,7 +48,6 @@ public class EndTutorial {
         
         //Todo
         plugin.getServer().getPluginManager().callEvent(event);
-        Bukkit.getServer().getPluginManager().callEvent(event);
 
         String command = tutorial.getCommand();
         if (command == null ||command.isEmpty()) return;
