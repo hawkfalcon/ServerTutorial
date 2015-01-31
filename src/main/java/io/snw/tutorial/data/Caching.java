@@ -7,6 +7,7 @@ import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 import io.snw.tutorial.TutorialConfigs;
 import io.snw.tutorial.TutorialView;
+import io.snw.tutorial.enums.CommandType;
 import io.snw.tutorial.enums.MessageType;
 import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.util.TutorialUtils;
@@ -55,14 +56,10 @@ public class Caching {
             Material item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "stick"));
 
             String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".command", "");
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command);
+            CommandType
+                    commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".commandtype", "NONE"));
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command, commandType);
             Setters.getSetters().addTutorial(tutorialName, tutorial);
-            
-            //Todo
-            //String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
-            //Material item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "stick"));
-            //Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item);
-            //Setters.getSetters().addTutorial(tutorialName, tutorial);
         }
     }
     
@@ -74,10 +71,9 @@ public class Caching {
                 HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
                 if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
                     for (String playerTutorial : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false)) {
-                        String playerTutorialName = playerTutorial;
-                        boolean seen = Boolean.valueOf(DataLoading.getDataLoading().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorialName));
-                    MapPlayerTutorial mapPlayerTutorial = new MapPlayerTutorial(playerTutorialName, seen);
-                    playerTutorials.put(playerTutorialName, mapPlayerTutorial);
+                        boolean seen = Boolean.valueOf(DataLoading.getDataLoading().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorial));
+                    MapPlayerTutorial mapPlayerTutorial = new MapPlayerTutorial(playerTutorial, seen);
+                    playerTutorials.put(playerTutorial, mapPlayerTutorial);
                     }
                 }
                 PlayerData playerData = new PlayerData(playerUUID, seenOnServer,  playerTutorials);

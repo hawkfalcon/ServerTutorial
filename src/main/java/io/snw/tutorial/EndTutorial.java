@@ -3,6 +3,7 @@ package io.snw.tutorial;
 import io.snw.tutorial.api.EndTutorialEvent;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.Getters;
+import io.snw.tutorial.enums.CommandType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -46,15 +47,32 @@ public class EndTutorial {
         }.runTaskLater(plugin, 20L);
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
         
-        //Todo
         plugin.getServer().getPluginManager().callEvent(event);
 
         String command = tutorial.getCommand();
-        if (command == null ||command.isEmpty()) return;
+        CommandType type = tutorial.getCommandType();
+        if (type == CommandType.NONE || command == null ||command.isEmpty()) return;
         if (command.startsWith("/")) command = command.replaceFirst("/", "");
         command = command.replace("%player%", player.getName());
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        switch(type) {
+            case PLAYER:
+                Bukkit.dispatchCommand(player, command);
+                break;
+            case SUDO:
+                boolean shouldBeOp = !player.isOp();
+                if(shouldBeOp) {
+                    player.setOp(true);
+                }
+                Bukkit.dispatchCommand(player, command);
+                if(shouldBeOp) {
+                    player.setOp(false);
+                }
+                break;
+            case CONSOLE:
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+                break;
+        }
     }
 
     public void reloadEndTutorial(final Player player) {

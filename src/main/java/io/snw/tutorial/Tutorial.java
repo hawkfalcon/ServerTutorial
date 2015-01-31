@@ -1,5 +1,6 @@
 package io.snw.tutorial;
 
+import io.snw.tutorial.enums.CommandType;
 import io.snw.tutorial.enums.ViewType;
 import org.bukkit.Material;
 
@@ -14,15 +15,18 @@ public class Tutorial {
     private final String endMessage;
     private final Material item;
     private final String command;
-    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item, String command) {
+    private final CommandType commandType;
+
+    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item,
+                    String command, CommandType commandType) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;
         this.timeLength = timeLength;
         this.endMessage = endMessage;
         this.item = item;
-
         this.command = command;
+        this.commandType = commandType;
     }
 
     public String getName() {
@@ -60,5 +64,9 @@ public class Tutorial {
     public String getCommand()
     {
         return command;
+    }
+
+    public CommandType getCommandType() {
+        return commandType;
     }
 }
