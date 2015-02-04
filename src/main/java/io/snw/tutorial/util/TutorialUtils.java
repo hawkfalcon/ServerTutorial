@@ -1,7 +1,5 @@
 package io.snw.tutorial.util;
 
-import io.github.andrepl.chatlib.ChatPosition;
-import io.github.andrepl.chatlib.Text;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
@@ -31,7 +29,7 @@ public class TutorialUtils {
     public void textUtils(Player player) {
         String name = player.getName();
         MessageType type = Getters.getGetters().getTutorialView(name).getMessageType();
-        if (type == MessageType.TEXT || type == MessageType.ACTION) {
+        if (type == MessageType.TEXT) {
             player.getInventory().clear();
             ItemStack i = new ItemStack(Getters.getGetters().getCurrentTutorial(name).getItem());
             ItemMeta data = i.getItemMeta();
@@ -41,23 +39,10 @@ public class TutorialUtils {
 
             String lines[] = tACC(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
 
-            if (type == MessageType.TEXT) {
-                for (String msg : lines) {
-                    player.sendMessage(msg);
-                }
-            } else {
-                String msg = "";
-                for (String line : lines) {
-                    if (msg.equalsIgnoreCase("")) {
-                        msg = line;
-                    } else {
-                        msg += "\n" + line;
-                    }
-                }
-
-                Text text = new Text(msg);
-                text.send(player, ChatPosition.ACTION);
+            for (String msg : lines) {
+                player.sendMessage(msg);
             }
+
             //Todo
             //player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
         }

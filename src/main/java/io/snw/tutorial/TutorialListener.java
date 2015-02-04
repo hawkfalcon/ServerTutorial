@@ -1,7 +1,5 @@
 package io.snw.tutorial;
 
-import io.github.andrepl.chatlib.ChatPosition;
-import io.github.andrepl.chatlib.Text;
 import io.snw.tutorial.api.EndTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.data.Caching;
@@ -71,9 +69,6 @@ public class TutorialListener implements Listener {
                         player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
                         if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
                             player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
-                        } else if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.ACTION) {
-                            Text text = new Text(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
-                            text.send(player, ChatPosition.ACTION);
                         }
                     }
                 }
