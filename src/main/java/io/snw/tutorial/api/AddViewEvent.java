@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.api;
 
 import io.snw.tutorial.Tutorial;
@@ -29,7 +28,7 @@ public class AddViewEvent extends Event {
         return handlers;
     }
 
-    /**
+    /*
      * Player who created view
      * @return player
      */
@@ -37,14 +36,15 @@ public class AddViewEvent extends Event {
         return this.player;
     }
 
-    /**
+    /*
      * Tutorial which view was created for
      * @return tutorial
      */
     public Tutorial getTutorial() {
         return this.tutorial;
     }
-    /**
+
+    /*
      * View which was created
      * @return view
      */

@@ -30,7 +30,7 @@ public class ViewSwitchEvent extends Event {
         return handlers;
     }
 
-    /**
+    /*
      * Player who switched view
      * @return player
      */
@@ -38,7 +38,7 @@ public class ViewSwitchEvent extends Event {
         return this.player;
     }
 
-    /**
+    /*
      * View switched from
      * @return fromTutorialView
      */
@@ -46,14 +46,14 @@ public class ViewSwitchEvent extends Event {
         return this.fromTutorialView;
     }
 
-    /**
+    /*
      * View switched to
      * @return toTutorialView
      */
     public TutorialView getToTutorialView() {
         return this.toTutorialView;
     }
-    
+
     /**
      * Tutorial from which view is part of
      * @return Tutorial

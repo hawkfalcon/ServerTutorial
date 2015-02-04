@@ -1,4 +1,3 @@
-
 package io.snw.tutorial;
 
 public class MapPlayerTutorial {

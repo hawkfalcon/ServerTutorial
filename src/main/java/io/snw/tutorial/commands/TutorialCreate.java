@@ -1,4 +1,3 @@
-
 package io.snw.tutorial.commands;
 
 import io.snw.tutorial.ServerTutorial;
@@ -21,30 +20,31 @@ public class TutorialCreate implements CommandExecutor {
 
         Player player = (Player) sender;
 
-        if (Permissions.CREATE.hasPerm(sender)) {
-            if (args[0].equalsIgnoreCase("create")) {
-                if (!Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
-                    CreateTutorial.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
-                    return true;
-                } else {
-                    sender.sendMessage(ChatColor.RED + "This tutorial already exists!");
-                    return true;
-                }
-                } else if (args[0].equalsIgnoreCase("addview")) {
-                    if (!Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
-                        sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
-                        return true;
-                    }
-                    plugin.getViewConversation().createNewView(player, args[1].toLowerCase());
-                    return true;
-
-                } else {
-                    sender.sendMessage(ChatColor.RED + "Try " + ChatColor.GOLD + "/tutorial help");
-                    return true;    
-                }
-        } else {
+        if (!Permissions.CREATE.hasPerm(sender)) {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
             return true;
         }
+
+        if (args.length >= 2 && args[0].equalsIgnoreCase("create")) {
+
+            if (Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
+                sender.sendMessage(ChatColor.RED + "This tutorial already exists!");
+                return true;
+            }
+
+            CreateTutorial.getCreateTutorial().createNewTutorial(player, args[1].toLowerCase());
+            return true;
+        }
+        if (args.length >= 2 && args[0].equalsIgnoreCase("addview")) {
+            if (!Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
+                sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
+                return true;
+            }
+            plugin.getViewConversation().createNewView(player, args[1].toLowerCase());
+            return true;
+
+        }
+        sender.sendMessage(ChatColor.RED + "Try " + ChatColor.GOLD + "/tutorial help");
+        return true;
     }
 }

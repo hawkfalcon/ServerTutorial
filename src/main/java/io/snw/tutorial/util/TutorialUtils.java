@@ -1,6 +1,5 @@
 package io.snw.tutorial.util;
 
-import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
@@ -13,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class TutorialUtils {
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
+
     private static TutorialUtils instance;
 
     public Location getLocation(String tutorialName, int viewID) {
@@ -29,21 +28,30 @@ public class TutorialUtils {
 
     public void textUtils(Player player) {
         String name = player.getName();
-        if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
+        MessageType type = Getters.getGetters().getTutorialView(name).getMessageType();
+        if (type == MessageType.TEXT) {
             player.getInventory().clear();
             ItemStack i = new ItemStack(Getters.getGetters().getCurrentTutorial(name).getItem());
             ItemMeta data = i.getItemMeta();
             data.setDisplayName(" ");
             i.setItemMeta(data);
             player.setItemInHand(i);
-            player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
+
+            String lines[] = tACC(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
+
+            for (String msg : lines) {
+                player.sendMessage(msg);
+            }
+
+            //Todo
+            //player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
         }
     }
 
     public String tACC(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
-    
+
     public static TutorialUtils getTutorialUtils() {
         if (instance == null) {
             instance = new TutorialUtils();

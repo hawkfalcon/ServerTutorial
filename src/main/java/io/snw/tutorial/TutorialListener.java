@@ -6,66 +6,121 @@ import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
 import io.snw.tutorial.data.Getters;
 import io.snw.tutorial.enums.MessageType;
+import io.snw.tutorial.enums.ViewType;
 import io.snw.tutorial.rewards.TutorialEco;
-import io.snw.tutorial.rewards.TutorialExp;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.UUIDFetcher;
-import java.util.HashMap;
-import java.util.logging.Level;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
 
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static Map<UUID, BukkitRunnable> restoreQueue = new HashMap<UUID, BukkitRunnable>();
+
+    public static Map<UUID, BukkitRunnable> getRestoreQueue() {
+        return restoreQueue;
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         String name = player.getName();
         if (event.getAction() != Action.PHYSICAL) {
-            if (Getters.getGetters().isInTutorial(name)) {
+            if (Getters.getGetters().isInTutorial(name) && Getters.getGetters().getCurrentTutorial(name).getViewType() != ViewType.TIME) {
                 if (player.getItemInHand().getType() == Getters.getGetters().getCurrentTutorial(name).getItem()) {
                     if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
-                            plugin.getEndTutorial().endTutorial(player);
-                        } else {
-                            plugin.incrementCurrentView(name);
-                            TutorialUtils.getTutorialUtils().textUtils(player);
-                            player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
-                            if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                                player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
-                            }
+                        plugin.getEndTutorial().endTutorial(player);
+                    } else {
+                        plugin.incrementCurrentView(name);
+                        TutorialUtils.getTutorialUtils().textUtils(player);
+                        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                        player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
+                        if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
+                            player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
                         }
+                    }
                 }
             }
         }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && !Getters.getGetters().isInTutorial(name)) {
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && !Getters.getGetters()
+                .isInTutorial(name)) {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
                 if (sign.getLine(0).equalsIgnoreCase(ChatColor.stripColor(Getters.getGetters().getConfigs().signSetting()))) {
-                    if (sign.getLine(1) == null) return;
+                    if (sign.getLine(1) == null) {
+                        return;
+                    }
                     plugin.startTutorial(sign.getLine(1), player);
                 }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onChat(AsyncPlayerChatEvent event) {
+        Player p = event.getPlayer();
+        if (Getters.getGetters().isInTutorial(p.getName())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        HashSet<Player> set = new HashSet<Player>(event.getRecipients());
+        for (Player setPlayer : set) {
+            if (setPlayer == null) {
+                continue;
+            }
+
+            Tutorial tut = Getters.getGetters().getCurrentTutorial(setPlayer.getName());
+            if (tut != null && tut.getViewType() == ViewType.TIME && Getters.getGetters().isInTutorial(setPlayer.getName())) {
+                event.getRecipients().remove(setPlayer);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        Player p = event.getPlayer();
+        if (!Getters.getGetters().isInTutorial(p.getName())) {
+            return;
+        }
+
+        if (Caching.getCaching().canTeleport(p.getUniqueId())) {
+            Caching.getCaching().setTeleport(p.getUniqueId(), false);
+        } else {
+            event.setCancelled(true);
         }
     }
 
@@ -73,18 +128,46 @@ public class TutorialListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (Getters.getGetters().isInTutorial(player.getName())) {
-            player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());               
+            Caching.getCaching().setTeleport(player.getUniqueId(), true);
+            player.teleport(Getters.getGetters().getTutorialView(player.getName()).getLocation());
         }
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         if (Getters.getGetters().isInTutorial(event.getPlayer().getName())) {
+            final GameMode gm = Caching.getCaching().getGameMode(player.getUniqueId());
+            final boolean allowFlight = plugin.getFlight(player.getName());
+            final String name = player.getName();
+            final Location loc = plugin.getFirstLoc(player.getName());
+            final ItemStack[] contents = plugin.getInventory(player.getName());
+            restoreQueue.put(player.getUniqueId(),
+                             new BukkitRunnable() {
+                                 @Override
+                                 public void run() {
+                                     Player player = Bukkit.getPlayerExact(name);
+                                     player.closeInventory();
+                                     player.getInventory().clear();
+                                     player.setGameMode(gm);
+                                     player.setAllowFlight(allowFlight);
+                                     player.setFlying(false);
+                                     plugin.removeFlight(name);
+                                     Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                                     player.teleport(loc);
+                                     plugin.cleanFirstLoc(name);
+                                     player.getInventory().setContents(contents);
+                                     plugin.cleanInventory(name);
+                                 }
+                             });
             plugin.removeFromTutorial(event.getPlayer().getName());
         }
         if (!plugin.getServer().getOnlineMode()) {
-            Caching.getCaching().getResponse().remove(player.getName());
+            try {
+                Caching.getCaching().getResponse().remove(player.getName());
+            } catch (Exception ignored) {
+
+            }
         }
     }
 
@@ -119,7 +202,7 @@ public class TutorialListener implements Listener {
     @EventHandler
     public void onWhee(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
-            if (Getters.getGetters().isInTutorial(((Player) event.getEntity()).getName())) {
+            if (Getters.getGetters().isInTutorial(event.getEntity().getName())) {
                 event.setCancelled(true);
             }
         }
@@ -127,7 +210,11 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+        if (plugin.isAuthmeSupportEnabled()) {
+            return;
+        }
+
+        final Player player = event.getPlayer();
         final String playerName = player.getName();
         if (!plugin.getServer().getOnlineMode()) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
@@ -135,28 +222,35 @@ public class TutorialListener implements Listener {
                 public void run() {
                     try {
                         Caching.getCaching().getResponse().put(playerName, UUIDFetcher.getUUIDOf(playerName));
-                    } catch (Exception e) {
-                        
+                    } catch (Exception ignored) {
+
                     }
                 }
             });
         }
         for (String name : Getters.getGetters().getAllInTutorial()) {
             Player tut = plugin.getServer().getPlayerExact(name);
-            tut.hidePlayer(player);
-            player.hidePlayer(tut);
+            if (tut != null) {
+                player.hidePlayer(tut);
+            }
         }
         if (!player.hasPlayedBefore()) {
             if (Getters.getGetters().getConfigs().firstJoin()) {
-               plugin.startTutorial(Getters.getGetters().getConfigs().firstJoinTutorial(), player);
+                plugin.startTutorial(Getters.getGetters().getConfigs().firstJoinTutorial(), player);
             }
         }
+
+        BukkitRunnable runnable = restoreQueue.get(player.getUniqueId());
+        if(runnable != null) {
+            runnable.runTaskLater(plugin, 20L);
+        }
+        restoreQueue.remove(player.getUniqueId());
     }
 
     @EventHandler
     public void onViewSwitch(ViewSwitchEvent event) {
         Player player = event.getPlayer();
-        if(Getters.getGetters().getConfigs().getExpCountdown()) {
+        if (Getters.getGetters().getConfigs().getExpCountdown()) {
             player.setExp(player.getExp() - 1f);
         }
         if (Getters.getGetters().getConfigs().getRewards()) {
@@ -165,10 +259,12 @@ public class TutorialListener implements Listener {
                     player.setTotalExperience(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerViewExp());
                     player.sendMessage(ChatColor.BLUE + "You recieved " + Getters.getGetters().getConfigs().getViewExp());
                 }
-                if(Getters.getGetters().getConfigs().getViewMoney()) {
-                    if(TutorialEco.getTutorialEco().setupEconomy()) {
-                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer((OfflinePlayer)player, Getters.getGetters().getConfigs().getPerViewMoney());
-                        if(ecoResponse.transactionSuccess()) {
+                if (Getters.getGetters().getConfigs().getViewMoney()) {
+                    if (TutorialEco.getTutorialEco().setupEconomy()) {
+                        EconomyResponse
+                                ecoResponse =
+                                TutorialEco.getTutorialEco().getEcon().depositPlayer(player, Getters.getGetters().getConfigs().getPerViewMoney());
+                        if (ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + " New Balance: " + ecoResponse.balance);
                         } else {
                             plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
@@ -181,28 +277,31 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onTutorialEnd(EndTutorialEvent event) {
-        if(Getters.getGetters().getConfigs().getRewards()) {
+        if (Getters.getGetters().getConfigs().getRewards()) {
             Player player = event.getPlayer();
             String playerName = player.getName().toLowerCase();
             if (!seenTutorial(playerName, event.getTutorial().getName())) {
-                if(TutorialEco.getTutorialEco().setupEconomy()) {
-                    if(Getters.getGetters().getConfigs().getTutorialMoney()) {
-                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer((OfflinePlayer) player, Getters.getGetters().getConfigs().getPerTutorialMoney());
-                        if(ecoResponse.transactionSuccess()) {
+                if (TutorialEco.getTutorialEco().setupEconomy()) {
+                    if (Getters.getGetters().getConfigs().getTutorialMoney()) {
+                        EconomyResponse
+                                ecoResponse =
+                                TutorialEco.getTutorialEco().getEcon().depositPlayer(player, Getters.getGetters().getConfigs().getPerTutorialMoney());
+                        if (ecoResponse.transactionSuccess()) {
                             player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                         } else {
                             plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                         }
                     }
-                    if(Getters.getGetters().getConfigs().getTutorialExp()) {
-                            player.setExp(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerTutorialExp());
+                    if (Getters.getGetters().getConfigs().getTutorialExp()) {
+                        player.setExp(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerTutorialExp());
                     }
                 }
             } else {
                 player.sendMessage(ChatColor.BLUE + "You have been through this tutorial already. You will not collect rewards!");
             }
         }
-        DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(event.getPlayer()) + ".tutorials." + event.getTutorial().getName(), "true");
+        DataLoading.getDataLoading().getPlayerData()
+                .set("players." + Caching.getCaching().getUUID(event.getPlayer()) + ".tutorials." + event.getTutorial().getName(), "true");
         DataLoading.getDataLoading().savePlayerData();
         Caching.getCaching().reCachePlayerData();
     }

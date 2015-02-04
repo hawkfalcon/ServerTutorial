@@ -1,5 +1,6 @@
 #set false to disable auto-updating
-auto-update: true
+#wont work with this fork
+auto-update: false
 
 #set false to disable metrics
 metrics: true

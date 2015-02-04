@@ -4,7 +4,6 @@ import io.snw.tutorial.api.StartTutorialEvent;
 import io.snw.tutorial.api.ViewSwitchEvent;
 import io.snw.tutorial.commands.TutorialMainCommand;
 import io.snw.tutorial.conversation.ConfigConversation;
-import io.snw.tutorial.conversation.CreateTutorial;
 import io.snw.tutorial.conversation.ViewConversation;
 import io.snw.tutorial.data.Caching;
 import io.snw.tutorial.data.DataLoading;
@@ -15,16 +14,17 @@ import io.snw.tutorial.metrics.Metrics;
 import io.snw.tutorial.util.TutorialTask;
 import io.snw.tutorial.util.TutorialUtils;
 import io.snw.tutorial.util.Updater;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
@@ -35,13 +35,18 @@ public class ServerTutorial extends JavaPlugin {
     private HashMap<String, Location> startLoc = new HashMap<String, Location>();
     private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
     private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
-    private HashMap<String, Boolean> godmode = new HashMap<String, Boolean>();
     private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
     private ConfigConversation configConversation = new ConfigConversation();
+    private boolean authmeAvailable;
 
     @Override
     public void onEnable() {
+        instance = this;
+        authmeAvailable = Bukkit.getPluginManager().getPlugin("AuthMe") != null;
+        if(authmeAvailable) {
+            this.getServer().getPluginManager().registerEvents(new AuthmeListener(), this);
+        }
         this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
@@ -55,24 +60,30 @@ public class ServerTutorial extends JavaPlugin {
         this.checkUpdate();
     }
 
+    @Override
+    public void onDisable() {
+        instance = null;
+    }
+
     private void startMetrics() {
-        if(getConfig().get("metrics") == null) {
+        if (getConfig().get("metrics") == null) {
             getConfig().set("metrics", true);
             saveConfig();
             Caching.getCaching().reCacheConfigs();
         }
-        if(getConfig().getBoolean("metrics")) {
+        if (getConfig().getBoolean("metrics")) {
             try {
                 Metrics metrics = new Metrics(this);
                 metrics.start();
-                } catch (IOException ex) {
-                    getLogger().warning("Failed to load metrics :(");
-                }
+            } catch (IOException ex) {
+                getLogger().warning("Failed to load metrics :(");
+            }
         }
     }
-/**
- * Check's for update
- */
+
+    /**
+     * Check's for update
+     */
     private void checkUpdate() {
         if (getConfig().get("auto-update") == null) {
             getConfig().set("auto-update", true);
@@ -96,18 +107,22 @@ public class ServerTutorial extends JavaPlugin {
             });
         }
     }
-/**
- * Start's tutorial
- * @param tutorialName tutorial name
- * @param player Player
- */
+
+    /**
+     * Start's tutorial
+     * @param tutorialName tutorial name
+     * @param player Player
+     */
     public void startTutorial(String tutorialName, Player player) {
-        String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
+        //String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
+
+        String name = player.getName();
         if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
-        if (Getters.getGetters().getTutorial(tutorialName) == null) {
+        Tutorial tut = Getters.getGetters().getTutorial(tutorialName);
+        if (tut == null) {
             player.sendMessage("Invalid tutorial");
             return;
         }
@@ -115,41 +130,48 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
             return;
         }
+
         this.startLoc.put(name, player.getLocation());
         this.addInventory(name, player.getInventory().getContents());
         this.addFlight(name, player.getAllowFlight());
         player.getInventory().clear();
         player.setAllowFlight(true);
         player.setFlying(true);
+        Caching.getCaching().setGameMode(player.getUniqueId(), player.getGameMode());
+        player.setGameMode(tut.getGameMode());
         this.initializeCurrentView(name);
         Setters.getSetters().addCurrentTutorial(name, tutorialName);
         Setters.getSetters().addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
-            player.hidePlayer(online);
         }
-        this.getServer().getPlayer(Caching.getCaching().getUUID(player)).teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+        player.teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             Getters.getGetters().getTutorialTimeTask(tutorialName, name);
         }
         TutorialUtils.getTutorialUtils().textUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, Getters.getGetters().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
-        if(DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
+        if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
             DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".seen", "true");
-            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
+            DataLoading.getDataLoading().getPlayerData()
+                    .set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
             DataLoading.getDataLoading().savePlayerData();
             Caching.getCaching().reCachePlayerData();
-        } else if(DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName) == null) {
-            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
+        } else if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName)
+                   == null) {
+            DataLoading.getDataLoading().getPlayerData()
+                    .set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
             DataLoading.getDataLoading().savePlayerData();
             Caching.getCaching().reCachePlayerData();
         }
     }
-/**
- * Removes player from tutorial
- * @param name Player name 
- */
+
+    /**
+     * Removes player from tutorial
+     * @param name Player name
+     */
     public void removeFromTutorial(String name) {
         Caching.getCaching().playerInTutorial().remove(name);
         this.startLoc.remove(name);
@@ -167,7 +189,9 @@ public class ServerTutorial extends JavaPlugin {
         Caching.getCaching().currentTutorialView().put(name, Getters.getGetters().getCurrentView(name) + 1);
         TutorialView toTutorialView = Getters.getGetters().getTutorialView(name);
         @SuppressWarnings("deprecation")
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
+        ViewSwitchEvent
+                event =
+                new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
@@ -198,7 +222,7 @@ public class ServerTutorial extends JavaPlugin {
     public void addFlight(String name, boolean flight) {
         this.flight.put(name, flight);
     }
-    
+
     public void removeFlight(String name) {
         this.flight.remove(name);
     }
@@ -229,18 +253,20 @@ public class ServerTutorial extends JavaPlugin {
         int viewsCount = Getters.getGetters().getTutorial(tutorialName).getTotalViews();
         DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
         DataLoading.getDataLoading().saveData();
-        if(viewsCount != viewID) {
-            for(String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+        if (viewsCount != viewID) {
+            for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                 int currentID = Integer.parseInt(vID);
                 int newViewID = Integer.parseInt(vID) - 1;
                 String message = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".message");
-                String messageType = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
+                String
+                        messageType =
+                        DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
                 String location = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".location");
                 DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".message", message);
                 DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".messagetype", messageType);
-                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".location" , location);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".location", location);
                 DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + currentID, null);
-                }
+            }
         }
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
@@ -248,5 +274,9 @@ public class ServerTutorial extends JavaPlugin {
 
     public static ServerTutorial getInstance() {
         return instance;
+    }
+
+    public boolean isAuthmeSupportEnabled() {
+        return authmeAvailable;
     }
 }

@@ -25,7 +25,7 @@ public class EndTutorialEvent extends Event {
         return handlers;
     }
 
-    /**
+    /*
      * Player who ended a tutorial
      * @return player
      */
@@ -33,7 +33,7 @@ public class EndTutorialEvent extends Event {
         return this.player;
     }
 
-    /**
+    /*
      * Tutorial which was ended
      * @return tutorial
      */

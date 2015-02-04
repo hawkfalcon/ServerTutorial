@@ -1,4 +1,3 @@
-
 package io.snw.tutorial;
 
 import java.util.HashMap;
@@ -19,7 +18,7 @@ public class PlayerData {
     public UUID getUUID() {
         return this.uuid;
     }
-    
+
     public boolean getSeen() {
         return this.seen;
     }

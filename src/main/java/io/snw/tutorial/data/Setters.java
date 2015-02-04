@@ -1,12 +1,9 @@
-
 package io.snw.tutorial.data;
 
-import io.snw.tutorial.ServerTutorial;
 import io.snw.tutorial.Tutorial;
 
 public class Setters {
 
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private static Setters instance;
 
     public void addCurrentTutorial(String name, String tutorialName) {
@@ -20,7 +17,7 @@ public class Setters {
     public void addToTutorial(String name) {
         Caching.getCaching().playerInTutorial().add(name);
     }
-    
+
     public static Setters getSetters() {
         if (instance == null) {
             instance = new Setters();

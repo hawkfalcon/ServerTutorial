@@ -1,11 +1,11 @@
-
 package io.snw.tutorial.data;
 
 import io.snw.tutorial.ServerTutorial;
-import java.io.File;
-import java.io.IOException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
 
 public class DataLoading {
 
@@ -48,7 +48,7 @@ public class DataLoading {
         playerDataFile = f;
         playerData = YamlConfiguration.loadConfiguration(f);
     }
-    
+
     public YamlConfiguration getPlayerData() {
         return this.playerData;
     }
@@ -72,7 +72,7 @@ public class DataLoading {
             plugin.getLogger().warning("Failed to save player data :(");
         }
     }
-    
+
     public static DataLoading getDataLoading() {
         if (instance == null) {
             instance = new DataLoading();

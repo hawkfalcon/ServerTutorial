@@ -1,7 +1,6 @@
-
 package io.snw.tutorial;
 
-/**
+/*
  *
  * @author Frostalf
  */
@@ -24,9 +23,11 @@ public class TutorialConfigs {
     private double perViewMoney;
 
 
-    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, 
-            boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp, int perViewExp, double perViewMoney) {
-        
+    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards,
+                           boolean expCountdown, boolean viewMoney, boolean viewExp,
+                           boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp, int perViewExp,
+                           double perViewMoney) {
+
         this.autoUpdate = autoUpdate;
         this.metrics = metrics;
         this.signSetting = signSetting;
