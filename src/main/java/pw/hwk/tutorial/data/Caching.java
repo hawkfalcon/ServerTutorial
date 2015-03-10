@@ -41,7 +41,7 @@ public class Caching {
                 for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
                     MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(viewID, DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    TutorialView view = new TutorialView(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
@@ -94,7 +94,6 @@ public class Caching {
         }
         for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
             UUID playerUUID = UUID.fromString(uuid);
-            boolean seenOnServer = Boolean.valueOf(DataLoading.getDataLoading().getData().getString("players." + uuid + ".seen"));
             HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
             if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
                 for (String playerTutorial : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false)) {
@@ -103,7 +102,7 @@ public class Caching {
                     playerTutorials.put(playerTutorial, mapPlayerTutorial);
                 }
             }
-            PlayerData playerData = new PlayerData(playerUUID, seenOnServer, playerTutorials);
+            PlayerData playerData = new PlayerData(playerTutorials);
             this.playerDataMap.put(plugin.getServer().getOfflinePlayer(playerUUID).getName(), playerData);
         }
     }
@@ -149,7 +148,7 @@ public class Caching {
     }
 
     public void cacheConfigs() {
-        TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getBoolean("metrics"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"), Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
+        TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"), Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 

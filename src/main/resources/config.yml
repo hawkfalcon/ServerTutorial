@@ -2,9 +2,6 @@
 #wont work with this fork
 auto-update: false
 
-#set false to disable metrics
-metrics: true
-
 #Sign setting
 sign: '&0[Tutorial]'
 

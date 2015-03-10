@@ -40,8 +40,6 @@ public class ConfigConversation {
         public Prompt acceptInput(ConversationContext context, String input) {
             if (input.equalsIgnoreCase("autoupdater")) {
                 return new AutoUpdater();
-            } else if (input.equalsIgnoreCase("metrics")) {
-                return new Metrics();
             } else if (input.equalsIgnoreCase("sign text")) {
                 return new SignText();
             } else if (input.equalsIgnoreCase("first join")) {
@@ -95,26 +93,7 @@ public class ConfigConversation {
             return new AutoUpdater();
         }
     }
-
-    private class Metrics extends StringPrompt {
-
-        @Override
-        public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>Current Setting for Metrics: " + String.valueOf(Getters.getGetters().getConfigs().getMetrics()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
-        }
-
-        @Override
-        public Prompt acceptInput(ConversationContext context, String input) {
-            if (input.equalsIgnoreCase("true") || input.equalsIgnoreCase("false")) {
-                plugin.getConfig().set("metrics", input.toLowerCase());
-                return new Done();
-            } else if (input.equalsIgnoreCase("cancel")) {
-                return new ConfigOption();
-            }
-            return new Metrics();
-        }
-    }
-
+    
     private class SignText extends StringPrompt {
 
         @Override

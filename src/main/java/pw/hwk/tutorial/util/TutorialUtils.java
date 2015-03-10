@@ -42,9 +42,6 @@ public class TutorialUtils {
             for (String msg : lines) {
                 player.sendMessage(msg);
             }
-
-            //Todo
-            //player.sendMessage(tACC(Getters.getGetters().getTutorialView(name).getMessage()));
         }
     }
 

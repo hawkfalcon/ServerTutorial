@@ -123,20 +123,11 @@ public class TutorialTask {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    boolean reset = true;
-    String alt;
-
     public void setPlayerItemName(Player player) {
+        player.setItemInHand(null);
         ItemStack i = new ItemStack(Getters.getGetters().getCurrentTutorial(player.getName()).getItem());
         ItemMeta data = i.getItemMeta();
-        if (reset) {
-            alt = "" + ChatColor.RESET;
-            reset = false;
-        } else {
-            alt = "";
-            reset = true;
-        }
-        data.setDisplayName(tACC(Getters.getGetters().getTutorialView(player.getName()).getMessage()) + alt);
+        data.setDisplayName(tACC(Getters.getGetters().getTutorialView(player.getName()).getMessage()));
 
         i.setItemMeta(data);
         player.setItemInHand(i);

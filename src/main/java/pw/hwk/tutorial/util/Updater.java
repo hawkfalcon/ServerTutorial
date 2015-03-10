@@ -208,24 +208,6 @@ public class Updater {
     }
 
     /*
-     * Get the latest version's release type (release, beta, or alpha)
-     * @return versionType
-     */
-    public String getLatestType() {
-        waitForThread();
-        return versionType;
-    }
-
-    /*
-     * Get the latest version's game version
-     * @return versionGameVersion
-     */
-    public String getLatestGameVersion() {
-        waitForThread();
-        return versionGameVersion;
-    }
-
-    /*
      * Get the latest version's name
      * @return versionName
      */

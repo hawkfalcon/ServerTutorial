@@ -38,10 +38,6 @@ public class TutorialListener implements Listener {
     private static ServerTutorial plugin = ServerTutorial.getInstance();
     private static Map<UUID, BukkitRunnable> restoreQueue = new HashMap<UUID, BukkitRunnable>();
 
-    public static Map<UUID, BukkitRunnable> getRestoreQueue() {
-        return restoreQueue;
-    }
-
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -56,9 +52,6 @@ public class TutorialListener implements Listener {
                         TutorialUtils.getTutorialUtils().textUtils(player);
                         Caching.getCaching().setTeleport(player.getUniqueId(), true);
                         player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
-                        if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.TEXT) {
-                            player.sendMessage(TutorialUtils.getTutorialUtils().tACC(Getters.getGetters().getTutorialView(name).getMessage()));
-                        }
                     }
                 }
             }
@@ -240,13 +233,13 @@ public class TutorialListener implements Listener {
             if (!seenTutorial(player.getName(), event.getTutorial().getName())) {
                 if (Getters.getGetters().getConfigs().getViewExp()) {
                     player.setTotalExperience(player.getTotalExperience() + Getters.getGetters().getConfigs().getPerViewExp());
-                    player.sendMessage(ChatColor.BLUE + "You recieved " + Getters.getGetters().getConfigs().getViewExp());
+                    player.sendMessage(ChatColor.BLUE + "You received " + Getters.getGetters().getConfigs().getViewExp());
                 }
                 if (Getters.getGetters().getConfigs().getViewMoney()) {
                     if (TutorialEco.getTutorialEco().setupEconomy()) {
                         EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, Getters.getGetters().getConfigs().getPerViewMoney());
                         if (ecoResponse.transactionSuccess()) {
-                            player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + " New Balance: " + ecoResponse.balance);
+                            player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + " New Balance: " + ecoResponse.balance);
                         } else {
                             plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                         }
@@ -266,7 +259,7 @@ public class TutorialListener implements Listener {
                     if (Getters.getGetters().getConfigs().getTutorialMoney()) {
                         EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, Getters.getGetters().getConfigs().getPerTutorialMoney());
                         if (ecoResponse.transactionSuccess()) {
-                            player.sendMessage(ChatColor.BLUE + "You recieved " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                            player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
                         } else {
                             plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                         }

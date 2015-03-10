@@ -86,23 +86,6 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
         return UUID.fromString(id.substring(0, 8) + "-" + id.substring(8, 12) + "-" + id.substring(12, 16) + "-" + id.substring(16, 20) + "-" + id.substring(20, 32));
     }
 
-    public static byte[] toBytes(UUID uuid) {
-        ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
-        byteBuffer.putLong(uuid.getMostSignificantBits());
-        byteBuffer.putLong(uuid.getLeastSignificantBits());
-        return byteBuffer.array();
-    }
-
-    public static UUID fromBytes(byte[] array) {
-        if (array.length != 16) {
-            throw new IllegalArgumentException("Illegal byte array length: " + array.length);
-        }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(array);
-        long mostSignificant = byteBuffer.getLong();
-        long leastSignificant = byteBuffer.getLong();
-        return new UUID(mostSignificant, leastSignificant);
-    }
-
     /**
      * @param name Player Name
      * @return UUID UUID of Player

@@ -47,10 +47,6 @@ public class Getters {
         return Caching.getCaching().playerDataMap();
     }
 
-    public boolean getPlayerSeenServer(String name) {
-        return Caching.getCaching().playerDataMap().containsKey(name) && Caching.getCaching().playerDataMap().get(name).getSeen();
-    }
-
     public ArrayList<String> getAllTutorials() {
         return Caching.getCaching().tutorialNames();
     }
@@ -73,10 +69,6 @@ public class Getters {
 
     public void getTutorialTimeTask(String tutorialName, String name) {
         TutorialTask.getTutorialTask().tutorialTimeTask(tutorialName, name);
-    }
-
-    public Map<String, UUID> getResponse() {
-        return Caching.getCaching().getResponse();
     }
 
     public static Getters getGetters() {

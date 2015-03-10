@@ -5,20 +5,14 @@ import org.bukkit.Location;
 
 public class TutorialView {
 
-    private final int viewId;
     private final String message;
     private final Location location;
     private final MessageType messageType;
 
-    public TutorialView(int viewId, String message, Location location, MessageType messageType) {
-        this.viewId = viewId;
+    public TutorialView(String message, Location location, MessageType messageType) {
         this.message = message;
         this.location = location;
         this.messageType = messageType;
-    }
-
-    public int getId() {
-        return this.viewId;
     }
 
     public String getMessage() {

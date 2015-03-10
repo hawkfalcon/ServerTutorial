@@ -11,12 +11,17 @@ import org.bukkit.entity.Player;
 
 public class ViewConversation {
 
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private String name;
 
     public void createNewView(Player player, String tutorialName) {
+        if (ServerTutorial.getInstance() == null) {
+            System.out.println("Plugin is null");
+        }
+        if (player == null) {
+            System.out.print("Player is null");
+        }
         this.name = tutorialName;
-        ConversationFactory factory = new ConversationFactory(plugin).withModality(true)
+        ConversationFactory factory = new ConversationFactory(ServerTutorial.getInstance()).withModality(true)
                 // .withPrefix(new Prefix())
                 .withFirstPrompt(new Welcome()).withEscapeSequence("/quit").withTimeout(60).thatExcludesNonPlayersWithMessage("You must be in game!");
         factory.buildConversation(player).begin();
@@ -77,7 +82,7 @@ public class ViewConversation {
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
             Player player = (Player) context.getForWhom();
-            String location = plugin.getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getX() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getY() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getZ() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + plugin.getServer().getPlayer(player.getName()).getLocation().getPitch();
+            String location = ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getWorld().getName() + "," + ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getX() + "," + ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getY() + "," + ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getZ() + "," + ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getYaw() + "," + ServerTutorial.getInstance().getServer().getPlayer(player.getName()).getLocation().getPitch();
             String message = context.getSessionData("message").toString();
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
@@ -95,7 +100,7 @@ public class ViewConversation {
                 e.printStackTrace();
             }
             AddViewEvent event = new AddViewEvent(player, Getters.getGetters().getTutorial(name), Getters.getGetters().getTutorialView(name, viewID));
-            plugin.getServer().getPluginManager().callEvent(event);
+            ServerTutorial.getInstance().getServer().getPluginManager().callEvent(event);
             return END_OF_CONVERSATION;
         }
     }

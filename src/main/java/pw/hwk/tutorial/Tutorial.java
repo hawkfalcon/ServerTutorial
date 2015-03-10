@@ -36,10 +36,6 @@ public class Tutorial {
         return this.name;
     }
 
-    public HashMap<Integer, TutorialView> getViews() {
-        return this.tutorialViews;
-    }
-
     public TutorialView getView(int viewID) {
         return this.tutorialViews.get(viewID);
     }

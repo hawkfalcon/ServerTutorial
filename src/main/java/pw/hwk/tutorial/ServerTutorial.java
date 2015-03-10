@@ -91,8 +91,6 @@ public class ServerTutorial extends JavaPlugin {
      * @param player       Player
      */
     public void startTutorial(String tutorialName, Player player) {
-        //String name = this.getServer().getPlayer(Caching.getCaching().getUUID(player)).getName();
-
         String name = player.getName();
         if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
@@ -201,10 +199,6 @@ public class ServerTutorial extends JavaPlugin {
 
     public EndTutorial getEndTutorial() {
         return endTutorial;
-    }
-
-    public String tACC(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public ViewConversation getViewConversation() {

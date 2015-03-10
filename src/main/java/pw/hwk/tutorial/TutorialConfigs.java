@@ -1,13 +1,8 @@
 package pw.hwk.tutorial;
 
-/*
- *
- * @author Frostalf
- */
 public class TutorialConfigs {
 
     private boolean autoUpdate;
-    private boolean metrics;
     private String signSetting;
     private boolean firstJoin;
     private String firstJoinTutorial;
@@ -23,10 +18,9 @@ public class TutorialConfigs {
     private double perViewMoney;
 
 
-    public TutorialConfigs(boolean autoUpdate, boolean metrics, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp, int perViewExp, double perViewMoney) {
+    public TutorialConfigs(boolean autoUpdate, String signSetting, boolean firstJoin, String firstJoinTutorial, boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, boolean tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp, int perViewExp, double perViewMoney) {
 
         this.autoUpdate = autoUpdate;
-        this.metrics = metrics;
         this.signSetting = signSetting;
         this.firstJoin = firstJoin;
         this.firstJoinTutorial = firstJoinTutorial;
@@ -44,10 +38,6 @@ public class TutorialConfigs {
 
     public boolean getUpdate() {
         return this.autoUpdate;
-    }
-
-    public boolean getMetrics() {
-        return this.metrics;
     }
 
     public String signSetting() {

@@ -1,9 +1,9 @@
 name: ServerTutorial
-main: ServerTutorial
+main: pw.hwk.tutorial.ServerTutorial
 version: maven-version-number
-description: Tutorial plugin modified for Adventuria
+description: Tutorial plugin
 authors: [hawkfalcon, gomeow, Frostalf, Trojaner]
-website: snw.io
+website: hwk.pw
 softdepend: [Vault]
 commands:
     tutorial:
