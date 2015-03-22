@@ -116,7 +116,7 @@ public class TutorialTask {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0, speed);
+        }.runTaskTimer(plugin, 0, 20L * speed);
     }
 
     public String tACC(String message) {
