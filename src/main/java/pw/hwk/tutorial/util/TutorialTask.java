@@ -108,6 +108,7 @@ public class TutorialTask {
                     timeLength--;
                 } catch (NullPointerException e) {
                     cancel();
+                    plugin.getEndTutorial().endTutorial(player);
                 }
             }
         }.runTaskTimer(plugin, 0, timeLength);
