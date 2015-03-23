@@ -47,8 +47,7 @@ public class TutorialTask {
     }
 
     public void tutorialTimeTask(final String tutorialName, final String name) {
-        //long num = (long) Getters.getGetters().getTutorial(tutorialName).getTimeLength();
-        //Long timeLength = num * 20L;
+        long timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20L;
 
         assert tutorialName != null && name != null;
 
@@ -61,16 +60,14 @@ public class TutorialTask {
         Caching.getCaching().setTeleport(player.getUniqueId(), true);
         player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
 
-        final int modifier = 2; //Todo: make configurable
-
-        long speed = 20L / modifier;
-
+        //final int modifier = 2; //Todo: make configurable
+        //long speed = 20L / modifier;
         new BukkitRunnable() {
-            long timeLeft = (long) Getters.getGetters().getTutorial(tutorialName).getTimeLength() * modifier;
 
             @Override
             public void run() {
                 try {
+                    int timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20;
                     Player player = plugin.getServer().getPlayerExact(name);
                     if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
                         plugin.getEndTutorial().endTutorial(player);
@@ -78,20 +75,17 @@ public class TutorialTask {
                         return;
                     }
 
-                    long shownTime = timeLeft / modifier;
-
-                    try {
-                        if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
-                            plugin.getEndTutorial().endTutorial(player);
-                            cancel();
-                            return;
-                        }
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                        plugin.getEndTutorial().endTutorial(player);
-                        cancel();
-                    }
-
+                    /*try {
+                     if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
+                     plugin.getEndTutorial().endTutorial(player);
+                     cancel();
+                     return;
+                     }
+                     } catch (Exception ignored) {
+                     ignored.printStackTrace();
+                     plugin.getEndTutorial().endTutorial(player);
+                     cancel();
+                     }*/
                     if (Getters.getGetters().getTutorialView(name).getMessageType() == MessageType.META) {
                         setPlayerItemName(player);
                     }
@@ -101,22 +95,23 @@ public class TutorialTask {
                     }
 
                     TutorialUtils.getTutorialUtils().textUtils(player);
-                    player.sendMessage(ChatColor.RED + "(" + shownTime + ")"); // Send time left
+                    player.sendMessage(ChatColor.RED + "(" + timeLength + ")"); // Send time left
+                    plugin.incrementCurrentView(name);
 
                     // View ended
-                    if (timeLeft == 0) {
-                        plugin.incrementCurrentView(name);
-                        tutorialTimeTask(tutorialName, name); // Restart for next view
-                        cancel();
-                        return;
-                    }
-
-                    timeLeft--;
+                   /* if (timeLength == 0) {
+                     plugin.incrementCurrentView(name);
+                     tutorialTimeTask(tutorialName, name); // Restart for next view
+                     cancel();
+                     return;
+                     }*/
+                    timeLength--;
                 } catch (NullPointerException e) {
                     cancel();
+                    plugin.getEndTutorial().endTutorial(player);
                 }
             }
-        }.runTaskTimer(plugin, 0, speed);
+        }.runTaskTimer(plugin, 0, timeLength);
     }
 
     public String tACC(String message) {
