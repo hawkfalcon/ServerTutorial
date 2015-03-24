@@ -77,6 +77,7 @@ public class TutorialTask {
                             return;
                         } else {
                             plugin.incrementCurrentView(name);
+                            timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20;
                         }
 
                     }
