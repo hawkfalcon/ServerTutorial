@@ -47,7 +47,6 @@ public class TutorialTask {
     }
 
     public void tutorialTimeTask(final String tutorialName, final String name) {
-        long timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20L;
 
         assert tutorialName != null && name != null;
 
@@ -117,7 +116,7 @@ public class TutorialTask {
                     plugin.getEndTutorial().endTutorial(player);
                 }
             }
-        }.runTaskTimer(plugin, 0, timeLength);
+        }.runTaskTimer(plugin, 0, 20L);
     }
 
     public String tACC(String message) {
