@@ -31,6 +31,13 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.5</version>
         </dependency>
+        
+        <!-- ProtocolLib Will be used later
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>3.6.3-SNAPSHOT</version>
+        </dependency> -->
 
     </dependencies>
 
@@ -48,6 +55,13 @@
             <id>vault-repo</id>
             <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
         </repository>
+        
+        <!--ProtocolLib Repo Will be used later
+        <repository>
+            <id>comphenix-rep</id>
+            <name>Comphenix Repository</name>
+            <url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
+        </repository> -->
     </repositories>
 
     <!-- BUILD -->
