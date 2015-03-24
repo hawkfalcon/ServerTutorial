@@ -5,13 +5,12 @@ import pw.hwk.tutorial.enums.ViewType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 
-import java.util.HashMap;
-
+import java.util.Map;
 
 public class Tutorial {
 
     private final String name;
-    private final HashMap<Integer, TutorialView> tutorialViews;
+    private final Map<Integer, TutorialView> tutorialViews;
     private final ViewType viewType;
     private final int timeLength;
     private final String endMessage;
@@ -20,7 +19,7 @@ public class Tutorial {
     private final CommandType commandType;
     private GameMode gamemode;
 
-    public Tutorial(String name, HashMap<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item, String command, CommandType commandType, GameMode gamemode) {
+    public Tutorial(String name, Map<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item, String command, CommandType commandType, GameMode gamemode) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;

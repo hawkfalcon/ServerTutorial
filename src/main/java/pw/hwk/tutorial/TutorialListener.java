@@ -34,7 +34,6 @@ import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
 
-
     private static ServerTutorial plugin = ServerTutorial.getInstance();
     private static Map<UUID, BukkitRunnable> restoreQueue = new HashMap<UUID, BukkitRunnable>();
 
@@ -84,8 +83,7 @@ public class TutorialListener implements Listener {
                 continue;
             }
 
-            Tutorial tut = Getters.getGetters().getCurrentTutorial(setPlayer.getName());
-            if (tut != null && tut.getViewType() == ViewType.TIME && Getters.getGetters().isInTutorial(setPlayer.getName())) {
+            if (Getters.getGetters().isInTutorial(setPlayer.getName())) {
                 event.getRecipients().remove(setPlayer);
             }
         }

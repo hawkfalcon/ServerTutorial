@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
@@ -30,9 +31,9 @@ public class ServerTutorial extends JavaPlugin {
     static String NEWVERSION;
     private static ServerTutorial instance;
 
-    private HashMap<String, Location> startLoc = new HashMap<String, Location>();
-    private HashMap<String, ItemStack[]> inventories = new HashMap<String, ItemStack[]>();
-    private HashMap<String, Boolean> flight = new HashMap<String, Boolean>();
+    private Map<String, Location> startLoc = new HashMap<>();
+    private Map<String, ItemStack[]> inventories = new HashMap<>();
+    private Map<String, Boolean> flight = new HashMap<>();
     private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
     private ConfigConversation configConversation = new ConfigConversation();
@@ -88,7 +89,7 @@ public class ServerTutorial extends JavaPlugin {
      * Start's tutorial
      *
      * @param tutorialName tutorial name
-     * @param player       Player
+     * @param player Player
      */
     public void startTutorial(String tutorialName, Player player) {
         String name = player.getName();
@@ -161,7 +162,8 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = Getters.getGetters().getTutorialView(name);
         Caching.getCaching().currentTutorialView().put(name, Getters.getGetters().getCurrentView(name) + 1);
         TutorialView toTutorialView = Getters.getGetters().getTutorialView(name);
-        @SuppressWarnings("deprecation") ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
+        @SuppressWarnings("deprecation")
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
