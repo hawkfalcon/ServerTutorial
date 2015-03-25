@@ -66,19 +66,11 @@ public class TutorialTask {
             @Override
             public void run() {
                 try {
-                    int timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20;
                     Player player = plugin.getServer().getPlayerExact(name);
-                    if (timeLength <= 0) {
-
-                        if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
-                            plugin.getEndTutorial().endTutorial(player);
-                            cancel();
-                            return;
-                        } else {
-                            plugin.incrementCurrentView(name);
-                            timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20;
-                        }
-
+                    if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
+                        plugin.getEndTutorial().endTutorial(player);
+                        cancel();
+                        return;
                     }
 
                     /*try {
@@ -101,7 +93,10 @@ public class TutorialTask {
                     }
 
                     TutorialUtils.getTutorialUtils().textUtils(player);
-                    player.sendMessage(ChatColor.RED + "(" + timeLength + ")"); // Send time left
+                    new TutorialViewTimer(name, tutorialName);
+                    //player.sendMessage(ChatColor.RED + "(" + timeLength + ")"); // Send time left
+
+                    plugin.incrementCurrentView(name);
 
                     // View ended
                    /* if (timeLength == 0) {
@@ -110,10 +105,8 @@ public class TutorialTask {
                      cancel();
                      return;
                      }*/
-                    timeLength--;
                 } catch (NullPointerException e) {
                     cancel();
-                    plugin.getEndTutorial().endTutorial(player);
                 }
             }
         }.runTaskTimer(plugin, 0, 20L);
