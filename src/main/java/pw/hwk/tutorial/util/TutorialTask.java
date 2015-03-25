@@ -47,7 +47,7 @@ public class TutorialTask {
     }
 
     public void tutorialTimeTask(final String tutorialName, final String name) {
-
+        long timeLength = Getters.getGetters().getTutorial(tutorialName).getTimeLength() * 20L;
         assert tutorialName != null && name != null;
 
         final Player player = Bukkit.getPlayerExact(name);
@@ -109,7 +109,7 @@ public class TutorialTask {
                     cancel();
                 }
             }
-        }.runTaskTimer(plugin, 0, 20L);
+        }.runTaskTimer(plugin, 0, timeLength);
     }
 
     public String tACC(String message) {
