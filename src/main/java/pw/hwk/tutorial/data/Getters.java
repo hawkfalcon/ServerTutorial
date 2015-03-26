@@ -6,10 +6,8 @@ import pw.hwk.tutorial.TutorialConfigs;
 import pw.hwk.tutorial.TutorialView;
 import pw.hwk.tutorial.util.TutorialTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class Getters {
 
@@ -43,15 +41,15 @@ public class Getters {
         return Caching.getCaching().playerDataMap().get(name);
     }
 
-    public HashMap<String, PlayerData> getPlayerData() {
+    public Map<String, PlayerData> getPlayerData() {
         return Caching.getCaching().playerDataMap();
     }
 
-    public ArrayList<String> getAllTutorials() {
+    public List<String> getAllTutorials() {
         return Caching.getCaching().tutorialNames();
     }
 
-    public ArrayList<String> getAllInTutorial() {
+    public List<String> getAllInTutorial() {
         return Caching.getCaching().playerInTutorial();
     }
 
