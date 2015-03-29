@@ -16,9 +16,11 @@ public class ViewConversation {
     public void createNewView(Player player, String tutorialName) {
         if (ServerTutorial.getInstance() == null) {
             System.out.println("Plugin is null");
+            return;
         }
         if (player == null) {
             System.out.print("Player is null");
+            return;
         }
         this.name = tutorialName;
         ConversationFactory factory = new ConversationFactory(ServerTutorial.getInstance()).withModality(true)
