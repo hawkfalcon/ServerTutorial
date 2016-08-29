@@ -12,17 +12,19 @@
     <!-- DEPENDENCIES -->
     <dependencies>
 
-        <!--Spigot-API-->
+        <!--Spigot API-->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!--Bukkit API-->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Vault -->
@@ -31,13 +33,6 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.5</version>
         </dependency>
-        
-        <!-- ProtocolLib Will be used later
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.6.3-SNAPSHOT</version>
-        </dependency> -->
 
     </dependencies>
 
@@ -47,7 +42,7 @@
 
         <repository>
             <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         
         <!-- Vault Repo -->

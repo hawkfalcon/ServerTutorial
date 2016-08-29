@@ -55,11 +55,12 @@ public class TutorialListener implements Listener {
                 }
             }
         }
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK && !Getters.getGetters().isInTutorial(name)) {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) && !Getters.getGetters().isInTutorial(name)) {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
-                if (sign.getLine(0).equalsIgnoreCase(ChatColor.stripColor(Getters.getGetters().getConfigs().signSetting()))) {
+                String match = ChatColor.stripColor(TutorialUtils.color(Getters.getGetters().getConfigs().signSetting()));
+                if (sign.getLine(0).equalsIgnoreCase(match)) {
                     if (sign.getLine(1) == null) {
                         return;
                     }

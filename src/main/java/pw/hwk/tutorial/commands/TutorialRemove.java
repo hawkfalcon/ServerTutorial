@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pw.hwk.tutorial.util.TutorialUtils;
 
 public class TutorialRemove implements CommandExecutor {
 
@@ -23,12 +24,12 @@ public class TutorialRemove implements CommandExecutor {
             return true;
         }
         if (!Getters.getGetters().getAllTutorials().contains(args[1])) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
+            player.sendMessage(TutorialUtils.color("&cThere is no Tutorial by that Name!"));
             return true;
         }
         if (args.length == 2) {
             plugin.removeTutorial(args[1]);
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed Tutorial: &b" + args[1]));
+            sender.sendMessage(TutorialUtils.color("&4Removed Tutorial: &b" + args[1]));
             return true;
         }
         if (args.length != 3) {
@@ -39,14 +40,14 @@ public class TutorialRemove implements CommandExecutor {
             try {
                 int id = Integer.parseInt(args[2]);
                 plugin.removeTutorialView(args[1], id);
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Removed View: &b" + id + " from " + args[1]));
+                sender.sendMessage(TutorialUtils.color("&4Removed View: &b" + id + " from " + args[1]));
                 return true;
             } catch (NumberFormatException ex) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Last Argument Needs to be a Number!"));
+                sender.sendMessage(TutorialUtils.color("&4Last Argument Needs to be a Number!"));
                 return true;
             }
         }
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&4Tutorial View does not exist!"));
+        sender.sendMessage(TutorialUtils.color("&4Tutorial View does not exist!"));
         return true;
     }
 }

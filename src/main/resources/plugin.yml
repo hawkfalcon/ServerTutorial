@@ -4,7 +4,7 @@ version: maven-version-number
 description: Tutorial plugin
 authors: [hawkfalcon, gomeow, Frostalf, Trojaner]
 website: hwk.pw
-softdepend: [Vault]
+softdepend: [Vault, Multiverse-Core]
 commands:
     tutorial:
         description: tutorial

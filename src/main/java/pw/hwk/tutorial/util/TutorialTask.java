@@ -60,15 +60,11 @@ public class TutorialTask {
 
     }
 
-    public String tACC(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-
     public void setPlayerItemName(Player player) {
         player.setItemInHand(null);
         ItemStack i = new ItemStack(Getters.getGetters().getCurrentTutorial(player.getName()).getItem());
         ItemMeta data = i.getItemMeta();
-        data.setDisplayName(tACC(Getters.getGetters().getTutorialView(player.getName()).getMessage()));
+        data.setDisplayName(TutorialUtils.color(Getters.getGetters().getTutorialView(player.getName()).getMessage()));
 
         i.setItemMeta(data);
         player.setItemInHand(i);

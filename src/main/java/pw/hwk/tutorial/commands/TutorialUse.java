@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pw.hwk.tutorial.util.TutorialUtils;
 
 public class TutorialUse implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class TutorialUse implements CommandExecutor {
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
+                player.sendMessage(TutorialUtils.color("&cThere is no Tutorial by that Name!"));
                 return true;
             }
         } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
@@ -29,12 +30,12 @@ public class TutorialUse implements CommandExecutor {
                 plugin.startTutorial(args[0], player);
                 return true;
             } else {
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cThere is no Tutorial by that Name!"));
+                player.sendMessage(TutorialUtils.color("&cThere is no Tutorial by that Name!"));
                 return true;
             }
         }
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission for this!!"));
+        player.sendMessage(TutorialUtils.color("&cYou do not have permission for this!!"));
         return true;
     }
 }

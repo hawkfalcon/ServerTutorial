@@ -37,7 +37,7 @@ public class TutorialUtils {
             i.setItemMeta(data);
             player.setItemInHand(i);
 
-            String lines[] = tACC(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
+            String lines[] = color(Getters.getGetters().getTutorialView(name).getMessage()).split("\\\\n");
 
             for (String msg : lines) {
                 player.sendMessage(msg);
@@ -45,7 +45,7 @@ public class TutorialUtils {
         }
     }
 
-    public String tACC(String message) {
+    public static String color(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 

@@ -8,6 +8,7 @@ import pw.hwk.tutorial.data.Getters;
 import org.bukkit.ChatColor;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
+import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ViewConversation {
 
@@ -34,7 +35,7 @@ public class ViewConversation {
         @Override
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
-            return ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\n&8>&fWelcome to the &bServerTutorial&f view creation!\n&8>&7This will guide you adding a view to your tutorial\n&8>&7Currently adding view to the tutorial &b" + name + "&7!");
+            return TutorialUtils.color("&6-------------------------------\n&8>&fWelcome to the &bServerTutorial&f view creation!\n&8>&7This will guide you adding a view to your tutorial\n&8>&7Currently adding view to the tutorial &b" + name + "&7!");
         }
 
         @Override
@@ -47,7 +48,7 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7First, Choose a MessageType: META, TEXT or ACTION\n" + "&8>&6META &7- uses the item name\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&7>&6> &7Type a MessageType to continue!");
+            return TutorialUtils.color("&8>&7First, Choose a MessageType: META, TEXT or ACTION\n" + "&8>&6META &7- uses the item name\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&7>&6> &7Type a MessageType to continue!");
         }
 
         @Override
@@ -64,7 +65,7 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7>&6> &7Type what message this view should have:");
+            return TutorialUtils.color("&8>&7>&6> &7Type what message this view should have:");
         }
 
         @Override
@@ -78,7 +79,7 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return ChatColor.translateAlternateColorCodes('&', "&8>&7The view for tutorial &b" + name + "&7 has been successfully created!\n&8>&7It is a &f" + context.getSessionData("messagetype").toString() + " &7based view with message &f" + context.getSessionData("message").toString() + "&7!\n&6-------------------------------");
+            return TutorialUtils.color("&8>&7The view for tutorial &b" + name + "&7 has been successfully created!\n&8>&7It is a &f" + context.getSessionData("messagetype").toString() + " &7based view with message &f" + context.getSessionData("message").toString() + "&7!\n&6-------------------------------");
         }
 
         @Override

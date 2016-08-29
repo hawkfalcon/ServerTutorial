@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pw.hwk.tutorial.util.TutorialUtils;
 
 public class TutorialView implements CommandExecutor {
 
@@ -17,7 +18,7 @@ public class TutorialView implements CommandExecutor {
             return true;
         }
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------\nAvailable tutorials:"));
+        player.sendMessage(TutorialUtils.color("&6-------------------------------\nAvailable tutorials:"));
         StringBuilder sb = new StringBuilder();
         if (Getters.getGetters().getAllTutorials().isEmpty()) {
             player.sendMessage(ChatColor.RED + "There are currently no tutorials setup.\nSet one up with /tutorial create <name>");
@@ -32,7 +33,7 @@ public class TutorialView implements CommandExecutor {
             sb.append(tutorial);
         }
         player.sendMessage(sb.toString());
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6-------------------------------"));
+        player.sendMessage(TutorialUtils.color("&6-------------------------------"));
         return true;
     }
 }

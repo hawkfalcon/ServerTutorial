@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import pw.hwk.tutorial.util.TutorialUtils;
 
 public class EndTutorial {
 
@@ -21,7 +22,7 @@ public class EndTutorial {
     public void endTutorial(final Player player) {
         final String name = plugin.getServer().getPlayer(player.getName()).getName();
         Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', tutorial.getEndMessage()));
+        player.sendMessage(TutorialUtils.color(tutorial.getEndMessage()));
         player.closeInventory();
         player.getInventory().clear();
         player.setAllowFlight(plugin.getFlight(name));
@@ -80,7 +81,7 @@ public class EndTutorial {
     public void reloadEndTutorial(final Player player) {
         final String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
         Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', tutorial.getEndMessage()));
+        player.sendMessage(TutorialUtils.color(tutorial.getEndMessage()));
         player.closeInventory();
         player.getInventory().clear();
         player.setAllowFlight(plugin.getFlight(name));
