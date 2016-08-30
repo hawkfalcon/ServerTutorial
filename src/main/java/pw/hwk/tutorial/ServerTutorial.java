@@ -2,9 +2,7 @@ package pw.hwk.tutorial;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import pw.hwk.tutorial.api.StartTutorialEvent;
 import pw.hwk.tutorial.api.ViewSwitchEvent;
@@ -12,6 +10,7 @@ import pw.hwk.tutorial.commands.TutorialMainCommand;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.TutorialManager;
+import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.Updater;
@@ -19,15 +18,15 @@ import pw.hwk.tutorial.util.Updater;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
     private static ServerTutorial instance;
 
-    private Map<String, Location> startLoc = new HashMap<>();
-    private Map<String, ItemStack[]> inventories = new HashMap<>();
-    private Map<String, Boolean> flight = new HashMap<>();
+    private Map<UUID, TutorialPlayer> tutorialPlayers = new HashMap<>();
+
     private EndTutorial endTutorial = new EndTutorial(this);
 
     @Override
@@ -99,20 +98,15 @@ public class ServerTutorial extends JavaPlugin {
             return;
         }
 
-        this.startLoc.put(name, player.getLocation());
-        this.addInventory(name, player.getInventory().getContents());
-        this.addFlight(name, player.getAllowFlight());
-        player.getInventory().clear();
-        player.setAllowFlight(true);
-        player.setFlying(true);
-        Caching.getCaching().setGameMode(player.getUniqueId(), player.getGameMode());
+        TutorialPlayer tutorialPlayer = new TutorialPlayer(player);
+        tutorialPlayer.clearPlayer(player);
+        addTutorialPlayer(player.getUniqueId(), tutorialPlayer);
+
         player.setGameMode(tut.getGameMode());
         this.initializeCurrentView(name);
         TutorialManager.getManager().addCurrentTutorial(name, tutorialName);
         TutorialManager.getManager().addToTutorial(name);
-        for (Player online : this.getServer().getOnlinePlayers()) {
-            online.hidePlayer(player);
-        }
+
         Caching.getCaching().setTeleport(player.getUniqueId(), true);
         player.teleport(TutorialManager.getManager().getTutorialView(tutorialName, name).getLocation());
         if (TutorialManager.getManager().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
@@ -140,10 +134,20 @@ public class ServerTutorial extends JavaPlugin {
      */
     public void removeFromTutorial(String name) {
         Caching.getCaching().playerInTutorial().remove(name);
-        this.startLoc.remove(name);
         Caching.getCaching().currentTutorial().remove(name);
         Caching.getCaching().currentTutorialView().remove(name);
-        this.flight.remove(name);
+    }
+
+    public TutorialPlayer getTutorialPlayer(UUID uuid) {
+        return tutorialPlayers.get(uuid);
+    }
+
+    public void addTutorialPlayer(UUID uuid, TutorialPlayer tutorialPlayer) {
+        this.tutorialPlayers.put(uuid, tutorialPlayer);
+    }
+
+    public void removeTutorialPlayer(Player player) {
+        this.tutorialPlayers.remove(player.getUniqueId());
     }
 
     public void initializeCurrentView(String name) {
@@ -156,38 +160,6 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView toTutorialView = TutorialManager.getManager().getTutorialView(name);
         ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, TutorialManager.getManager().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
-    }
-
-    public Location getFirstLoc(String name) {
-        return this.startLoc.get(name);
-    }
-
-    public void cleanFirstLoc(String name) {
-        this.startLoc.remove(name);
-    }
-
-    public ItemStack[] getInventory(String name) {
-        return this.inventories.get(name);
-    }
-
-    public void addInventory(String name, ItemStack[] items) {
-        this.inventories.put(name, items);
-    }
-
-    public void cleanInventory(String name) {
-        this.inventories.remove(name);
-    }
-
-    public boolean getFlight(String name) {
-        return this.flight.get(name);
-    }
-
-    public void addFlight(String name, boolean flight) {
-        this.flight.put(name, flight);
-    }
-
-    public void removeFlight(String name) {
-        this.flight.remove(name);
     }
 
     public EndTutorial getEndTutorial() {
@@ -224,5 +196,4 @@ public class ServerTutorial extends JavaPlugin {
     public static ServerTutorial getInstance() {
         return instance;
     }
-
 }

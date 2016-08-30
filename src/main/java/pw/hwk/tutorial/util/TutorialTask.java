@@ -8,7 +8,6 @@ import pw.hwk.tutorial.data.TutorialManager;
 
 public class TutorialTask {
 
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private static TutorialTask instance;
 
     public void tutorialTimeTask(final String tutorialName, final String name) {

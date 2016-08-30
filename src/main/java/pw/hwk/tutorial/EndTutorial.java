@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import pw.hwk.tutorial.api.EndTutorialEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.TutorialManager;
+import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.util.TutorialUtils;
 
@@ -49,26 +50,14 @@ public class EndTutorial {
     public void endTutorialPlayer(final Player player, final String name, String endMessage) {
         player.sendMessage(TutorialUtils.color(endMessage));
         player.closeInventory();
-        player.getInventory().clear();
-        player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(false);
-        plugin.removeFlight(name);
-        Caching.getCaching().setTeleport(player.getUniqueId(), true);
-        player.teleport(plugin.getFirstLoc(name));
-        player.setGameMode(Caching.getCaching().getGameMode(player.getUniqueId()));
-        plugin.cleanFirstLoc(name);
-        plugin.removeFromTutorial(name);
-        new BukkitRunnable() {
 
-            @Override
-            public void run() {
-                for (Player online : plugin.getServer().getOnlinePlayers()) {
-                    online.showPlayer(player);
-                }
-                player.getInventory().setContents(plugin.getInventory(name));
-                plugin.cleanInventory(name);
-            }
-        }.runTaskLater(plugin, 20L);
+        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+
+        TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
+        tutorialPlayer.restorePlayer(player);
+
+        plugin.removeTutorialPlayer(player);
+        plugin.removeFromTutorial(name);
     }
 
     public void reloadEndTutorial(Player player) {

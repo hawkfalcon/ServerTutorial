@@ -24,7 +24,6 @@ public class Caching {
     private Map<String, PlayerData> playerDataMap = new HashMap<>();
     private static Caching instance;
     private Map<UUID, Boolean> allowedTeleports = new HashMap<>();
-    private Map<UUID, GameMode> gameModes = new HashMap<>();
 
     public void casheAllData() {
         if (DataLoading.getDataLoading().getData().getString("tutorials") == null) {
@@ -178,13 +177,5 @@ public class Caching {
             instance = new Caching();
         }
         return instance;
-    }
-
-    public void setGameMode(UUID uniqueId, GameMode gameMode) {
-        gameModes.put(uniqueId, gameMode);
-    }
-
-    public GameMode getGameMode(UUID uniqueId) {
-        return gameModes.get(uniqueId);
     }
 }

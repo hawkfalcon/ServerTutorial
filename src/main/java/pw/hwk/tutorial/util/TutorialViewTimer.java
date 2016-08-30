@@ -6,12 +6,11 @@
 package pw.hwk.tutorial.util;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.TutorialManager;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class TutorialViewTimer {
 
@@ -19,7 +18,6 @@ public class TutorialViewTimer {
     private String playerName;
     private String tutorialName;
     private int seconds;
-    private Timer timer;
     private Player player;
 
     public TutorialViewTimer(String playerName, String tutorialName) {
@@ -27,26 +25,19 @@ public class TutorialViewTimer {
         this.player = plugin.getServer().getPlayerExact(playerName);
         this.tutorialName = tutorialName;
         this.seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
-        this.timer = new Timer();
     }
 
     public void startTimer() {
-        timer.schedule(new DisplayCounter(), 0, 1000);
+        new DisplayCounter().runTaskTimer(plugin, 0, 20);
     }
 
-    public void cancelTimer() {
-        timer.cancel();
-    }
-
-    public class DisplayCounter extends TimerTask {
+    public class DisplayCounter extends BukkitRunnable {
 
         @Override
         public void run() {
             try {
-                TutorialUtils.getTutorialUtils().messageUtils(player);
-
                 if (seconds > 0) {
-                    player.setExp(seconds);
+                    player.setLevel(seconds);
                     seconds--;
                 } else {
                     if (TutorialManager.getManager().getCurrentTutorial(playerName).getTotalViews() == TutorialManager.getManager().getCurrentView(playerName)) {
@@ -59,7 +50,7 @@ public class TutorialViewTimer {
                     player.teleport(TutorialManager.getManager().getTutorialView(playerName).getLocation());
                     TutorialUtils.getTutorialUtils().messageUtils(player);
                     seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
-                    player.setExp(seconds);
+                    player.setLevel(seconds);
                     seconds--;
                 }
             } catch (NullPointerException ex) {

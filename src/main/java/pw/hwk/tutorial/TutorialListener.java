@@ -20,6 +20,7 @@ import pw.hwk.tutorial.api.ViewSwitchEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.TutorialManager;
+import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.rewards.TutorialEco;
 import pw.hwk.tutorial.util.TutorialUtils;
@@ -114,26 +115,18 @@ public class TutorialListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (TutorialManager.getManager().isInTutorial(event.getPlayer().getName())) {
-            final GameMode gm = Caching.getCaching().getGameMode(player.getUniqueId());
-            final boolean allowFlight = plugin.getFlight(player.getName());
             final String name = player.getName();
-            final Location loc = plugin.getFirstLoc(player.getName());
-            final ItemStack[] contents = plugin.getInventory(player.getName());
             restoreQueue.put(player.getUniqueId(), new BukkitRunnable() {
                 @Override
                 public void run() {
                     Player player = Bukkit.getPlayerExact(name);
                     player.closeInventory();
-                    player.getInventory().clear();
-                    player.setGameMode(gm);
-                    player.setAllowFlight(allowFlight);
-                    player.setFlying(false);
-                    plugin.removeFlight(name);
                     Caching.getCaching().setTeleport(player.getUniqueId(), true);
-                    player.teleport(loc);
-                    plugin.cleanFirstLoc(name);
-                    player.getInventory().setContents(contents);
-                    plugin.cleanInventory(name);
+
+                    TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
+                    tutorialPlayer.restorePlayer(player);
+
+                    plugin.removeTutorialPlayer(player);
                 }
             });
             plugin.removeFromTutorial(event.getPlayer().getName());
