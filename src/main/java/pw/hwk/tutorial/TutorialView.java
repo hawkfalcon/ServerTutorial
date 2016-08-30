@@ -1,7 +1,7 @@
 package pw.hwk.tutorial;
 
-import pw.hwk.tutorial.enums.MessageType;
 import org.bukkit.Location;
+import pw.hwk.tutorial.enums.MessageType;
 
 public class TutorialView {
 

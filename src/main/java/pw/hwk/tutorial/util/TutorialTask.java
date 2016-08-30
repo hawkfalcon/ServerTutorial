@@ -1,15 +1,10 @@
 package pw.hwk.tutorial.util;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.Getters;
-import pw.hwk.tutorial.enums.MessageType;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class TutorialTask {
 

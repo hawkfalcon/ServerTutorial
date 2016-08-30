@@ -5,13 +5,13 @@
  */
 package pw.hwk.tutorial.util;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.Getters;
-import pw.hwk.tutorial.enums.MessageType;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TutorialViewTimer {
 

@@ -1,5 +1,9 @@
 package pw.hwk.tutorial.conversation;
 
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.conversations.*;
+import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.api.CreateTutorialEvent;
 import pw.hwk.tutorial.data.Caching;
@@ -7,10 +11,6 @@ import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.Getters;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.enums.ViewType;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.conversations.*;
-import org.bukkit.entity.Player;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class CreateTutorial {
@@ -115,7 +115,7 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7Choose a type for the end-command: PLAYER, SUDO, CONSOLE or NONE\n" + "&8>&6PLAYER &7- the tutorial player will execute the command\n" + "&8>&6SUDO &7- like PLAYER, but the user will execute it with * permission\n" + "&8>&6CONSOLE &7- execute command as console\n" + "&8>&6NONE &7- Dont execute any commands\n" + "&8>&7>&6> &7Type a Command Type to continue:");
+            return TutorialUtils.color("&8>&7Choose a type for the end-command: PLAYER, CONSOLE or NONE\n" + "&8>&6PLAYER &7- the tutorial player will execute the command\n" + "&8>&6CONSOLE &7- execute command as console\n" + "&8>&6NONE &7- Dont execute any commands\n" + "&8>&7>&6> &7Type a Command Type to continue:");
         }
 
         @Override

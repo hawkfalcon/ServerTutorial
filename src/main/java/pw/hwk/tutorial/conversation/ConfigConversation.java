@@ -1,11 +1,10 @@
 package pw.hwk.tutorial.conversation;
 
+import org.bukkit.conversations.*;
+import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.Getters;
-import org.bukkit.ChatColor;
-import org.bukkit.conversations.*;
-import org.bukkit.entity.Player;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ConfigConversation {
@@ -95,7 +94,7 @@ public class ConfigConversation {
             return new AutoUpdater();
         }
     }
-    
+
     private class SignText extends StringPrompt {
 
         @Override

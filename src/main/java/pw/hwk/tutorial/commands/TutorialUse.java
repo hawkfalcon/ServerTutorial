@@ -1,13 +1,12 @@
 package pw.hwk.tutorial.commands;
 
-import pw.hwk.tutorial.ServerTutorial;
-import pw.hwk.tutorial.data.Getters;
-import pw.hwk.tutorial.enums.Permissions;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import pw.hwk.tutorial.ServerTutorial;
+import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.enums.Permissions;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class TutorialUse implements CommandExecutor {

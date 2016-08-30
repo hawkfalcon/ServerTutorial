@@ -1,15 +1,5 @@
 package pw.hwk.tutorial;
 
-import pw.hwk.tutorial.api.EndTutorialEvent;
-import pw.hwk.tutorial.api.ViewSwitchEvent;
-import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.DataLoading;
-import pw.hwk.tutorial.data.Getters;
-import pw.hwk.tutorial.enums.MessageType;
-import pw.hwk.tutorial.enums.ViewType;
-import pw.hwk.tutorial.rewards.TutorialEco;
-import pw.hwk.tutorial.util.TutorialUtils;
-import pw.hwk.tutorial.util.UUIDFetcher;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -25,6 +15,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import pw.hwk.tutorial.api.EndTutorialEvent;
+import pw.hwk.tutorial.api.ViewSwitchEvent;
+import pw.hwk.tutorial.data.Caching;
+import pw.hwk.tutorial.data.DataLoading;
+import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.enums.ViewType;
+import pw.hwk.tutorial.rewards.TutorialEco;
+import pw.hwk.tutorial.util.TutorialUtils;
+import pw.hwk.tutorial.util.UUIDFetcher;
 
 import java.util.HashMap;
 import java.util.HashSet;

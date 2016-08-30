@@ -1,13 +1,13 @@
 package pw.hwk.tutorial.conversation;
 
+import org.bukkit.ChatColor;
+import org.bukkit.conversations.*;
+import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.api.AddViewEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.Getters;
-import org.bukkit.ChatColor;
-import org.bukkit.conversations.*;
-import org.bukkit.entity.Player;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ViewConversation {
@@ -50,7 +50,7 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7First, Choose a MessageType: META, TEXT or ACTION\n" + "&8>&6META &7- uses the item name\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&7>&6> &7Type a MessageType to continue!");
+            return TutorialUtils.color("&8>&7First, Choose a MessageType: TEXT, TITLE, or ACTIONBAR\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&6TITLE &7- uses titles\n" + "&8>&6TITLE &7- uses the action bar\n" + "&8>&7>&6> &7Type a MessageType to continue!");
         }
 
         @Override

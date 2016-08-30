@@ -1,9 +1,8 @@
 package pw.hwk.tutorial;
 
+import org.bukkit.GameMode;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.enums.ViewType;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
 
 import java.util.Map;
 

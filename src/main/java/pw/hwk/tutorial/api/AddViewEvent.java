@@ -1,10 +1,10 @@
 package pw.hwk.tutorial.api;
 
-import pw.hwk.tutorial.Tutorial;
-import pw.hwk.tutorial.TutorialView;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import pw.hwk.tutorial.Tutorial;
+import pw.hwk.tutorial.TutorialView;
 
 public class AddViewEvent extends Event {
 

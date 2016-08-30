@@ -1,19 +1,14 @@
 package pw.hwk.tutorial.data;
 
+import org.bukkit.GameMode;
+import org.bukkit.entity.Player;
 import pw.hwk.tutorial.*;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.enums.MessageType;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.util.TutorialUtils;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Caching {
 

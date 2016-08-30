@@ -1,5 +1,11 @@
 package pw.hwk.tutorial;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import pw.hwk.tutorial.api.StartTutorialEvent;
 import pw.hwk.tutorial.api.ViewSwitchEvent;
 import pw.hwk.tutorial.commands.TutorialMainCommand;
@@ -10,12 +16,6 @@ import pw.hwk.tutorial.data.Setters;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.Updater;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
@@ -82,7 +82,7 @@ public class ServerTutorial extends JavaPlugin {
      * Starts tutorial
      *
      * @param tutorialName tutorial name
-     * @param player Player
+     * @param player       Player
      */
     public void startTutorial(String tutorialName, Player player) {
         String name = player.getName();
@@ -155,8 +155,7 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = Getters.getGetters().getTutorialView(name);
         Caching.getCaching().currentTutorialView().put(name, Getters.getGetters().getCurrentView(name) + 1);
         TutorialView toTutorialView = Getters.getGetters().getTutorialView(name);
-        @SuppressWarnings("deprecation")
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
+        @SuppressWarnings("deprecation") ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 

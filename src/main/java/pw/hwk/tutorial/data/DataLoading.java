@@ -1,8 +1,8 @@
 package pw.hwk.tutorial.data;
 
-import pw.hwk.tutorial.ServerTutorial;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import pw.hwk.tutorial.ServerTutorial;
 
 import java.io.File;
 import java.io.IOException;
