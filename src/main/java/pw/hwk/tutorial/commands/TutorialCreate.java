@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.conversation.CreateTutorial;
 import pw.hwk.tutorial.conversation.ViewConversation;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.Permissions;
 
 
@@ -25,7 +25,7 @@ public class TutorialCreate implements CommandExecutor {
 
         if (args.length >= 2 && args[0].equalsIgnoreCase("create")) {
 
-            if (Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
+            if (TutorialManager.getManager().getAllTutorials().contains(args[1].toLowerCase())) {
                 sender.sendMessage(ChatColor.RED + "This tutorial already exists!");
                 return true;
             }
@@ -34,7 +34,7 @@ public class TutorialCreate implements CommandExecutor {
             return true;
         }
         if (args.length >= 2 && args[0].equalsIgnoreCase("addview")) {
-            if (!Getters.getGetters().getAllTutorials().contains(args[1].toLowerCase())) {
+            if (!TutorialManager.getManager().getAllTutorials().contains(args[1].toLowerCase())) {
                 sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
                 return true;
             }

@@ -5,7 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.Permissions;
 import pw.hwk.tutorial.util.TutorialUtils;
 
@@ -20,12 +20,12 @@ public class TutorialView implements CommandExecutor {
 
         player.sendMessage(TutorialUtils.color("&6-------------------------------\nAvailable tutorials:"));
         StringBuilder sb = new StringBuilder();
-        if (Getters.getGetters().getAllTutorials().isEmpty()) {
+        if (TutorialManager.getManager().getAllTutorials().isEmpty()) {
             player.sendMessage(ChatColor.RED + "There are currently no tutorials setup.\nSet one up with /tutorial create <name>");
             return true;
         }
 
-        for (String tutorial : Getters.getGetters().getAllTutorials()) {
+        for (String tutorial : TutorialManager.getManager().getAllTutorials()) {
             if (sb.length() > 0) {
                 sb.append(',');
                 sb.append(' ');

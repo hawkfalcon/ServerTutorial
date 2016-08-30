@@ -4,7 +4,7 @@ import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ConfigConversation {
@@ -80,7 +80,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>Current Setting for Auto-Updater: " + String.valueOf(Getters.getGetters().getConfigs().getUpdate()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("&8>Current Setting for Auto-Updater: " + String.valueOf(TutorialManager.getManager().getConfigs().getUpdate()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -99,7 +99,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>Current Setting for Sign Text: " + String.valueOf(Getters.getGetters().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes. Can only be 15 characters long");
+            return TutorialUtils.color("&8>Current Setting for Sign Text: " + String.valueOf(TutorialManager.getManager().getConfigs().signSetting()) + "\n&8>Type what you want the Sign Text to be, also add any color codes. Can only be 15 characters long");
         }
 
         @Override
@@ -118,7 +118,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>Current Setting for First Join: " + String.valueOf(Getters.getGetters().getConfigs().firstJoin()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("&8>Current Setting for First Join: " + String.valueOf(TutorialManager.getManager().getConfigs().firstJoin()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -137,7 +137,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>Current Setting for First Join Tutorial: " + String.valueOf(Getters.getGetters().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
+            return TutorialUtils.color("&8>Current Setting for First Join Tutorial: " + String.valueOf(TutorialManager.getManager().getConfigs().firstJoinTutorial()) + "\n&8>Valid inputs is a Tutorial name that exists or Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -160,7 +160,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>Current Setting for Rewards: " + String.valueOf(Getters.getGetters().getConfigs().getRewards()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("&8>Current Setting for Rewards: " + String.valueOf(TutorialManager.getManager().getConfigs().getRewards()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -179,7 +179,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for Exp CountDown: " + String.valueOf(Getters.getGetters().getConfigs().getExpCountdown()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for Exp CountDown: " + String.valueOf(TutorialManager.getManager().getConfigs().getExpCountdown()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -198,7 +198,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for View Money: " + String.valueOf(Getters.getGetters().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for View Money: " + String.valueOf(TutorialManager.getManager().getConfigs().getPerViewMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -217,7 +217,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for View Exp: " + String.valueOf(Getters.getGetters().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for View Exp: " + String.valueOf(TutorialManager.getManager().getConfigs().getPerViewExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -235,7 +235,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for Turtorial Money: " + String.valueOf(Getters.getGetters().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for Turtorial Money: " + String.valueOf(TutorialManager.getManager().getConfigs().getPerTutorialMoney()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -253,7 +253,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for Tutorial Exp: " + String.valueOf(Getters.getGetters().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for Tutorial Exp: " + String.valueOf(TutorialManager.getManager().getConfigs().getPerTutorialExp()) + "\n&8>Valid inputs are True, False, Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -271,7 +271,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for Turtorial Money Reward: " + String.valueOf(Getters.getGetters().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs is a Number including decimal values or Cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for Turtorial Money Reward: " + String.valueOf(TutorialManager.getManager().getConfigs().getTutorialMoney()) + "\n&8>Valid inputs is a Number including decimal values or Cancel(cancels changing the setting)");
         }
 
         @Override
@@ -291,7 +291,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for Turtorial Exp Reward: " + String.valueOf(Getters.getGetters().getConfigs().getTutorialExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for Turtorial Exp Reward: " + String.valueOf(TutorialManager.getManager().getConfigs().getTutorialExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override
@@ -311,7 +311,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for View Money Reward: " + String.valueOf(Getters.getGetters().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for View Money Reward: " + String.valueOf(TutorialManager.getManager().getConfigs().getViewMoney()) + "\n&8>Valid inputs a number or cancel(cancels changing the setting)");
         }
 
         @Override
@@ -331,7 +331,7 @@ public class ConfigConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("Current Setting for View Exp Reward: " + String.valueOf(Getters.getGetters().getConfigs().getViewExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
+            return TutorialUtils.color("Current Setting for View Exp Reward: " + String.valueOf(TutorialManager.getManager().getConfigs().getViewExp()) + "\n&8>Valid inputs is a Number with 1 decimal place(Ex: 1.1) or cancel(cancels changing the setting)");
         }
 
         @Override

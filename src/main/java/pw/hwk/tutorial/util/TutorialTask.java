@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 
 public class TutorialTask {
 
@@ -19,7 +19,7 @@ public class TutorialTask {
             return;
         }
         Caching.getCaching().setTeleport(player.getUniqueId(), true);
-        player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
+        player.teleport(TutorialManager.getManager().getTutorialView(name).getLocation());
         TutorialViewTimer timer = new TutorialViewTimer(name, tutorialName);
         timer.startTimer();
 

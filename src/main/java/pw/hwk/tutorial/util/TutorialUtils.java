@@ -7,7 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.TutorialView;
 import pw.hwk.tutorial.data.DataLoading;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 
 public class TutorialUtils {
 
@@ -27,12 +27,14 @@ public class TutorialUtils {
     }
 
     public void messageUtils(Player player) {
-        TutorialView tutorialView = Getters.getGetters().getTutorialView(player.getName());
+        TutorialView tutorialView = TutorialManager.getManager().getTutorialView(player.getName());
         String message = color(tutorialView.getMessage());
 
         switch (tutorialView.getMessageType()) {
+            case ACTIONBAR:
+            case TITLE:
             case META:
-            case TEXT:
+            default:
                 String lines[] = message.split("\\\\n");
 
                 for (String msg : lines) {

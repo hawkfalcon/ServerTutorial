@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.api.TutorialReloadEvent;
 import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.Permissions;
 
 public class TutorialReload implements CommandExecutor {
@@ -22,7 +22,7 @@ public class TutorialReload implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
             return true;
         }
-        for (String playerName : Getters.getGetters().getAllInTutorial()) {
+        for (String playerName : TutorialManager.getManager().getAllInTutorial()) {
             Player player = plugin.getServer().getPlayer(playerName);
             plugin.getEndTutorial().reloadEndTutorial(player);
         }

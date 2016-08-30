@@ -8,7 +8,7 @@ import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.api.CreateTutorialEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.util.TutorialUtils;
@@ -204,7 +204,7 @@ public class CreateTutorial {
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".gamemode", gamemode);
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
-        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), Getters.getGetters().getTutorial(name));
+        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), TutorialManager.getManager().getTutorial(name));
         plugin.getServer().getPluginManager().callEvent(event);
     }
 

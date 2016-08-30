@@ -70,7 +70,7 @@ public class Caching {
             }
 
             Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, command, commandType, gm);
-            Setters.getSetters().addTutorial(tutorialName, tutorial);
+            TutorialManager.getManager().addTutorial(tutorialName, tutorial);
         }
     }
 

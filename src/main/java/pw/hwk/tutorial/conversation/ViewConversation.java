@@ -7,7 +7,7 @@ import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.api.AddViewEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ViewConversation {
@@ -104,7 +104,7 @@ public class ViewConversation {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            AddViewEvent event = new AddViewEvent(player, Getters.getGetters().getTutorial(name), Getters.getGetters().getTutorialView(name, viewID));
+            AddViewEvent event = new AddViewEvent(player, TutorialManager.getManager().getTutorial(name), TutorialManager.getManager().getTutorialView(name, viewID));
             ServerTutorial.getInstance().getServer().getPluginManager().callEvent(event);
             return END_OF_CONVERSATION;
         }

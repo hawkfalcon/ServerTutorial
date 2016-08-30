@@ -8,7 +8,7 @@ package pw.hwk.tutorial.util;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +26,7 @@ public class TutorialViewTimer {
         this.playerName = playerName;
         this.player = plugin.getServer().getPlayerExact(playerName);
         this.tutorialName = tutorialName;
-        this.seconds = Getters.getGetters().getTutorial(tutorialName).getTimeLength();
+        this.seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
         this.timer = new Timer();
     }
 
@@ -49,16 +49,16 @@ public class TutorialViewTimer {
                     player.setExp(seconds);
                     seconds--;
                 } else {
-                    if (Getters.getGetters().getCurrentTutorial(playerName).getTotalViews() == Getters.getGetters().getCurrentView(playerName)) {
+                    if (TutorialManager.getManager().getCurrentTutorial(playerName).getTotalViews() == TutorialManager.getManager().getCurrentView(playerName)) {
                         plugin.getEndTutorial().endTutorial(player);
                         this.cancel();
                         return;
                     }
                     plugin.incrementCurrentView(playerName);
                     Caching.getCaching().setTeleport(player.getUniqueId(), true);
-                    player.teleport(Getters.getGetters().getTutorialView(playerName).getLocation());
+                    player.teleport(TutorialManager.getManager().getTutorialView(playerName).getLocation());
                     TutorialUtils.getTutorialUtils().messageUtils(player);
-                    seconds = Getters.getGetters().getTutorial(tutorialName).getTimeLength();
+                    seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
                     player.setExp(seconds);
                     seconds--;
                 }

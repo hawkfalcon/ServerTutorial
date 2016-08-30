@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import pw.hwk.tutorial.api.EndTutorialEvent;
 import pw.hwk.tutorial.data.Caching;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.util.TutorialUtils;
 
@@ -20,7 +20,7 @@ public class EndTutorial {
 
     public void endTutorial(Player player) {
         String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
-        Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
+        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(name);
         endTutorialPlayer(player, name, tutorial.getEndMessage());
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
 
@@ -73,7 +73,7 @@ public class EndTutorial {
 
     public void reloadEndTutorial(Player player) {
         String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
-        Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
+        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(name);
         endTutorialPlayer(player, name, tutorial.getEndMessage());
     }
 }

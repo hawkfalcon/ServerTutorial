@@ -1,6 +1,5 @@
 package pw.hwk.tutorial.data;
 
-import pw.hwk.tutorial.PlayerData;
 import pw.hwk.tutorial.Tutorial;
 import pw.hwk.tutorial.TutorialConfigs;
 import pw.hwk.tutorial.TutorialView;
@@ -9,9 +8,22 @@ import pw.hwk.tutorial.util.TutorialTask;
 import java.util.List;
 import java.util.Map;
 
-public class Getters {
+public class TutorialManager {
 
-    private static Getters instance;
+    private static TutorialManager instance;
+
+    public void addCurrentTutorial(String name, String tutorialName) {
+        Caching.getCaching().currentTutorial().put(name, tutorialName);
+    }
+
+    public void addTutorial(String tutorialName, Tutorial tutorial) {
+        Caching.getCaching().tutorial().put(tutorialName, tutorial);
+    }
+
+    public void addToTutorial(String name) {
+        Caching.getCaching().playerInTutorial().add(name);
+    }
+
 
     public Tutorial getCurrentTutorial(String name) {
         return Caching.getCaching().tutorial().get(Caching.getCaching().currentTutorial().get(name));
@@ -69,9 +81,9 @@ public class Getters {
         TutorialTask.getTutorialTask().tutorialTimeTask(tutorialName, name);
     }
 
-    public static Getters getGetters() {
+    public static TutorialManager getManager() {
         if (instance == null) {
-            instance = new Getters();
+            instance = new TutorialManager();
         }
         return instance;
     }

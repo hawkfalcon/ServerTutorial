@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
-import pw.hwk.tutorial.data.Getters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.Permissions;
 import pw.hwk.tutorial.util.TutorialUtils;
 
@@ -23,7 +23,7 @@ public class TutorialRemove implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "You don't have permission for this!");
             return true;
         }
-        if (!Getters.getGetters().getAllTutorials().contains(args[1])) {
+        if (!TutorialManager.getManager().getAllTutorials().contains(args[1])) {
             player.sendMessage(TutorialUtils.color("&cThere is no Tutorial by that Name!"));
             return true;
         }
@@ -36,7 +36,7 @@ public class TutorialRemove implements CommandExecutor {
             return true;
         }
 
-        if (Getters.getGetters().getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
+        if (TutorialManager.getManager().getTutorial(args[1]).getView(Integer.parseInt(args[2])) != null) {
             try {
                 int id = Integer.parseInt(args[2]);
                 plugin.removeTutorialView(args[1], id);

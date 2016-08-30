@@ -1,4 +1,6 @@
-package pw.hwk.tutorial;
+package pw.hwk.tutorial.data;
+
+import pw.hwk.tutorial.MapPlayerTutorial;
 
 import java.util.HashMap;
 import java.util.Map;

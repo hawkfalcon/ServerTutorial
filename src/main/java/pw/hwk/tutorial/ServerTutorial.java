@@ -11,8 +11,7 @@ import pw.hwk.tutorial.api.ViewSwitchEvent;
 import pw.hwk.tutorial.commands.TutorialMainCommand;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
-import pw.hwk.tutorial.data.Getters;
-import pw.hwk.tutorial.data.Setters;
+import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.ViewType;
 import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.Updater;
@@ -90,7 +89,7 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
         }
-        Tutorial tut = Getters.getGetters().getTutorial(tutorialName);
+        Tutorial tut = TutorialManager.getManager().getTutorial(tutorialName);
         if (tut == null) {
             player.sendMessage("Invalid tutorial");
             return;
@@ -109,18 +108,18 @@ public class ServerTutorial extends JavaPlugin {
         Caching.getCaching().setGameMode(player.getUniqueId(), player.getGameMode());
         player.setGameMode(tut.getGameMode());
         this.initializeCurrentView(name);
-        Setters.getSetters().addCurrentTutorial(name, tutorialName);
-        Setters.getSetters().addToTutorial(name);
+        TutorialManager.getManager().addCurrentTutorial(name, tutorialName);
+        TutorialManager.getManager().addToTutorial(name);
         for (Player online : this.getServer().getOnlinePlayers()) {
             online.hidePlayer(player);
         }
         Caching.getCaching().setTeleport(player.getUniqueId(), true);
-        player.teleport(Getters.getGetters().getTutorialView(tutorialName, name).getLocation());
-        if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
-            Getters.getGetters().getTutorialTimeTask(tutorialName, name);
+        player.teleport(TutorialManager.getManager().getTutorialView(tutorialName, name).getLocation());
+        if (TutorialManager.getManager().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
+            TutorialManager.getManager().getTutorialTimeTask(tutorialName, name);
         }
         TutorialUtils.getTutorialUtils().messageUtils(player);
-        StartTutorialEvent event = new StartTutorialEvent(player, Getters.getGetters().getTutorial(tutorialName));
+        StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
         if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
             DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".seen", "true");
@@ -152,10 +151,10 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void incrementCurrentView(String name) {
-        TutorialView fromTutorialView = Getters.getGetters().getTutorialView(name);
-        Caching.getCaching().currentTutorialView().put(name, Getters.getGetters().getCurrentView(name) + 1);
-        TutorialView toTutorialView = Getters.getGetters().getTutorialView(name);
-        @SuppressWarnings("deprecation") ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, Getters.getGetters().getCurrentTutorial(name));
+        TutorialView fromTutorialView = TutorialManager.getManager().getTutorialView(name);
+        Caching.getCaching().currentTutorialView().put(name, TutorialManager.getManager().getCurrentView(name) + 1);
+        TutorialView toTutorialView = TutorialManager.getManager().getTutorialView(name);
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, TutorialManager.getManager().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
@@ -202,7 +201,7 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void removeTutorialView(String tutorialName, int viewID) {
-        int viewsCount = Getters.getGetters().getTutorial(tutorialName).getTotalViews();
+        int viewsCount = TutorialManager.getManager().getTutorial(tutorialName).getTotalViews();
         DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
         DataLoading.getDataLoading().saveData();
         if (viewsCount != viewID) {
