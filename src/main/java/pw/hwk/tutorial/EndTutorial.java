@@ -19,31 +19,10 @@ public class EndTutorial {
         this.plugin = plugin;
     }
 
-    public void endTutorial(final Player player) {
-        final String name = plugin.getServer().getPlayer(player.getName()).getName();
+    public void endTutorial(Player player) {
+        String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
         Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
-        player.sendMessage(TutorialUtils.color(tutorial.getEndMessage()));
-        player.closeInventory();
-        player.getInventory().clear();
-        player.setAllowFlight(plugin.getFlight(name));
-        player.setFlying(false);
-        plugin.removeFlight(name);
-        Caching.getCaching().setTeleport(player.getUniqueId(), true);
-        player.setGameMode(Caching.getCaching().getGameMode(player.getUniqueId()));
-        player.teleport(plugin.getFirstLoc(name));
-        plugin.cleanFirstLoc(name);
-        plugin.removeFromTutorial(name);
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                for (Player online : plugin.getServer().getOnlinePlayers()) {
-                    online.showPlayer(player);
-                }
-                player.getInventory().setContents(plugin.getInventory(name));
-                plugin.cleanInventory(name);
-            }
-        }.runTaskLater(plugin, 20L);
+        endTutorialPlayer(player, name, tutorial.getEndMessage());
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
 
         plugin.getServer().getPluginManager().callEvent(event);
@@ -62,26 +41,14 @@ public class EndTutorial {
             case PLAYER:
                 Bukkit.dispatchCommand(player, command);
                 break;
-            case SUDO:
-                boolean shouldBeOp = !player.isOp();
-                if (shouldBeOp) {
-                    player.setOp(true);
-                }
-                Bukkit.dispatchCommand(player, command);
-                if (shouldBeOp) {
-                    player.setOp(false);
-                }
-                break;
             case CONSOLE:
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 break;
         }
     }
 
-    public void reloadEndTutorial(final Player player) {
-        final String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
-        Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
-        player.sendMessage(TutorialUtils.color(tutorial.getEndMessage()));
+    public void endTutorialPlayer(final Player player, final String name, String endMessage) {
+        player.sendMessage(TutorialUtils.color(endMessage));
         player.closeInventory();
         player.getInventory().clear();
         player.setAllowFlight(plugin.getFlight(name));
@@ -103,5 +70,11 @@ public class EndTutorial {
                 plugin.cleanInventory(name);
             }
         }.runTaskLater(plugin, 20L);
+    }
+
+    public void reloadEndTutorial(Player player) {
+        String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
+        Tutorial tutorial = Getters.getGetters().getCurrentTutorial(name);
+        endTutorialPlayer(player, name, tutorial.getEndMessage());
     }
 }

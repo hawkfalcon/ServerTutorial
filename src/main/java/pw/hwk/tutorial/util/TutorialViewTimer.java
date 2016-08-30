@@ -13,10 +13,6 @@ import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.Getters;
 import pw.hwk.tutorial.enums.MessageType;
 
-/**
- *
- * @author Frostalf
- */
 public class TutorialViewTimer {
 
     private ServerTutorial plugin = ServerTutorial.getInstance();
@@ -47,16 +43,10 @@ public class TutorialViewTimer {
         @Override
         public void run() {
             try {
-                TutorialUtils.getTutorialUtils().textUtils(player);
-                if (Getters.getGetters().getTutorialView(playerName).getMessageType() == MessageType.META) {
-                    TutorialTask.getTutorialTask().setPlayerItemName(player);
-                }
+                TutorialUtils.getTutorialUtils().messageUtils(player);
 
-                for (int i = 0; i < Getters.getGetters().getTutorial(tutorialName).getTimeLength(); i++) {
-                    player.sendMessage(" "); // Flood chat to make it more readable
-                }
                 if (seconds > 0) {
-                    player.sendMessage("Seconds Remaining: " + seconds);
+                    player.setExp(seconds);
                     seconds--;
                 } else {
                     if (Getters.getGetters().getCurrentTutorial(playerName).getTotalViews() == Getters.getGetters().getCurrentView(playerName)) {
@@ -67,9 +57,9 @@ public class TutorialViewTimer {
                     plugin.incrementCurrentView(playerName);
                     Caching.getCaching().setTeleport(player.getUniqueId(), true);
                     player.teleport(Getters.getGetters().getTutorialView(playerName).getLocation());
-                    TutorialUtils.getTutorialUtils().textUtils(player);
+                    TutorialUtils.getTutorialUtils().messageUtils(player);
                     seconds = Getters.getGetters().getTutorial(tutorialName).getTimeLength();
-                    player.sendMessage("Seconds Remaining: " + seconds);
+                    player.setExp(seconds);
                     seconds--;
                 }
             } catch (NullPointerException ex) {

@@ -2,6 +2,7 @@ package pw.hwk.tutorial.commands;
 
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.conversation.CreateTutorial;
+import pw.hwk.tutorial.conversation.ViewConversation;
 import pw.hwk.tutorial.data.Getters;
 import pw.hwk.tutorial.enums.Permissions;
 import org.bukkit.ChatColor;
@@ -12,8 +13,6 @@ import org.bukkit.entity.Player;
 
 
 public class TutorialCreate implements CommandExecutor {
-
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -40,7 +39,7 @@ public class TutorialCreate implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
                 return true;
             }
-            plugin.getViewConversation().createNewView(player, args[1].toLowerCase());
+            ViewConversation.getViewConversation().createNewView(player, args[1].toLowerCase());
             return true;
 
         }

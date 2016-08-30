@@ -43,15 +43,13 @@ public class TutorialListener implements Listener {
         String name = player.getName();
         if (event.getAction() != Action.PHYSICAL) {
             if (Getters.getGetters().isInTutorial(name) && Getters.getGetters().getCurrentTutorial(name).getViewType() != ViewType.TIME) {
-                if (player.getItemInHand().getType() == Getters.getGetters().getCurrentTutorial(name).getItem()) {
-                    if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
-                        plugin.getEndTutorial().endTutorial(player);
-                    } else {
-                        plugin.incrementCurrentView(name);
-                        TutorialUtils.getTutorialUtils().textUtils(player);
-                        Caching.getCaching().setTeleport(player.getUniqueId(), true);
-                        player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
-                    }
+                if (Getters.getGetters().getCurrentTutorial(name).getTotalViews() == Getters.getGetters().getCurrentView(name)) {
+                    plugin.getEndTutorial().endTutorial(player);
+                } else {
+                    plugin.incrementCurrentView(name);
+                    TutorialUtils.getTutorialUtils().messageUtils(player);
+                    Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                    player.teleport(Getters.getGetters().getTutorialView(name).getLocation());
                 }
             }
         }

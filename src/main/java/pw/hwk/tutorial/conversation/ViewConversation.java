@@ -12,6 +12,8 @@ import pw.hwk.tutorial.util.TutorialUtils;
 
 public class ViewConversation {
 
+    private static ViewConversation instance;
+
     private String name;
 
     public void createNewView(Player player, String tutorialName) {
@@ -114,5 +116,12 @@ public class ViewConversation {
         public String getPrefix(ConversationContext context) {
             return ChatColor.AQUA + "[" + ChatColor.GRAY + "Tutorial" + ChatColor.AQUA + "] " + ChatColor.WHITE;
         }
+    }
+
+    public static ViewConversation getViewConversation() {
+        if (instance == null) {
+            instance = new ViewConversation();
+        }
+        return instance;
     }
 }

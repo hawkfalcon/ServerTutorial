@@ -13,7 +13,6 @@ import java.util.Map;
 
 public class TutorialMainCommand implements CommandExecutor {
 
-    private static ServerTutorial plugin = ServerTutorial.getInstance();
     private Map<String, CommandExecutor> subCommandMap = Maps.newHashMap();
 
     public TutorialMainCommand() {
@@ -31,7 +30,7 @@ public class TutorialMainCommand implements CommandExecutor {
         CommandExecutor subCommandUse = subCommandMap.get("use");
         CommandExecutor subCommandView = subCommandMap.get("view");
         CommandExecutor subCommandReload = subCommandMap.get("reload");
-        CommandExecutor subCommandConfig = subCommandMap.get("config");
+
         if (!(sender instanceof Player)) {
             return false;
         }

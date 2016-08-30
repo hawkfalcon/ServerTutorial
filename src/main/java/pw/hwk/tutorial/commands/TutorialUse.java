@@ -17,15 +17,7 @@ public class TutorialUse implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
-        if (Permissions.USE.hasPerm(sender)) {
-            if (Getters.getGetters().getAllTutorials().contains(args[0].toLowerCase())) {
-                plugin.startTutorial(args[0], player);
-                return true;
-            } else {
-                player.sendMessage(TutorialUtils.color("&cThere is no Tutorial by that Name!"));
-                return true;
-            }
-        } else if (Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
+        if (Permissions.USE.hasPerm(sender) || Permissions.TUTORIAL.hasTutorialPerm(player, args[0].toLowerCase())) {
             if (Getters.getGetters().getAllTutorials().contains(args[0].toLowerCase())) {
                 plugin.startTutorial(args[0], player);
                 return true;

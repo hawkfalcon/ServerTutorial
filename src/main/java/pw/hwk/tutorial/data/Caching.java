@@ -58,16 +58,6 @@ public class Caching {
             int timeLength = Integer.parseInt(timeLengthS);
             String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
 
-            Material item;
-            try {
-                item = Material.matchMaterial(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".item", "STICK"));
-                if (item == null) {
-                    throw new NullPointerException();
-                }
-            } catch (NullPointerException e) {
-                item = Material.STICK;
-            }
-
             String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endcommand", "");
 
             CommandType commandType;
@@ -84,7 +74,7 @@ public class Caching {
                 gm = GameMode.SPECTATOR;
             }
 
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, item, command, commandType, gm);
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, command, commandType, gm);
             Setters.getSetters().addTutorial(tutorialName, tutorial);
         }
     }

@@ -3,14 +3,11 @@ package pw.hwk.tutorial;
 import pw.hwk.tutorial.api.StartTutorialEvent;
 import pw.hwk.tutorial.api.ViewSwitchEvent;
 import pw.hwk.tutorial.commands.TutorialMainCommand;
-import pw.hwk.tutorial.conversation.ConfigConversation;
-import pw.hwk.tutorial.conversation.ViewConversation;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.Getters;
 import pw.hwk.tutorial.data.Setters;
 import pw.hwk.tutorial.enums.ViewType;
-import pw.hwk.tutorial.util.TutorialTask;
 import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.Updater;
 import org.bukkit.Bukkit;
@@ -27,29 +24,27 @@ import java.util.logging.Level;
 
 public class ServerTutorial extends JavaPlugin {
 
-    static boolean UPDATE;
-    static String NEWVERSION;
     private static ServerTutorial instance;
 
     private Map<String, Location> startLoc = new HashMap<>();
     private Map<String, ItemStack[]> inventories = new HashMap<>();
     private Map<String, Boolean> flight = new HashMap<>();
-    private ViewConversation viewConversation = new ViewConversation();
     private EndTutorial endTutorial = new EndTutorial(this);
-    private ConfigConversation configConversation = new ConfigConversation();
 
     @Override
     public void onEnable() {
         instance = this;
+
         this.getServer().getPluginManager().registerEvents(new TutorialListener(), this);
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
+
         DataLoading.getDataLoading().loadData();
         DataLoading.getDataLoading().loadPlayerData();
         Caching.getCaching().casheAllData();
         Caching.getCaching().cacheConfigs();
         Caching.getCaching().cachePlayerData();
-        TutorialTask.getTutorialTask().tutorialTask();
+
         this.checkUpdate();
     }
 
@@ -59,7 +54,7 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     /**
-     * Check's for update
+     * Checks for update
      */
     private void checkUpdate() {
         if (getConfig().get("auto-update") == null) {
@@ -70,13 +65,11 @@ public class ServerTutorial extends JavaPlugin {
         if (getConfig().getBoolean("auto-update")) {
             final ServerTutorial plugin = this;
             final File file = this.getFile();
-            final Updater.UpdateType updateType = Updater.UpdateType.DEFAULT;
+
             getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
                 @Override
                 public void run() {
-                    Updater updater = new Updater(plugin, 69090, file, updateType, false);
-                    ServerTutorial.UPDATE = updater.getResult() == Updater.UpdateResult.UPDATE_AVAILABLE;
-                    ServerTutorial.NEWVERSION = updater.getLatestName();
+                    Updater updater = new Updater(plugin, 69090, file, Updater.UpdateType.DEFAULT, false);
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
                         getLogger().log(Level.INFO, "Successfully updated ServerTutorial to version {0} for next restart!", updater.getLatestName());
                     }
@@ -86,7 +79,7 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     /**
-     * Start's tutorial
+     * Starts tutorial
      *
      * @param tutorialName tutorial name
      * @param player Player
@@ -126,7 +119,7 @@ public class ServerTutorial extends JavaPlugin {
         if (Getters.getGetters().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             Getters.getGetters().getTutorialTimeTask(tutorialName, name);
         }
-        TutorialUtils.getTutorialUtils().textUtils(player);
+        TutorialUtils.getTutorialUtils().messageUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, Getters.getGetters().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
         if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
@@ -201,14 +194,6 @@ public class ServerTutorial extends JavaPlugin {
 
     public EndTutorial getEndTutorial() {
         return endTutorial;
-    }
-
-    public ViewConversation getViewConversation() {
-        return viewConversation;
-    }
-
-    public ConfigConversation getConfigConversation() {
-        return configConversation;
     }
 
     public void removeTutorial(String tutorialName) {

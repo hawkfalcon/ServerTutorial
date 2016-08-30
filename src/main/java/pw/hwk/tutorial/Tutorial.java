@@ -14,18 +14,16 @@ public class Tutorial {
     private final ViewType viewType;
     private final int timeLength;
     private final String endMessage;
-    private final Material item;
     private final String command;
     private final CommandType commandType;
     private GameMode gamemode;
 
-    public Tutorial(String name, Map<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, Material item, String command, CommandType commandType, GameMode gamemode) {
+    public Tutorial(String name, Map<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, String command, CommandType commandType, GameMode gamemode) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;
         this.timeLength = timeLength;
         this.endMessage = endMessage;
-        this.item = item;
         this.command = command;
         this.commandType = commandType;
         this.gamemode = gamemode;
@@ -53,10 +51,6 @@ public class Tutorial {
 
     public String getEndMessage() {
         return this.endMessage;
-    }
-
-    public Material getItem() {
-        return this.item;
     }
 
     public String getCommand() {

@@ -11,6 +11,7 @@ import pw.hwk.tutorial.util.TutorialUtils;
 public class ConfigConversation {
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
+    private static ConfigConversation instance;
 
     public void editConfig(Player player) {
         ConversationFactory factory = new ConversationFactory(plugin).withModality(true).withFirstPrompt(new Welcome()).withEscapeSequence("/quit").withTimeout(60).thatExcludesNonPlayersWithMessage("You must be in game!");
@@ -365,5 +366,12 @@ public class ConfigConversation {
             }
             return new Done();
         }
+    }
+
+    public static ConfigConversation getConfigConversation() {
+        if (instance == null) {
+            instance = new ConfigConversation();
+        }
+        return instance;
     }
 }
