@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.ServerTutorial;
-import pw.hwk.tutorial.api.TutorialReloadEvent;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.enums.Permissions;
@@ -29,8 +28,6 @@ public class TutorialReload implements CommandExecutor {
         Caching.getCaching().reCasheTutorials();
         Caching.getCaching().reCacheConfigs();
         Caching.getCaching().reCachePlayerData();
-        TutorialReloadEvent event = new TutorialReloadEvent();
-        plugin.getServer().getPluginManager().callEvent(event);
         sender.sendMessage(ChatColor.RED + "Server Tutorial Reloaded!");
         return true;
     }

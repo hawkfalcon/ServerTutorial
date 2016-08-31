@@ -50,7 +50,7 @@ public class ViewConversation {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7First, Choose a MessageType: TEXT, TITLE, or ACTIONBAR\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&6TITLE &7- uses titles\n" + "&8>&6TITLE &7- uses the action bar\n" + "&8>&7>&6> &7Type a MessageType to continue!");
+            return TutorialUtils.color("&8>&7First, Choose a MessageType: TEXT, TITLE, or ACTIONBAR\n" + "&8>&6TEXT &7- normal text message\n" + "&8>&6TITLE &7- uses titles\n" + "&8>&6ACTIONBAR &7- uses the action bar\n" + "&8>&7>&6> &7Type a MessageType to continue!");
         }
 
         @Override

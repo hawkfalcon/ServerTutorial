@@ -7,7 +7,6 @@ package pw.hwk.tutorial.util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import pw.hwk.tutorial.ServerTutorial;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.TutorialManager;

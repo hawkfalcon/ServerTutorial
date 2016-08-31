@@ -1,7 +1,8 @@
 package pw.hwk.tutorial;
 
 import net.milkbowl.vault.economy.EconomyResponse;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -13,8 +14,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import pw.hwk.tutorial.api.EndTutorialEvent;
 import pw.hwk.tutorial.api.ViewSwitchEvent;
 import pw.hwk.tutorial.data.Caching;
@@ -26,16 +25,12 @@ import pw.hwk.tutorial.rewards.TutorialEco;
 import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.UUIDFetcher;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
 
     private static ServerTutorial plugin = ServerTutorial.getInstance();
-    private static Map<UUID, BukkitRunnable> restoreQueue = new HashMap<UUID, BukkitRunnable>();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -58,10 +53,7 @@ public class TutorialListener implements Listener {
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
                 String match = ChatColor.stripColor(TutorialUtils.color(TutorialManager.getManager().getConfigs().signSetting()));
-                if (sign.getLine(0).equalsIgnoreCase(match)) {
-                    if (sign.getLine(1) == null) {
-                        return;
-                    }
+                if (sign.getLine(0).equalsIgnoreCase(match) && sign.getLine(1) != null) {
                     plugin.startTutorial(sign.getLine(1), player);
                 }
             }
@@ -115,20 +107,13 @@ public class TutorialListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (TutorialManager.getManager().isInTutorial(event.getPlayer().getName())) {
-            final String name = player.getName();
-            restoreQueue.put(player.getUniqueId(), new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Player player = Bukkit.getPlayerExact(name);
-                    player.closeInventory();
-                    Caching.getCaching().setTeleport(player.getUniqueId(), true);
+            player.closeInventory();
+            Caching.getCaching().setTeleport(player.getUniqueId(), true);
 
-                    TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
-                    tutorialPlayer.restorePlayer(player);
+            TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
+            tutorialPlayer.restorePlayer(player);
 
-                    plugin.removeTutorialPlayer(player);
-                }
-            });
+            plugin.removeTutorialPlayer(player);
             plugin.removeFromTutorial(event.getPlayer().getName());
         }
         if (!plugin.getServer().getOnlineMode()) {
@@ -204,12 +189,6 @@ public class TutorialListener implements Listener {
                 plugin.startTutorial(TutorialManager.getManager().getConfigs().firstJoinTutorial(), player);
             }
         }
-
-        BukkitRunnable runnable = restoreQueue.get(player.getUniqueId());
-        if (runnable != null) {
-            runnable.runTaskLater(plugin, 20L);
-        }
-        restoreQueue.remove(player.getUniqueId());
     }
 
     @EventHandler
