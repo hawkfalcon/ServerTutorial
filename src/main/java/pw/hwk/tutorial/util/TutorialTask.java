@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import pw.hwk.tutorial.data.Caching;
 import pw.hwk.tutorial.data.TutorialManager;
 
+import java.util.UUID;
+
 public class TutorialTask {
 
     private static TutorialTask instance;
@@ -16,7 +18,8 @@ public class TutorialTask {
         if (player == null) {
             return;
         }
-        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+
+        Caching.getCaching().setTeleport(player, true);
         player.teleport(TutorialManager.getManager().getTutorialView(name).getLocation());
         TutorialViewTimer timer = new TutorialViewTimer(name, tutorialName);
         timer.startTimer();

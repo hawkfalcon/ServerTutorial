@@ -21,7 +21,7 @@ public class Caching {
     private Map<String, Integer> currentTutorialView = new HashMap<>();
     private ArrayList<String> playerInTutorial = new ArrayList<>();
     private Map<String, UUID> response = new HashMap<>();
-    private Map<String, PlayerData> playerDataMap = new HashMap<>();
+    private Map<UUID, Set<String>> seenTutorials = new HashMap<>();
     private static Caching instance;
     private Map<UUID, Boolean> allowedTeleports = new HashMap<>();
 
@@ -79,16 +79,10 @@ public class Caching {
         }
         for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
             UUID playerUUID = UUID.fromString(uuid);
-            HashMap<String, MapPlayerTutorial> playerTutorials = new HashMap<String, MapPlayerTutorial>();
             if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
-                for (String playerTutorial : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false)) {
-                    boolean seen = Boolean.valueOf(DataLoading.getDataLoading().getPlayerData().getString("players." + uuid + ".tutorials." + playerTutorial));
-                    MapPlayerTutorial mapPlayerTutorial = new MapPlayerTutorial(playerTutorial, seen);
-                    playerTutorials.put(playerTutorial, mapPlayerTutorial);
-                }
+                Set<String> tutorials = DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false);
+                seenTutorials.put(playerUUID, tutorials);
             }
-            PlayerData playerData = new PlayerData(playerTutorials);
-            this.playerDataMap.put(plugin.getServer().getOfflinePlayer(playerUUID).getName(), playerData);
         }
     }
 
@@ -112,8 +106,8 @@ public class Caching {
         return this.configs;
     }
 
-    public Map<String, PlayerData> playerDataMap() {
-        return this.playerDataMap;
+    public Map<UUID, Set<String>> seenTutorials() {
+        return this.seenTutorials;
     }
 
     public List<String> playerInTutorial() {
@@ -124,16 +118,31 @@ public class Caching {
         return this.response;
     }
 
-    public boolean canTeleport(UUID uuid) {
-        return allowedTeleports.get(uuid);
+    public boolean canTeleport(Player player) {
+        return allowedTeleports.get(getUUID(player));
     }
 
-    public void setTeleport(UUID uuid, boolean value) {
-        allowedTeleports.put(uuid, value);
+    public void setTeleport(Player player, boolean value) {
+        allowedTeleports.put(getUUID(player), value);
     }
 
     public void cacheConfigs() {
-        TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin.getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig().getString("first_join_tutorial"), plugin.getConfig().getBoolean("rewards"), plugin.getConfig().getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig().getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig().getBoolean("tutorial_exp"), Double.valueOf(plugin.getConfig().getString("per_tutorial_money")), Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig().getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
+        TutorialConfigs configOptions =
+                new TutorialConfigs(
+                        plugin.getConfig().getBoolean("auto-update"),
+                        plugin.getConfig().getString("sign"),
+                        plugin.getConfig().getBoolean("first_join"),
+                        plugin.getConfig().getString("first_join_tutorial"),
+                        plugin.getConfig().getBoolean("rewards"),
+                        plugin.getConfig().getBoolean("exp_countdown"),
+                        plugin.getConfig().getBoolean("view_money"),
+                        plugin.getConfig().getBoolean("view_exp"),
+                        plugin.getConfig().getBoolean("tutorial_money"),
+                        plugin.getConfig().getBoolean("tutorial_exp"),
+                        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")),
+                        Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")),
+                        Integer.valueOf(plugin.getConfig().getString("per_view_exp")),
+                        Double.valueOf(plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 
@@ -153,7 +162,7 @@ public class Caching {
     }
 
     public void reCachePlayerData() {
-        this.playerDataMap().clear();
+        this.seenTutorials().clear();
         cachePlayerData();
     }
 

@@ -20,7 +20,6 @@ public class TutorialMainCommand implements CommandExecutor {
         subCommandMap.put("remove", new TutorialRemove());
         subCommandMap.put("addview", new TutorialCreate());
         subCommandMap.put("reload", new TutorialReload());
-        subCommandMap.put("config", new TutorialConfig());
     }
 
     @Override

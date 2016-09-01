@@ -26,6 +26,8 @@ import pw.hwk.tutorial.util.TutorialUtils;
 import pw.hwk.tutorial.util.UUIDFetcher;
 
 import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class TutorialListener implements Listener {
@@ -43,7 +45,7 @@ public class TutorialListener implements Listener {
                 } else {
                     plugin.incrementCurrentView(name);
                     TutorialUtils.getTutorialUtils().messageUtils(player);
-                    Caching.getCaching().setTeleport(player.getUniqueId(), true);
+                    Caching.getCaching().setTeleport(player, true);
                     player.teleport(TutorialManager.getManager().getTutorialView(name).getLocation());
                 }
             }
@@ -82,13 +84,13 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        Player p = event.getPlayer();
-        if (!TutorialManager.getManager().isInTutorial(p.getName())) {
+        Player player = event.getPlayer();
+        if (!TutorialManager.getManager().isInTutorial(player.getName())) {
             return;
         }
 
-        if (Caching.getCaching().canTeleport(p.getUniqueId())) {
-            Caching.getCaching().setTeleport(p.getUniqueId(), false);
+        if (Caching.getCaching().canTeleport(player)) {
+            Caching.getCaching().setTeleport(player, false);
         } else {
             event.setCancelled(true);
         }
@@ -98,7 +100,7 @@ public class TutorialListener implements Listener {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (TutorialManager.getManager().isInTutorial(player.getName())) {
-            Caching.getCaching().setTeleport(player.getUniqueId(), true);
+            Caching.getCaching().setTeleport(player, true);
             player.teleport(TutorialManager.getManager().getTutorialView(player.getName()).getLocation());
         }
     }
@@ -108,7 +110,7 @@ public class TutorialListener implements Listener {
         final Player player = event.getPlayer();
         if (TutorialManager.getManager().isInTutorial(event.getPlayer().getName())) {
             player.closeInventory();
-            Caching.getCaching().setTeleport(player.getUniqueId(), true);
+            Caching.getCaching().setTeleport(player, true);
 
             TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
             tutorialPlayer.restorePlayer(player);
@@ -198,7 +200,8 @@ public class TutorialListener implements Listener {
             player.setExp(player.getExp() - 1f);
         }
         if (TutorialManager.getManager().getConfigs().getRewards()) {
-            if (!seenTutorial(player.getName(), event.getTutorial().getName())) {
+            UUID uuid = Caching.getCaching().getUUID(player);
+            if (!seenTutorial(uuid, event.getTutorial().getName())) {
                 if (TutorialManager.getManager().getConfigs().getViewExp()) {
                     player.setTotalExperience(player.getTotalExperience() + TutorialManager.getManager().getConfigs().getPerViewExp());
                     player.sendMessage(ChatColor.BLUE + "You received " + TutorialManager.getManager().getConfigs().getViewExp());
@@ -219,36 +222,39 @@ public class TutorialListener implements Listener {
 
     @EventHandler
     public void onTutorialEnd(EndTutorialEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = Caching.getCaching().getUUID(player);
         if (TutorialManager.getManager().getConfigs().getRewards()) {
-            Player player = event.getPlayer();
-            String playerName = player.getName().toLowerCase();
-            if (!seenTutorial(playerName, event.getTutorial().getName())) {
-                if (TutorialEco.getTutorialEco().setupEconomy()) {
-                    if (TutorialManager.getManager().getConfigs().getTutorialMoney()) {
-                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, TutorialManager.getManager().getConfigs().getPerTutorialMoney());
-                        if (ecoResponse.transactionSuccess()) {
-                            player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
-                        } else {
-                            plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
-                        }
+            if (!seenTutorial(uuid, event.getTutorial().getName())) {
+                if (TutorialEco.getTutorialEco().setupEconomy() && TutorialManager.getManager().getConfigs().getTutorialMoney()) {
+                    EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, TutorialManager.getManager().getConfigs().getPerTutorialMoney());
+                    if (ecoResponse.transactionSuccess()) {
+                        player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                    } else {
+                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
                     }
-                    if (TutorialManager.getManager().getConfigs().getTutorialExp()) {
-                        player.setExp(player.getTotalExperience() + TutorialManager.getManager().getConfigs().getPerTutorialExp());
-                    }
+                }
+                if (TutorialManager.getManager().getConfigs().getTutorialExp()) {
+                    player.setExp(player.getTotalExperience() + TutorialManager.getManager().getConfigs().getPerTutorialExp());
                 }
             } else {
                 player.sendMessage(ChatColor.BLUE + "You have been through this tutorial already. You will not collect rewards!");
             }
         }
-        DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(event.getPlayer()) + ".tutorials." + event.getTutorial().getName(), "true");
+        DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + event.getTutorial().getName(), "true");
         DataLoading.getDataLoading().savePlayerData();
         Caching.getCaching().reCachePlayerData();
     }
 
-    public boolean seenTutorial(String name, String tutorial) {
-        if (TutorialManager.getManager().getPlayerData().containsKey(name)) {
-            if (TutorialManager.getManager().getPlayerData(name).getPlayerTutorialData().containsKey(tutorial)) {
-                return TutorialManager.getManager().getPlayerData(name).getPlayerTutorialData().get(tutorial).getSeen();
+    private boolean seenTutorial(UUID uuid, String tutorial) {
+        System.out.println("?");
+        Set<String> seenTutorials = TutorialManager.getManager().getSeenTutorials(uuid);
+        System.out.println(seenTutorials);
+        if (seenTutorials != null) {
+            System.out.println(seenTutorials);
+            System.out.println(tutorial);
+            if (seenTutorials.contains(tutorial)) {
+                return true;
             }
         }
         return false;

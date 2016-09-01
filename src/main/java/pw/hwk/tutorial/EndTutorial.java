@@ -9,6 +9,8 @@ import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.util.TutorialUtils;
 
+import java.util.UUID;
+
 public class EndTutorial {
 
 
@@ -19,12 +21,13 @@ public class EndTutorial {
     }
 
     public void endTutorial(Player player) {
-        String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
-        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(name);
-        endTutorialPlayer(player, name, tutorial.getEndMessage());
+        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(player.getName());
+        endTutorialPlayer(player, tutorial.getEndMessage());
         EndTutorialEvent event = new EndTutorialEvent(player, tutorial);
 
         plugin.getServer().getPluginManager().callEvent(event);
+
+        TutorialManager.getManager().setSeenTutorial(Caching.getCaching().getUUID(player), tutorial.getName());
 
         String command = tutorial.getCommand();
         CommandType type = tutorial.getCommandType();
@@ -46,22 +49,21 @@ public class EndTutorial {
         }
     }
 
-    public void endTutorialPlayer(final Player player, final String name, String endMessage) {
+    public void endTutorialPlayer(final Player player, String endMessage) {
         player.sendMessage(TutorialUtils.color(endMessage));
         player.closeInventory();
 
-        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+        Caching.getCaching().setTeleport(player, true);
 
-        TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(player.getUniqueId());
+        TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(Caching.getCaching().getUUID(player));
         tutorialPlayer.restorePlayer(player);
 
         plugin.removeTutorialPlayer(player);
-        plugin.removeFromTutorial(name);
+        plugin.removeFromTutorial(player.getName());
     }
 
     public void reloadEndTutorial(Player player) {
-        String name = plugin.getServer().getPlayer(player.getUniqueId()).getName();
-        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(name);
-        endTutorialPlayer(player, name, tutorial.getEndMessage());
+        Tutorial tutorial = TutorialManager.getManager().getCurrentTutorial(player.getName());
+        endTutorialPlayer(player, tutorial.getEndMessage());
     }
 }

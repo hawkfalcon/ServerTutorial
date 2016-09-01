@@ -7,6 +7,8 @@ import pw.hwk.tutorial.util.TutorialTask;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class TutorialManager {
 
@@ -49,12 +51,12 @@ public class TutorialManager {
         return Caching.getCaching().configs().get("config");
     }
 
-    public PlayerData getPlayerData(String name) {
-        return Caching.getCaching().playerDataMap().get(name);
+    public Set<String> getSeenTutorials(UUID uuid) {
+        return Caching.getCaching().seenTutorials().get(uuid);
     }
 
-    public Map<String, PlayerData> getPlayerData() {
-        return Caching.getCaching().playerDataMap();
+    public void setSeenTutorial(UUID uuid, String tutorial) {
+        Caching.getCaching().seenTutorials().get(uuid).add(tutorial);
     }
 
     public List<String> getAllTutorials() {

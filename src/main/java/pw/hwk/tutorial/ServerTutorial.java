@@ -84,6 +84,7 @@ public class ServerTutorial extends JavaPlugin {
      */
     public void startTutorial(String tutorialName, Player player) {
         String name = player.getName();
+        UUID uuid = Caching.getCaching().getUUID(player);
         if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
             player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
             return;
@@ -100,14 +101,14 @@ public class ServerTutorial extends JavaPlugin {
 
         TutorialPlayer tutorialPlayer = new TutorialPlayer(player);
         tutorialPlayer.clearPlayer(player);
-        addTutorialPlayer(player.getUniqueId(), tutorialPlayer);
+        addTutorialPlayer(uuid, tutorialPlayer);
 
         player.setGameMode(tut.getGameMode());
         this.initializeCurrentView(name);
         TutorialManager.getManager().addCurrentTutorial(name, tutorialName);
         TutorialManager.getManager().addToTutorial(name);
 
-        Caching.getCaching().setTeleport(player.getUniqueId(), true);
+        Caching.getCaching().setTeleport(player, true);
         player.teleport(TutorialManager.getManager().getTutorialView(tutorialName, name).getLocation());
         if (TutorialManager.getManager().getTutorial(tutorialName).getViewType() == ViewType.TIME) {
             TutorialManager.getManager().getTutorialTimeTask(tutorialName, name);
@@ -115,16 +116,9 @@ public class ServerTutorial extends JavaPlugin {
         TutorialUtils.getTutorialUtils().messageUtils(player);
         StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
-        if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player)) == null) {
-            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".seen", "true");
-            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
-            DataLoading.getDataLoading().savePlayerData();
-            Caching.getCaching().reCachePlayerData();
-        } else if (DataLoading.getDataLoading().getPlayerData().get("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName) == null) {
-            DataLoading.getDataLoading().getPlayerData().set("players." + Caching.getCaching().getUUID(player) + ".tutorials." + tutorialName, "false");
-            DataLoading.getDataLoading().savePlayerData();
-            Caching.getCaching().reCachePlayerData();
-        }
+
+        DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + tutorialName, "false");
+        DataLoading.getDataLoading().savePlayerData();
     }
 
     /**
@@ -147,7 +141,7 @@ public class ServerTutorial extends JavaPlugin {
     }
 
     public void removeTutorialPlayer(Player player) {
-        this.tutorialPlayers.remove(player.getUniqueId());
+        this.tutorialPlayers.remove(Caching.getCaching().getUUID(player));
     }
 
     public void initializeCurrentView(String name) {
