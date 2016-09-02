@@ -1,5 +1,7 @@
 package pw.hwk.tutorial.util;
 
+import io.github.theluca98.textapi.ActionBar;
+import io.github.theluca98.textapi.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,7 +34,13 @@ public class TutorialUtils {
 
         switch (tutorialView.getMessageType()) {
             case ACTIONBAR:
+                ActionBar bar = new ActionBar(message);
+                bar.send(player);
+                return;
             case TITLE:
+                Title title = new Title("", message, 5, 2 * 20, 5);
+                title.send(player);
+                return;
             case META:
             default:
                 String lines[] = message.split("\\\\n");

@@ -247,12 +247,8 @@ public class TutorialListener implements Listener {
     }
 
     private boolean seenTutorial(UUID uuid, String tutorial) {
-        System.out.println("?");
         Set<String> seenTutorials = TutorialManager.getManager().getSeenTutorials(uuid);
-        System.out.println(seenTutorials);
         if (seenTutorials != null) {
-            System.out.println(seenTutorials);
-            System.out.println(tutorial);
             if (seenTutorials.contains(tutorial)) {
                 return true;
             }

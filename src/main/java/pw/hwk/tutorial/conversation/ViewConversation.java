@@ -55,7 +55,7 @@ public class ViewConversation {
 
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
-            if (input.equalsIgnoreCase("text") || input.equalsIgnoreCase("meta")) {
+            if (input.equalsIgnoreCase("text") || input.equalsIgnoreCase("actionbar") || input.equalsIgnoreCase("title") || input.equalsIgnoreCase("meta")) {
                 context.setSessionData("messagetype", input.toUpperCase());
                 return new Message();
             }

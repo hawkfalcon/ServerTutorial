@@ -27,6 +27,12 @@
             <version>1.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.theluca98</groupId>
+            <artifactId>TextAPI</artifactId>
+            <version>1.10.2-R2.1</version>
+        </dependency>
+
     </dependencies>
 
     <!-- REPOSITORIES -->
@@ -88,6 +94,32 @@
                         </replacement>
                     </replacements>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>io.github.theluca98:*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.github.theluca98</pattern>
+                            <shadedPattern>pw.hwk</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
