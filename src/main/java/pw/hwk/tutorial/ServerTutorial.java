@@ -69,7 +69,8 @@ public class ServerTutorial extends JavaPlugin {
                 public void run() {
                     Updater updater = new Updater(plugin, 69090, file, Updater.UpdateType.DEFAULT, false);
                     if (updater.getResult() == Updater.UpdateResult.SUCCESS) {
-                        getLogger().log(Level.INFO, "Successfully updated ServerTutorial to version {0} for next restart!", updater.getLatestName());
+                        getLogger().log(Level.INFO, "Successfully updated ServerTutorial to version {0} for next " +
+                                "restart!", updater.getLatestName());
                     }
                 }
             });
@@ -86,7 +87,7 @@ public class ServerTutorial extends JavaPlugin {
         String name = player.getName();
         UUID uuid = Caching.getCaching().getUUID(player);
         if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials") == null) {
-            player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <message>");
+            player.sendMessage(ChatColor.RED + "You need to set up a tutorial first! /tutorial create <name>");
             return;
         }
         Tutorial tut = TutorialManager.getManager().getTutorial(tutorialName);
@@ -94,8 +95,9 @@ public class ServerTutorial extends JavaPlugin {
             player.sendMessage("Invalid tutorial");
             return;
         }
-        if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views") == null) {
-            player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <tutorial name>");
+        if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views") ==
+                null) {
+            player.sendMessage(ChatColor.RED + "You need to set up a view first! /tutorial addview <name>");
             return;
         }
 
@@ -114,7 +116,8 @@ public class ServerTutorial extends JavaPlugin {
             TutorialManager.getManager().getTutorialTimeTask(tutorialName, name);
         }
         TutorialUtils.getTutorialUtils().messageUtils(player);
-        StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial(tutorialName));
+        StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial
+                (tutorialName));
         this.getServer().getPluginManager().callEvent(event);
 
         DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + tutorialName, "false");
@@ -152,7 +155,8 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = TutorialManager.getManager().getTutorialView(name);
         Caching.getCaching().currentTutorialView().put(name, TutorialManager.getManager().getCurrentView(name) + 1);
         TutorialView toTutorialView = TutorialManager.getManager().getTutorialView(name);
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView, TutorialManager.getManager().getCurrentTutorial(name));
+        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView,
+                TutorialManager.getManager().getCurrentTutorial(name));
         Bukkit.getServer().getPluginManager().callEvent(event);
     }
 
@@ -171,15 +175,22 @@ public class ServerTutorial extends JavaPlugin {
         DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + viewID, null);
         DataLoading.getDataLoading().saveData();
         if (viewsCount != viewID) {
-            for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." +
+                    tutorialName + ".views").getKeys(false)) {
                 int currentID = Integer.parseInt(vID);
                 int newViewID = Integer.parseInt(vID) - 1;
-                String message = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".message");
-                String messageType = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".messagetype");
-                String location = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + currentID + ".location");
-                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".message", message);
-                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".messagetype", messageType);
-                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + ".location", location);
+                String message = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                        ".views." + currentID + ".message");
+                String messageType = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                        ".views." + currentID + ".messagetype");
+                String location = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                        ".views." + currentID + ".location");
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + "" +
+                        ".message", message);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + "" +
+                        ".messagetype", messageType);
+                DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + newViewID + "" +
+                        ".location", location);
                 DataLoading.getDataLoading().getData().set("tutorials." + tutorialName + ".views." + currentID, null);
             }
         }

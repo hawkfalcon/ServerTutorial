@@ -35,7 +35,8 @@ public class TutorialCreate implements CommandExecutor {
         }
         if (args.length >= 2 && args[0].equalsIgnoreCase("addview")) {
             if (!TutorialManager.getManager().getAllTutorials().contains(args[1].toLowerCase())) {
-                sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD + "/tutorial create <name>");
+                sender.sendMessage(ChatColor.RED + "You must create this tutorial first! " + ChatColor.GOLD +
+                        "/tutorial create <name>");
                 return true;
             }
             ViewConversation.getViewConversation().createNewView(player, args[1].toLowerCase());

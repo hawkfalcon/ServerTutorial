@@ -25,7 +25,8 @@ public class CreateTutorial {
         this.player = player;
         ConversationFactory factory = new ConversationFactory(plugin).withModality(true)
                 //.withPrefix(new Prefix())
-                .withFirstPrompt(new Welcome()).withEscapeSequence("/quit").withTimeout(60).thatExcludesNonPlayersWithMessage("You must be in game!");
+                .withFirstPrompt(new Welcome()).withEscapeSequence("/quit").withTimeout(60)
+                .thatExcludesNonPlayersWithMessage("You must be in game!");
         factory.buildConversation(player).begin();
     }
 
@@ -35,7 +36,9 @@ public class CreateTutorial {
         public String getPromptText(ConversationContext context) {
             context.setSessionData("name", name);
             context.setSessionData("player", player.getName());
-            return TutorialUtils.color("&6-------------------------------\n" + "&8>&fWelcome to the &bServerTutorial&f tutorial creation!\n" + "&8>&7This will guide you through creating a new Tutorial\n" + "&8>&7Currently creating new tutorial with name: &b" + name + "!");
+            return TutorialUtils.color("&6-------------------------------\n" + "&8>&fWelcome to the " +
+                    "&bServerTutorial&f tutorial creation!\n" + "&8>&7This will guide you through creating a new " +
+                    "Tutorial\n" + "&8>&7Currently creating new tutorial with name: &b" + name + "&7!");
         }
 
         @Override
@@ -48,7 +51,9 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7First, choose a ViewType: CLICK or TIME\n" + "&8>&6CLICK &7- cycle though by clicking\n" + "&8>&6TIME &7- automated with a timer\n" + "&8>&7>&6> &7Type a ViewType to continue!");
+            return TutorialUtils.color("&8>&7First, choose a ViewType: CLICK or TIME\n" + "&8>&6CLICK &7- cycle " +
+                    "though by clicking\n" + "&8>&6TIME &7- automated with a timer\n" + "&8>&7>&6> &7Type a ViewType " +
+                    "to continue!");
         }
 
         @Override
@@ -115,7 +120,10 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7Choose a type for the end-command: PLAYER, CONSOLE or NONE\n" + "&8>&6PLAYER &7- the tutorial player will execute the command\n" + "&8>&6CONSOLE &7- execute command as console\n" + "&8>&6NONE &7- Dont execute any commands\n" + "&8>&7>&6> &7Type a Command Type to continue:");
+            return TutorialUtils.color("&8>&7Choose a type for the end-command: PLAYER, CONSOLE or NONE\n" +
+                    "&8>&6PLAYER &7- the tutorial player will execute the command\n" + "&8>&6CONSOLE &7- execute " +
+                    "command as console\n" + "&8>&6NONE &7- Dont execute any commands\n" + "&8>&7>&6> &7Type a " +
+                    "Command Type to continue:");
         }
 
         @Override
@@ -141,7 +149,8 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7>&6> &7Type what command should be executed when the tutorial ends (use %player% as placeholder):");
+            return TutorialUtils.color("&8>&7>&6> &7Type what command should be executed when the tutorial ends (use " +
+                    "%player% as placeholder):");
         }
 
         @Override
@@ -172,12 +181,18 @@ public class CreateTutorial {
 
         @Override
         public String getPromptText(ConversationContext context) {
-            return TutorialUtils.color("&8>&7The Tutorial &b" + name + "&7 has been successfully created!\n" + "&8>&7It is a &f" + context.getSessionData("viewtype").toString() + " &7based tutorial with end message &f" + context.getSessionData("endmessage").toString() + "&7!\n" + "&6-------------------------------");
+            return TutorialUtils.color("&8>&7The Tutorial &b" + name + "&7 has been successfully created!\n" +
+                    "&8>&7It is a &f" + context.getSessionData("viewtype").toString() + " &7based tutorial with end " +
+                    "message &f" + context.getSessionData("endmessage").toString() + "&7!\n" +
+                    "&6-------------------------------");
         }
 
         @Override
         public Prompt getNextPrompt(ConversationContext context) {
-            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData("endmessage").toString(), context.getSessionData("timelength"), context.getSessionData("player").toString(), context.getSessionData("command").toString(), context.getSessionData("commandtype").toString(), context.getSessionData("gamemode").toString());
+            writeNewTutorial(name, context.getSessionData("viewtype").toString(), context.getSessionData
+                    ("endmessage").toString(), context.getSessionData("timelength"), context.getSessionData("player")
+                    .toString(), context.getSessionData("command").toString(), context.getSessionData("commandtype")
+                    .toString(), context.getSessionData("gamemode").toString());
             return END_OF_CONVERSATION;
         }
     }
@@ -190,7 +205,8 @@ public class CreateTutorial {
         }
     }
 
-    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String playerName, String command, String commandType, String gamemode) {
+    public void writeNewTutorial(String name, String viewType, String endMessage, Object timeLength, String
+            playerName, String command, String commandType, String gamemode) {
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".viewtype", viewType);
         if (timeLength != null) {
             DataLoading.getDataLoading().getData().set("tutorials." + name + ".timelength", timeLength.toString());
@@ -204,7 +220,8 @@ public class CreateTutorial {
         DataLoading.getDataLoading().getData().set("tutorials." + name + ".gamemode", gamemode);
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
-        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), TutorialManager.getManager().getTutorial(name));
+        CreateTutorialEvent event = new CreateTutorialEvent(plugin.getServer().getPlayer(playerName), TutorialManager
+                .getManager().getTutorial(name));
         plugin.getServer().getPluginManager().callEvent(event);
     }
 

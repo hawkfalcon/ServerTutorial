@@ -37,7 +37,9 @@ public class TutorialMainCommand implements CommandExecutor {
         }
         if (args.length == 1) {
             if (args[0].equalsIgnoreCase("help")) {
-                player.sendMessage(TutorialUtils.color("&6-------------------------------\n&8>ServerTutorial Help:\n&8>&71. /tutorial <name> to enter tutorial\n&8>&72. /tutorial to list\n&8>&73. /tutorial create <name>\n&8>&74. /tutorial addview <name>"));
+                player.sendMessage(TutorialUtils.color("&6-------------------------------\n>ServerTutorial " +
+                        "Help:\n&8>&7 /tutorial <name> to enter tutorial\n&8>&7 /tutorial to list\n&8>&7 /tutorial " +
+                        "create <name>\n&8>&7 /tutorial addview <name>"));
             } else if (args[0].equalsIgnoreCase("reload")) {
                 return subCommandReload.onCommand(sender, cmd, commandLabel, args);
             } else {

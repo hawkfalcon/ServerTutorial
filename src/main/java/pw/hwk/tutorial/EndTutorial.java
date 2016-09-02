@@ -9,8 +9,6 @@ import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.util.TutorialUtils;
 
-import java.util.UUID;
-
 public class EndTutorial {
 
 

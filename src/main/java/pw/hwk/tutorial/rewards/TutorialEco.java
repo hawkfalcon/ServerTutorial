@@ -9,7 +9,8 @@ public class TutorialEco {
     private static TutorialEco instance;
 
     /**
-     * @return boolean returns true if vault is enabled and there is an economy plugin, otherwise false if either is not present
+     * @return boolean returns true if vault is enabled and there is an economy plugin, otherwise false if either is
+     * not present
      */
     public boolean setupEconomy() {
         return getEcon() != null;
@@ -22,7 +23,8 @@ public class TutorialEco {
         if (Bukkit.getServer().getPluginManager().getPlugin("Vault") == null) {
             return null;
         }
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl
+                .vault.economy.Economy.class);
         if (rsp != null) {
             return rsp.getProvider();
         }

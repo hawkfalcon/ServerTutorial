@@ -16,7 +16,8 @@ public class TutorialUtils {
     private static TutorialUtils instance;
 
     public Location getLocation(String tutorialName, int viewID) {
-        String[] loc = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".location").split(",");
+        String[] loc = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." +
+                viewID + ".location").split(",");
 
         World w = Bukkit.getWorld(loc[0]);
         Double x = Double.parseDouble(loc[1]);

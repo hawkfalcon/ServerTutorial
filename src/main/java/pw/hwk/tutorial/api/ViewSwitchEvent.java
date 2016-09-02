@@ -14,7 +14,8 @@ public class ViewSwitchEvent extends Event {
     private TutorialView toTutorialView;
     private Tutorial tutorial;
 
-    public ViewSwitchEvent(Player player, TutorialView fromTutorialView, TutorialView toTutorialView, Tutorial tutorial) {
+    public ViewSwitchEvent(Player player, TutorialView fromTutorialView, TutorialView toTutorialView, Tutorial
+            tutorial) {
         this.player = player;
         this.tutorial = tutorial;
         this.fromTutorialView = fromTutorialView;

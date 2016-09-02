@@ -2,7 +2,10 @@ package pw.hwk.tutorial.data;
 
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import pw.hwk.tutorial.*;
+import pw.hwk.tutorial.ServerTutorial;
+import pw.hwk.tutorial.Tutorial;
+import pw.hwk.tutorial.TutorialConfigs;
+import pw.hwk.tutorial.TutorialView;
 import pw.hwk.tutorial.enums.CommandType;
 import pw.hwk.tutorial.enums.MessageType;
 import pw.hwk.tutorial.enums.ViewType;
@@ -29,46 +32,59 @@ public class Caching {
         if (DataLoading.getDataLoading().getData().getString("tutorials") == null) {
             return;
         }
-        for (String tutorialName : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials").getKeys(false)) {
+        for (String tutorialName : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials")
+                .getKeys(false)) {
             this.tutorialNames.add(tutorialName.toLowerCase());
             Map<Integer, TutorialView> tutorialViews = new HashMap<>();
-            if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views") != null) {
-                for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + ".views").getKeys(false)) {
+            if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + "" +
+                    ".views") != null) {
+                for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." +
+                        tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
-                    MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
-                    TutorialView view = new TutorialView(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".message", "No message written"), TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                    MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString
+                            ("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
+                    TutorialView view = new TutorialView(DataLoading.getDataLoading().getData().getString("tutorials" +
+                            "." + tutorialName + ".views." + viewID + ".message", "No message written"),
+                            TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
                     tutorialViews.put(viewID, view);
                 }
             }
 
             ViewType viewType;
             try {
-                viewType = ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".viewtype", "CLICK"));
+                viewType = ViewType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." +
+                        tutorialName + ".viewtype", "CLICK"));
             } catch (IllegalArgumentException e) {
                 viewType = ViewType.CLICK;
             }
 
-            String timeLengthS = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".timelength", "10");
+            String timeLengthS = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                    ".timelength", "10");
             int timeLength = Integer.parseInt(timeLengthS);
-            String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endmessage", "Sample end message");
+            String endMessage = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                    ".endmessage", "Sample end message");
 
-            String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endcommand", "");
+            String command = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + "" +
+                    ".endcommand", "");
 
             CommandType commandType;
             try {
-                commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".endcommandtype", "NONE"));
+                commandType = CommandType.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." +
+                        tutorialName + ".endcommandtype", "NONE"));
             } catch (IllegalArgumentException e) {
                 commandType = CommandType.NONE;
             }
 
             GameMode gm;
             try {
-                gm = GameMode.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".gamemode", "SPECTATOR"));
+                gm = GameMode.valueOf(DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName +
+                        ".gamemode", "SPECTATOR"));
             } catch (IllegalArgumentException e) {
                 gm = GameMode.SPECTATOR;
             }
 
-            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, command, commandType, gm);
+            Tutorial tutorial = new Tutorial(tutorialName, tutorialViews, viewType, timeLength, endMessage, command,
+                    commandType, gm);
             TutorialManager.getManager().addTutorial(tutorialName, tutorial);
         }
     }
@@ -77,10 +93,13 @@ public class Caching {
         if (DataLoading.getDataLoading().getPlayerData().getString("players") == null) {
             return;
         }
-        for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
+        for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys
+                (false)) {
             UUID playerUUID = UUID.fromString(uuid);
-            if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials") != null) {
-                Set<String> tutorials = DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + ".tutorials").getKeys(false);
+            if (DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players." + uuid + "" +
+                    ".tutorials") != null) {
+                Set<String> tutorials = DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players" +
+                        "." + uuid + ".tutorials").getKeys(false);
                 seenTutorials.put(playerUUID, tutorials);
             }
         }
@@ -127,22 +146,14 @@ public class Caching {
     }
 
     public void cacheConfigs() {
-        TutorialConfigs configOptions =
-                new TutorialConfigs(
-                        plugin.getConfig().getBoolean("auto-update"),
-                        plugin.getConfig().getString("sign"),
-                        plugin.getConfig().getBoolean("first_join"),
-                        plugin.getConfig().getString("first_join_tutorial"),
-                        plugin.getConfig().getBoolean("rewards"),
-                        plugin.getConfig().getBoolean("exp_countdown"),
-                        plugin.getConfig().getBoolean("view_money"),
-                        plugin.getConfig().getBoolean("view_exp"),
-                        plugin.getConfig().getBoolean("tutorial_money"),
-                        plugin.getConfig().getBoolean("tutorial_exp"),
-                        Double.valueOf(plugin.getConfig().getString("per_tutorial_money")),
-                        Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")),
-                        Integer.valueOf(plugin.getConfig().getString("per_view_exp")),
-                        Double.valueOf(plugin.getConfig().getString("per_view_money")));
+        TutorialConfigs configOptions = new TutorialConfigs(plugin.getConfig().getBoolean("auto-update"), plugin
+                .getConfig().getString("sign"), plugin.getConfig().getBoolean("first_join"), plugin.getConfig()
+                .getString("first_join_tutorial"), plugin.getConfig().getBoolean("rewards"), plugin.getConfig()
+                .getBoolean("exp_countdown"), plugin.getConfig().getBoolean("view_money"), plugin.getConfig()
+                .getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig()
+                .getBoolean("tutorial_exp"), Double.valueOf(plugin.getConfig().getString("per_tutorial_money")),
+                Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig()
+                .getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
         this.addConfig(configOptions);
     }
 

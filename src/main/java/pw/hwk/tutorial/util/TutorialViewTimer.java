@@ -39,7 +39,8 @@ public class TutorialViewTimer {
                     player.setLevel(seconds);
                     seconds--;
                 } else {
-                    if (TutorialManager.getManager().getCurrentTutorial(playerName).getTotalViews() == TutorialManager.getManager().getCurrentView(playerName)) {
+                    if (TutorialManager.getManager().getCurrentTutorial(playerName).getTotalViews() ==
+                            TutorialManager.getManager().getCurrentView(playerName)) {
                         plugin.getEndTutorial().endTutorial(player);
                         this.cancel();
                         return;

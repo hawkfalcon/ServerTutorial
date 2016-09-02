@@ -6,7 +6,6 @@ import pw.hwk.tutorial.TutorialView;
 import pw.hwk.tutorial.util.TutorialTask;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,7 +39,8 @@ public class TutorialManager {
     }
 
     public TutorialView getTutorialView(String name) {
-        return Caching.getCaching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView(name));
+        return Caching.getCaching().tutorial().get(this.getCurrentTutorial(name).getName()).getView(getCurrentView
+                (name));
     }
 
     public TutorialView getTutorialView(String tutorialName, int id) {

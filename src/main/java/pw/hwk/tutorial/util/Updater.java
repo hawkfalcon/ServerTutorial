@@ -19,13 +19,17 @@ import java.util.zip.ZipFile;
 /**
  * Check for updates on BukkitDev for a given plugin, and download the updates if needed.
  * <p>
- * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
+ * <b>VERY, VERY IMPORTANT</b>: Because there are no standards for adding auto-update toggles in your plugin's
+ * config, this system provides NO CHECK WITH YOUR CONFIG to make sure the user has allowed auto-updating.
  * <br>
- * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from running <b>AT ALL</b>.
+ * It is a <b>BUKKIT POLICY</b> that you include a boolean value in your config that prevents the auto-updater from
+ * running <b>AT ALL</b>.
  * <br>
- * If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you attempt to submit it to dev.bukkit.org.
+ * If you fail to include this option in your config, your plugin will be <b>REJECTED</b> when you attempt to submit
+ * it to dev.bukkit.org.
  * </p>
- * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set to false you may NOT run the auto-updater.
+ * An example of a good configuration option would be something similar to 'auto-update: true' - if this value is set
+ * to false you may NOT run the auto-updater.
  * <br>
  * If you are unsure about these rules, please read the plugin submission guidelines: http://goo.gl/8iU5l
  *
@@ -184,7 +188,8 @@ public class Updater {
      *
      * @param plugin   The plugin that is checking for an update.
      * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
+     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your
+     *                 main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param announce True if the program should announce the progress of new updates in console.
      */
@@ -197,7 +202,8 @@ public class Updater {
      *
      * @param plugin   The plugin that is checking for an update.
      * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
+     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your
+     *                 main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param callback The callback instance to notify when the Updater has finished
      */
@@ -210,7 +216,8 @@ public class Updater {
      *
      * @param plugin   The plugin that is checking for an update.
      * @param id       The dev.bukkit.org id of the project.
-     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
+     * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your
+     *                 main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param callback The callback instance to notify when the Updater has finished
      * @param announce True if the program should announce the progress of new updates in console.
@@ -229,7 +236,10 @@ public class Updater {
         final File updaterConfigFile = new File(updaterFile, "config.yml");
 
         YamlConfiguration config = new YamlConfiguration();
-        config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - http://forums.bukkit.org/threads/96681/ )" + '\n' + "If you wish to use your API key, read http://wiki.bukkit.org/ServerMods_API and place it below." + '\n' + "Some updating systems will not adhere to the disabled value, but these may be turned off in their plugin's configuration.");
+        config.options().header("This configuration file affects all plugins using the Updater system (version 2+ - " +
+                "http://forums.bukkit.org/threads/96681/ )" + '\n' + "If you wish to use your API key, read " +
+                "http://wiki.bukkit.org/ServerMods_API and place it below." + '\n' + "Some updating systems will not " +
+                "adhere to the disabled value, but these may be turned off in their plugin's configuration.");
         config.addDefault(API_KEY_CONFIG_KEY, API_KEY_DEFAULT);
         config.addDefault(DISABLE_CONFIG_KEY, DISABLE_DEFAULT);
 
@@ -271,7 +281,8 @@ public class Updater {
         try {
             this.url = new URL(Updater.HOST + Updater.QUERY + this.id);
         } catch (final MalformedURLException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "The project ID provided for updating, " + this.id + " is invalid.", e);
+            this.plugin.getLogger().log(Level.SEVERE, "The project ID provided for updating, " + this.id + " is " +
+                    "invalid.", e);
             this.result = UpdateResult.FAIL_BADID;
         }
 
@@ -343,7 +354,8 @@ public class Updater {
     }
 
     /**
-     * As the result of Updater output depends on the thread's completion, it is necessary to wait for the thread to finish
+     * As the result of Updater output depends on the thread's completion, it is necessary to wait for the thread to
+     * finish
      * before allowing anyone to check the result.
      */
     private void waitForThread() {
@@ -408,7 +420,8 @@ public class Updater {
                 }
             }
         } catch (Exception ex) {
-            this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was unsuccessful.", ex);
+            this.plugin.getLogger().log(Level.WARNING, "The auto-updater tried to download a new update, but was " +
+                    "unsuccessful.", ex);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             try {
@@ -455,7 +468,8 @@ public class Updater {
             while (e.hasMoreElements()) {
                 ZipEntry entry = e.nextElement();
                 File destinationFilePath = new File(zipPath, entry.getName());
-                this.fileIOOrError(destinationFilePath.getParentFile(), destinationFilePath.getParentFile().mkdirs(), true);
+                this.fileIOOrError(destinationFilePath.getParentFile(), destinationFilePath.getParentFile().mkdirs(),
+                        true);
                 if (!entry.isDirectory()) {
                     final BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
                     int b;
@@ -481,7 +495,8 @@ public class Updater {
             moveNewZipFiles(zipPath);
 
         } catch (final IOException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "The auto-updater tried to unzip a new update file, but was unsuccessful.", e);
+            this.plugin.getLogger().log(Level.SEVERE, "The auto-updater tried to unzip a new update file, but was " +
+                    "unsuccessful.", e);
             this.result = Updater.UpdateResult.FAIL_DOWNLOAD;
         } finally {
             this.fileIOOrError(fSourceZip, fSourceZip.delete(), false);
@@ -530,7 +545,8 @@ public class Updater {
     }
 
     /**
-     * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files out of a zip.
+     * Check if the name of a jar is one of the plugins currently installed, used for extracting the correct files
+     * out of a zip.
      *
      * @param name a name to check for inside the plugins folder.
      * @return true if a file inside the plugins folder is named this.
@@ -546,7 +562,8 @@ public class Updater {
     }
 
     /**
-     * Check to see if the program should continue by evaluating whether the plugin is already updated, or shouldn't be updated.
+     * Check to see if the program should continue by evaluating whether the plugin is already updated, or shouldn't
+     * be updated.
      *
      * @return true if the version was located and is not the same as the remote's newest.
      */
@@ -565,8 +582,10 @@ public class Updater {
                 }
             } else {
                 // The file's name did not contain the string 'vVersion'
-                final String authorInfo = this.plugin.getDescription().getAuthors().isEmpty() ? "" : " (" + this.plugin.getDescription().getAuthors().get(0) + ")";
-                this.plugin.getLogger().warning("The author of this plugin" + authorInfo + " has misconfigured their Auto Update system");
+                final String authorInfo = this.plugin.getDescription().getAuthors().isEmpty() ? "" : " (" + this
+                        .plugin.getDescription().getAuthors().get(0) + ")";
+                this.plugin.getLogger().warning("The author of this plugin" + authorInfo + " has misconfigured their " +
+                        "Auto Update system");
                 this.plugin.getLogger().warning("File versions should follow the format 'PluginName vVERSION'");
                 this.plugin.getLogger().warning("Please notify the author of this error.");
                 this.result = Updater.UpdateResult.FAIL_NOVERSION;
@@ -660,12 +679,14 @@ public class Updater {
             return true;
         } catch (final IOException e) {
             if (e.getMessage().contains("HTTP response code: 403")) {
-                this.plugin.getLogger().severe("dev.bukkit.org rejected the API key provided in plugins/Updater/config.yml");
+                this.plugin.getLogger().severe("dev.bukkit.org rejected the API key provided in " +
+                        "plugins/Updater/config.yml");
                 this.plugin.getLogger().severe("Please double-check your configuration to ensure it is correct.");
                 this.result = UpdateResult.FAIL_APIKEY;
             } else {
                 this.plugin.getLogger().severe("The updater could not contact dev.bukkit.org for updating.");
-                this.plugin.getLogger().severe("If you have not recently modified your configuration and this is the first time you are seeing this message, the site may be experiencing temporary downtime.");
+                this.plugin.getLogger().severe("If you have not recently modified your configuration and this is the " +
+                        "first time you are seeing this message, the site may be experiencing temporary downtime.");
                 this.result = UpdateResult.FAIL_DBO;
             }
             this.plugin.getLogger().log(Level.SEVERE, null, e);
@@ -682,14 +703,16 @@ public class Updater {
      */
     private void fileIOOrError(File file, boolean result, boolean create) {
         if (!result) {
-            this.plugin.getLogger().severe("The updater could not " + (create ? "create" : "delete") + " file at: " + file.getAbsolutePath());
+            this.plugin.getLogger().severe("The updater could not " + (create ? "create" : "delete") + " file at: " +
+                    file.getAbsolutePath());
         }
     }
 
     private File[] listFilesOrError(File folder) {
         File[] contents = folder.listFiles();
         if (contents == null) {
-            this.plugin.getLogger().severe("The updater could not access files at: " + this.updateFolder.getAbsolutePath());
+            this.plugin.getLogger().severe("The updater could not access files at: " + this.updateFolder
+                    .getAbsolutePath());
             return new File[0];
         } else {
             return contents;

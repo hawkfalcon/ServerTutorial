@@ -18,10 +18,10 @@ public class TutorialConfigs {
     private double perViewMoney;
 
 
-    public TutorialConfigs(boolean autoUpdate, String signSetting, boolean firstJoin,
-                           String firstJoinTutorial, boolean rewards, boolean expCountdown,
-                           boolean viewMoney, boolean viewExp, boolean tutorialMoney, boolean tutorialExp,
-                           double perTutorialMoney, int perTutorialExp, int perViewExp, double perViewMoney) {
+    public TutorialConfigs(boolean autoUpdate, String signSetting, boolean firstJoin, String firstJoinTutorial,
+                           boolean rewards, boolean expCountdown, boolean viewMoney, boolean viewExp, boolean
+                                   tutorialMoney, boolean tutorialExp, double perTutorialMoney, int perTutorialExp,
+                           int perViewExp, double perViewMoney) {
 
         this.autoUpdate = autoUpdate;
         this.signSetting = signSetting;

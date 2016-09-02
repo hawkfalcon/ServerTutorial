@@ -17,7 +17,8 @@ public class Tutorial {
     private final CommandType commandType;
     private GameMode gamemode;
 
-    public Tutorial(String name, Map<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String endMessage, String command, CommandType commandType, GameMode gamemode) {
+    public Tutorial(String name, Map<Integer, TutorialView> tutorialViews, ViewType viewType, int timeLength, String
+            endMessage, String command, CommandType commandType, GameMode gamemode) {
         this.name = name;
         this.tutorialViews = tutorialViews;
         this.viewType = viewType;

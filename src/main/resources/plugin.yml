@@ -2,7 +2,7 @@ name: ServerTutorial
 main: pw.hwk.tutorial.ServerTutorial
 version: maven-version-number
 description: Tutorial plugin
-authors: [hawkfalcon, gomeow, Frostalf, Trojaner]
+authors: [hawkfalcon, Frostalf, Trojaner]
 website: hwk.pw
 softdepend: [Vault, Multiverse-Core]
 commands:

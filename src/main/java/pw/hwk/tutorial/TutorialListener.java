@@ -39,8 +39,10 @@ public class TutorialListener implements Listener {
         Player player = event.getPlayer();
         String name = player.getName();
         if (event.getAction() != Action.PHYSICAL) {
-            if (TutorialManager.getManager().isInTutorial(name) && TutorialManager.getManager().getCurrentTutorial(name).getViewType() != ViewType.TIME) {
-                if (TutorialManager.getManager().getCurrentTutorial(name).getTotalViews() == TutorialManager.getManager().getCurrentView(name)) {
+            if (TutorialManager.getManager().isInTutorial(name) && TutorialManager.getManager().getCurrentTutorial
+                    (name).getViewType() != ViewType.TIME) {
+                if (TutorialManager.getManager().getCurrentTutorial(name).getTotalViews() == TutorialManager
+                        .getManager().getCurrentView(name)) {
                     plugin.getEndTutorial().endTutorial(player);
                 } else {
                     plugin.incrementCurrentView(name);
@@ -50,11 +52,13 @@ public class TutorialListener implements Listener {
                 }
             }
         }
-        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) && !TutorialManager.getManager().isInTutorial(name)) {
+        if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) &&
+                !TutorialManager.getManager().isInTutorial(name)) {
             Block block = event.getClickedBlock();
             if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
-                String match = ChatColor.stripColor(TutorialUtils.color(TutorialManager.getManager().getConfigs().signSetting()));
+                String match = ChatColor.stripColor(TutorialUtils.color(TutorialManager.getManager().getConfigs()
+                        .signSetting()));
                 if (sign.getLine(0).equalsIgnoreCase(match) && sign.getLine(1) != null) {
                     plugin.startTutorial(sign.getLine(1), player);
                 }
@@ -203,16 +207,21 @@ public class TutorialListener implements Listener {
             UUID uuid = Caching.getCaching().getUUID(player);
             if (!seenTutorial(uuid, event.getTutorial().getName())) {
                 if (TutorialManager.getManager().getConfigs().getViewExp()) {
-                    player.setTotalExperience(player.getTotalExperience() + TutorialManager.getManager().getConfigs().getPerViewExp());
-                    player.sendMessage(ChatColor.BLUE + "You received " + TutorialManager.getManager().getConfigs().getViewExp());
+                    player.setTotalExperience(player.getTotalExperience() + TutorialManager.getManager().getConfigs()
+                            .getPerViewExp());
+                    player.sendMessage(ChatColor.BLUE + "You received " + TutorialManager.getManager().getConfigs()
+                            .getViewExp());
                 }
                 if (TutorialManager.getManager().getConfigs().getViewMoney()) {
                     if (TutorialEco.getTutorialEco().setupEconomy()) {
-                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, TutorialManager.getManager().getConfigs().getPerViewMoney());
+                        EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player,
+                                TutorialManager.getManager().getConfigs().getPerViewMoney());
                         if (ecoResponse.transactionSuccess()) {
-                            player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + " New Balance: " + ecoResponse.balance);
+                            player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + " New Balance:" +
+                                    " " + ecoResponse.balance);
                         } else {
-                            plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                            plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: " +
+                                    "{0}", player.getName());
                         }
                     }
                 }
@@ -226,22 +235,26 @@ public class TutorialListener implements Listener {
         UUID uuid = Caching.getCaching().getUUID(player);
         if (TutorialManager.getManager().getConfigs().getRewards()) {
             if (!seenTutorial(uuid, event.getTutorial().getName())) {
-                if (TutorialEco.getTutorialEco().setupEconomy() && TutorialManager.getManager().getConfigs().getTutorialMoney()) {
-                    EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player, TutorialManager.getManager().getConfigs().getPerTutorialMoney());
+                if (TutorialEco.getTutorialEco().setupEconomy() && TutorialManager.getManager().getConfigs()
+                        .getTutorialMoney()) {
+                    EconomyResponse ecoResponse = TutorialEco.getTutorialEco().getEcon().depositPlayer(player,
+                            TutorialManager.getManager().getConfigs().getPerTutorialMoney());
                     if (ecoResponse.transactionSuccess()) {
-                        player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + ". New Balance: " + ecoResponse.balance);
+                        player.sendMessage(ChatColor.BLUE + "You received " + ecoResponse.amount + " for completing " +
+                                "the tutorial!");
                     } else {
-                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: {0}", player.getName());
+                        plugin.getLogger().log(Level.WARNING, "There was an error processing Economy for player: " +
+                                "{0}", player.getName());
                     }
                 }
                 if (TutorialManager.getManager().getConfigs().getTutorialExp()) {
-                    player.setExp(player.getTotalExperience() + TutorialManager.getManager().getConfigs().getPerTutorialExp());
+                    player.setExp(player.getTotalExperience() + TutorialManager.getManager().getConfigs()
+                            .getPerTutorialExp());
                 }
-            } else {
-                player.sendMessage(ChatColor.BLUE + "You have been through this tutorial already. You will not collect rewards!");
             }
         }
-        DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + event.getTutorial().getName(), "true");
+        DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + event.getTutorial()
+                .getName(), "true");
         DataLoading.getDataLoading().savePlayerData();
         Caching.getCaching().reCachePlayerData();
     }

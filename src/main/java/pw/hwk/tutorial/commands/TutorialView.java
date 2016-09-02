@@ -21,7 +21,8 @@ public class TutorialView implements CommandExecutor {
         player.sendMessage(TutorialUtils.color("&6-------------------------------\nAvailable tutorials:"));
         StringBuilder sb = new StringBuilder();
         if (TutorialManager.getManager().getAllTutorials().isEmpty()) {
-            player.sendMessage(ChatColor.RED + "There are currently no tutorials setup.\nSet one up with /tutorial create <name>");
+            player.sendMessage(ChatColor.RED + "There are currently no tutorials setup.\nSet one up with /tutorial " +
+                    "create <name>");
             return true;
         }
 
