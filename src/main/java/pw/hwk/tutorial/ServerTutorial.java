@@ -1,6 +1,5 @@
 package pw.hwk.tutorial;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -155,9 +154,9 @@ public class ServerTutorial extends JavaPlugin {
         TutorialView fromTutorialView = TutorialManager.getManager().getTutorialView(name);
         Caching.getCaching().currentTutorialView().put(name, TutorialManager.getManager().getCurrentView(name) + 1);
         TutorialView toTutorialView = TutorialManager.getManager().getTutorialView(name);
-        ViewSwitchEvent event = new ViewSwitchEvent(Bukkit.getPlayerExact(name), fromTutorialView, toTutorialView,
+        ViewSwitchEvent event = new ViewSwitchEvent(getServer().getPlayerExact(name), fromTutorialView, toTutorialView,
                 TutorialManager.getManager().getCurrentTutorial(name));
-        Bukkit.getServer().getPluginManager().callEvent(event);
+        getServer().getPluginManager().callEvent(event);
     }
 
     public EndTutorial getEndTutorial() {
