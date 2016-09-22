@@ -24,9 +24,6 @@ public class TutorialMainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-        CommandExecutor subCommandUse = subCommandMap.get("use");
-        CommandExecutor subCommandView = subCommandMap.get("view");
-        CommandExecutor subCommandReload = subCommandMap.get("reload");
 
         if (!(sender instanceof Player)) {
             return false;
@@ -41,17 +38,15 @@ public class TutorialMainCommand implements CommandExecutor {
                         "Help:\n&8>&7 /tutorial <name> to enter tutorial\n&8>&7 /tutorial to list\n&8>&7 /tutorial " +
                         "create <name>\n&8>&7 /tutorial addview <name>"));
             } else if (args[0].equalsIgnoreCase("reload")) {
-                return subCommandReload.onCommand(sender, cmd, commandLabel, args);
+                return subCommandMap.get(args[0].toLowerCase()).onCommand(sender, cmd, commandLabel, args);
             } else {
-                return subCommandUse.onCommand(sender, cmd, commandLabel, args);
+                return subCommandMap.get("use").onCommand(sender, cmd, commandLabel, args);
             }
             return true;
         } else if (args.length > 1) {
-            String subCommandName = args[0].toLowerCase();
-            CommandExecutor subCommand = subCommandMap.get(subCommandName);
-            return !subCommandMap.containsKey(subCommandName) || subCommand.onCommand(sender, cmd, commandLabel, args);
+            return !subCommandMap.containsKey(args[0].toLowerCase()) || subCommandMap.get(args[0].toLowerCase()).onCommand(sender, cmd, commandLabel, args);
         } else if (args.length == 0) {
-            return subCommandView.onCommand(sender, cmd, commandLabel, args);
+            return subCommandMap.get("view").onCommand(sender, cmd, commandLabel, args);
         }
         return true;
     }
