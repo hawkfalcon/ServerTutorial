@@ -45,10 +45,12 @@ public class TutorialUtils {
             case META:
             default:
                 String lines[] = message.split("\\\\n");
+                player.sendMessage(lines);
 
-                for (String msg : lines) {
+                /*for (String msg : lines) {
                     player.sendMessage(msg);
-                }
+                    player.sendMessage(message);
+                }*/
                 break;
         }
     }
