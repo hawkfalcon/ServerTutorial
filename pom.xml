@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.11-R0.1-SNAPSHOT</version>
+            <version>1.11-R0.1-SNAPSHOTjit</version>
             <scope>provided</scope>
         </dependency>
 
@@ -76,7 +76,7 @@
     <!-- BUILD -->
 
     <build>
-        <defaultGoal>clean package install deploy</defaultGoal>
+        <defaultGoal>clean package install</defaultGoal>
         <finalName>ServerTutorial</finalName>
 
         <!-- BUILD PLUGINS -->
