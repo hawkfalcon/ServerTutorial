@@ -5,7 +5,7 @@ Have you ever wanted to make a cool tutorial for players that doesn't use boring
 
 ### Description
 
-**NOW 1.10 COMPATIBLE**
+**NOW 1.11 COMPATIBLE**
 
 This is the ultimate tutorial plugin for Bukkit. It allows easy creation of 'views' which the player sees after typing /tutorial. 
 
@@ -62,3 +62,14 @@ We also include an update checker. It will download the latest updates for you. 
 
 ### Bugs? Suggestions?
 Make a new issue
+
+### Maven Repo
+        <repository>
+            <id>ServerTutorial</id>
+            <url>http://repo.frostalf.net</url>
+        </repository>
+        <dependency>
+            <groupId>pw.hwk</groupId>
+            <artifactId>ServerTutorial</artifactId>
+            <version>{version or LATEST}</version>
+        </dependency>
