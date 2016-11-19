@@ -49,6 +49,10 @@ public class ServerTutorial extends JavaPlugin {
     @Override
     public void onDisable() {
         instance = null;
+        for (String players : TutorialManager.getManager().getAllInTutorial()) {
+            Player player = getServer().getPlayer(players);
+            getEndTutorial().endTutorial(player);
+        }
     }
 
     /**
