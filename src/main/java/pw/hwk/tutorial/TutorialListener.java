@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Level;
+import org.bukkit.GameMode;
 
 public class TutorialListener implements Listener {
 
@@ -172,6 +173,9 @@ public class TutorialListener implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
         final String playerName = player.getName();
+        if (TutorialManager.getManager().getConfigs().getCheckGameMode()) {
+            event.getPlayer().setGameMode(GameMode.SURVIVAL);
+        }
         if (!plugin.getServer().getOnlineMode()) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override

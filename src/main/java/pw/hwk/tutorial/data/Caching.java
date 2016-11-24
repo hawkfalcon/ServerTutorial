@@ -153,7 +153,7 @@ public class Caching {
                 .getBoolean("view_exp"), plugin.getConfig().getBoolean("tutorial_money"), plugin.getConfig()
                 .getBoolean("tutorial_exp"), Double.valueOf(plugin.getConfig().getString("per_tutorial_money")),
                 Integer.valueOf(plugin.getConfig().getString("per_tutorial_exp")), Integer.valueOf(plugin.getConfig()
-                .getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")));
+                .getString("per_view_exp")), Double.valueOf(plugin.getConfig().getString("per_view_money")), plugin.getConfig().getBoolean("check_gamemode"));
         this.addConfig(configOptions);
     }
 
