@@ -76,7 +76,7 @@
     <!-- BUILD -->
 
     <build>
-        <defaultGoal>clean package install</defaultGoal>
+        <defaultGoal>clean package install deploy</defaultGoal>
         <finalName>ServerTutorial</finalName>
 
         <!-- BUILD PLUGINS -->
@@ -90,6 +90,7 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <optimize>true</optimize>
                 </configuration>
             </plugin>
 
@@ -131,6 +132,19 @@
                     </execution>
                 </executions>
             </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
