@@ -29,6 +29,8 @@ public class ServerTutorial extends JavaPlugin {
 
     private EndTutorial endTutorial = new EndTutorial(this);
 
+    public ServerTutorial() {}
+
     @Override
     public void onEnable() {
         instance = this;
@@ -120,8 +122,7 @@ public class ServerTutorial extends JavaPlugin {
             TutorialManager.getManager().getTutorialTimeTask(tutorialName, name);
         }
         TutorialUtils.getTutorialUtils().messageUtils(player);
-        StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial
-                (tutorialName));
+        StartTutorialEvent event = new StartTutorialEvent(player, TutorialManager.getManager().getTutorial(tutorialName));
         this.getServer().getPluginManager().callEvent(event);
 
         DataLoading.getDataLoading().getPlayerData().set("players." + uuid + ".tutorials." + tutorialName, "false");
