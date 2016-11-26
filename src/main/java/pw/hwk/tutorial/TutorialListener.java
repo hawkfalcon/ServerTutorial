@@ -99,6 +99,14 @@ public class TutorialListener implements Listener {
         } else {
             event.setCancelled(true);
         }
+
+        if (TutorialManager.getManager().isInTutorial(player.getName())) {
+            if(event.getFrom().getWorld() != event.getTo().getWorld()) {
+                GameMode gameMode = TutorialManager.getManager().getCurrentTutorial(player.getName()).getGameMode();
+                player.setGameMode(gameMode);
+            }
+        }
+
     }
 
     @EventHandler
