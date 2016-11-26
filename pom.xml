@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>pw.hwk</groupId>
     <artifactId>ServerTutorial</artifactId>
-    <version>2.2.1</version>
+    <version>2.2.2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -76,7 +76,7 @@
     <!-- BUILD -->
 
     <build>
-        <defaultGoal>clean package install deploy</defaultGoal>
+        <defaultGoal>clean package install</defaultGoal>
         <finalName>ServerTutorial</finalName>
 
         <!-- BUILD PLUGINS -->
