@@ -25,19 +25,16 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
+            <scope>provided</scope>
         </dependency>
-
-        <!--<dependency>
-            <groupId>io.github.theluca98</groupId>
-            <artifactId>TextAPI</artifactId>
-            <version>1.10.2-R2.1</version>
-        </dependency>-->
         
         <dependency>
             <groupId>com.github.TheLuca98</groupId>
             <artifactId>TextAPI</artifactId>
             <version>v1.10.2-R2.1</version>
+            <scope>compile</scope>
         </dependency>
+        
     </dependencies>
 
     <!-- REPOSITORIES -->
@@ -76,7 +73,7 @@
     <!-- BUILD -->
 
     <build>
-        <defaultGoal>clean package install</defaultGoal>
+        
         <finalName>ServerTutorial</finalName>
 
         <!-- BUILD PLUGINS -->
@@ -116,7 +113,7 @@
                     </replacements>
                 </configuration>
             </plugin>
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
@@ -131,7 +128,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
