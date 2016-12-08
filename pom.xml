@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>pw.hwk</groupId>
     <artifactId>ServerTutorial</artifactId>
-    <version>2.2.2</version>
+    <version>2.2.3</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +25,12 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bukkit</groupId>
+                    <artifactId>bukkit</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>provided</scope>
         </dependency>
         
@@ -118,7 +124,7 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4.3</version>
                 <configuration>
-                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                 </configuration>
                 <executions>
                     <execution>
@@ -126,6 +132,28 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>commons-lang:commons-lang</exclude>
+                                    <exclude>com.googlecode.json-simple</exclude>
+                                    <exclude>junit:junit</exclude>
+                                    <exclude>org.hamcrest:hamcrest-core</exclude>
+                                    <exclude>com.google.guava:guava</exclude>
+                                    <exclude>com.google.code.gson</exclude>
+                                    <exclude>org.avaje:ebean</exclude>
+                                    <exclude>javax.persistence:persistence-api</exclude>
+                                    <exclude>org.yaml:snakeyaml</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                    <exclude>org.bukkit:bukkit</exclude>
+                                </excludes>
+                            </artifactSet>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
