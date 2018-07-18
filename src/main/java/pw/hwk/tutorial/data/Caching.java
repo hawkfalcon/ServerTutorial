@@ -37,16 +37,17 @@ public class Caching {
                 .getKeys(false)) {
             this.tutorialNames.add(tutorialName.toLowerCase());
             Map<Integer, TutorialView> tutorialViews = new HashMap<>();
-            if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName + "" +
+            if (DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." + tutorialName +
                     ".views") != null) {
                 for (String vID : DataLoading.getDataLoading().getData().getConfigurationSection("tutorials." +
                         tutorialName + ".views").getKeys(false)) {
                     int viewID = Integer.parseInt(vID);
                     MessageType messageType = MessageType.valueOf(DataLoading.getDataLoading().getData().getString
                             ("tutorials." + tutorialName + ".views." + viewID + ".messagetype", "META"));
+                    String viewTime = DataLoading.getDataLoading().getData().getString("tutorials." + tutorialName + ".views." + viewID + ".viewtime", "default");
                     TutorialView view = new TutorialView(DataLoading.getDataLoading().getData().getString("tutorials" +
                             "." + tutorialName + ".views." + viewID + ".message", "No message written"),
-                            TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType);
+                            TutorialUtils.getTutorialUtils().getLocation(tutorialName, viewID), messageType, viewTime);
                     tutorialViews.put(viewID, view);
                 }
             }
@@ -189,6 +190,11 @@ public class Caching {
     public void reCachePlayerData() {
         this.seenTutorials().clear();
         cachePlayerData();
+    }
+
+    public void reCacheTempPlayerData() {
+        plugin.getTempPlayers().clear();
+        cacheTempData();
     }
 
     public UUID getUUID(Player player) {

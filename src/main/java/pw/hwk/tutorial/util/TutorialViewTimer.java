@@ -49,7 +49,11 @@ public class TutorialViewTimer {
                     Caching.getCaching().setTeleport(player, true);
                     player.teleport(TutorialManager.getManager().getTutorialView(playerName).getLocation());
                     TutorialUtils.getTutorialUtils().messageUtils(player);
-                    seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
+                    if (TutorialManager.getManager().getTutorial(tutorialName).getView(TutorialManager.getManager().getCurrentView(playerName)).getViewTime().equalsIgnoreCase("default")) {
+                        seconds = TutorialManager.getManager().getTutorial(tutorialName).getTimeLength();
+                    } else {
+                        seconds = Integer.parseInt(TutorialManager.getManager().getTutorial(tutorialName).getView(TutorialManager.getManager().getCurrentView(playerName)).getViewTime());
+                    }
                     player.setLevel(seconds);
                     seconds--;
                 }

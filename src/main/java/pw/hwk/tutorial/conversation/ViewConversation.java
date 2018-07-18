@@ -79,6 +79,27 @@ public class ViewConversation {
         @Override
         public Prompt acceptInput(ConversationContext context, String input) {
             context.setSessionData("message", input);
+            return new ViewTime();
+        }
+    }
+
+    private class ViewTime extends StringPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return TutorialUtils.color("&8>&7>&6> &7Input in seconds how long you want this view to last. Enter Default if you want to use the default.");
+        }
+
+        @Override
+        public Prompt acceptInput(ConversationContext context, String input) {
+            if (!input.equalsIgnoreCase("default")) {
+                try {
+                    int inputNumber = Integer.parseInt(input);
+                } catch (NumberFormatException ex) {
+                    return new ViewTime();
+                }
+            }
+            context.setSessionData("viewtime", input);
             return new FinishMessage();
         }
     }
@@ -106,6 +127,7 @@ public class ViewConversation {
             String message = context.getSessionData("message").toString();
             String messageType = context.getSessionData("messagetype").toString();
             String name = context.getSessionData("name").toString();
+            String viewTime = context.getSessionData("viewtime").toString();
             int viewID = 1;
             while (DataLoading.getDataLoading().getData().get("tutorials." + context.getSessionData("name") + ".views" +
                     "." + viewID) != null) {
@@ -118,6 +140,7 @@ public class ViewConversation {
                         messageType);
                 DataLoading.getDataLoading().getData().set("tutorials." + name + ".views." + viewID + ".location",
                         location);
+                DataLoading.getDataLoading().getData().set("tutorials." + name + ".views." + viewID + ".viewtime", viewTime);
                 DataLoading.getDataLoading().saveData();
                 Caching.getCaching().reCasheTutorials();
             } catch (Exception e) {
