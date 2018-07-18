@@ -2,6 +2,9 @@
 #wont work with this fork
 auto-update: false
 
+#Set false if you don't want metrics to be enabled for this plugin
+metrics: true
+
 #Sign setting
 sign: '&0[Tutorial]'
 
