@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import org.bstats.bukkit.Metrics;
 import pw.hwk.tutorial.data.TempPlayerData;
 import pw.hwk.tutorial.util.Base64Serialize;
 
@@ -43,6 +44,9 @@ public class ServerTutorial extends JavaPlugin {
         this.getCommand("tutorial").setExecutor(new TutorialMainCommand());
         this.saveDefaultConfig();
 
+        if (this.getConfig().getBoolean("metrics", true)) {
+            Metrics metrics = new Metrics(this);
+        }
         DataLoading.getDataLoading().loadData();
         DataLoading.getDataLoading().loadPlayerData();
         DataLoading.getDataLoading().loadTempData();
