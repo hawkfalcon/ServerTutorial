@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import pw.hwk.tutorial.api.EndTutorialEvent;
 import pw.hwk.tutorial.data.Caching;
+import pw.hwk.tutorial.data.DataLoading;
 import pw.hwk.tutorial.data.TutorialManager;
 import pw.hwk.tutorial.data.TutorialPlayer;
 import pw.hwk.tutorial.enums.CommandType;
@@ -47,6 +48,9 @@ public class EndTutorial {
         }
         TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(Caching.getCaching().getUUID(player));
         tutorialPlayer.restorePlayer(player);
+        plugin.getTempPlayers().remove(player.getUniqueId());
+        DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId(), null);
+        DataLoading.getDataLoading().saveTempData();
     }
 
     public void endTutorialPlayer(final Player player, String endMessage) {
@@ -60,6 +64,9 @@ public class EndTutorial {
 
         plugin.removeTutorialPlayer(player);
         plugin.removeFromTutorial(player.getName());
+        plugin.getTempPlayers().remove(player.getUniqueId());
+        DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId(), null);
+        DataLoading.getDataLoading().saveTempData();
     }
 
     public void reloadEndTutorial(Player player) {

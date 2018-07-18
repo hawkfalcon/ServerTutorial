@@ -20,12 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+import pw.hwk.tutorial.data.TempPlayerData;
+import pw.hwk.tutorial.util.Base64Serialize;
 
 public class ServerTutorial extends JavaPlugin {
 
     private static ServerTutorial instance;
 
     private Map<UUID, TutorialPlayer> tutorialPlayers = new HashMap<>();
+
+    private Map<UUID, TempPlayerData> tempPlayers = new HashMap<>();
 
     private EndTutorial endTutorial = new EndTutorial(this);
 
@@ -41,9 +45,11 @@ public class ServerTutorial extends JavaPlugin {
 
         DataLoading.getDataLoading().loadData();
         DataLoading.getDataLoading().loadPlayerData();
+        DataLoading.getDataLoading().loadTempData();
         Caching.getCaching().casheAllData();
         Caching.getCaching().cacheConfigs();
         Caching.getCaching().cachePlayerData();
+        Caching.getCaching().cacheTempData();
 
         this.checkUpdate();
     }
@@ -107,6 +113,7 @@ public class ServerTutorial extends JavaPlugin {
             return;
         }
 
+        addPlayertoTemp(player);
         TutorialPlayer tutorialPlayer = new TutorialPlayer(player);
         tutorialPlayer.clearPlayer(player);
         addTutorialPlayer(uuid, tutorialPlayer);
@@ -201,6 +208,18 @@ public class ServerTutorial extends JavaPlugin {
         }
         DataLoading.getDataLoading().saveData();
         Caching.getCaching().reCasheTutorials();
+    }
+
+    public Map<UUID, TempPlayerData> getTempPlayers() {
+        return this.tempPlayers;
+    }
+
+    public void addPlayertoTemp(Player player) {
+        DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId() + ".gamemode", player.getGameMode());
+        DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId() + ".inventory", Base64Serialize.toBase64(player.getInventory()));
+        DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId() + ".armor", Base64Serialize.itemStackArrayToBase64(player.getInventory().getArmorContents()));
+        DataLoading.getDataLoading().saveTempData();
+        Caching.getCaching().cacheTempData();
     }
 
     public static ServerTutorial getInstance() {

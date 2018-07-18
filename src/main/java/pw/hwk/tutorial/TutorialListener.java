@@ -184,6 +184,12 @@ public class TutorialListener implements Listener {
         if (TutorialManager.getManager().getConfigs().getCheckGameMode()) {
             event.getPlayer().setGameMode(GameMode.SURVIVAL);
         }
+        if (plugin.getTempPlayers().containsKey(player.getUniqueId())) {
+            plugin.getTempPlayers().get(player.getUniqueId()).restorePlayer();
+            plugin.getTempPlayers().remove(player.getUniqueId());
+            DataLoading.getDataLoading().getTempData().set("players." + player.getUniqueId(), null);
+            DataLoading.getDataLoading().saveTempData();
+        }
         if (!plugin.getServer().getOnlineMode()) {
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
                 @Override

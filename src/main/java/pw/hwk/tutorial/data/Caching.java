@@ -27,6 +27,7 @@ public class Caching {
     private Map<UUID, Set<String>> seenTutorials = new HashMap<>();
     private static Caching instance;
     private Map<UUID, Boolean> allowedTeleports = new HashMap<>();
+    private Map<UUID, String> getTempPlayers = new HashMap<>();
 
     public void casheAllData() {
         if (DataLoading.getDataLoading().getData().getString("tutorials") == null) {
@@ -101,6 +102,19 @@ public class Caching {
                 Set<String> tutorials = DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players" +
                         "." + uuid + ".tutorials").getKeys(false);
                 seenTutorials.put(playerUUID, tutorials);
+            }
+        }
+    }
+
+    public void cacheTempData() {
+        if (DataLoading.getDataLoading().getTempData().getString("players") == null) {
+            return;
+        }
+
+        for (String uuid : DataLoading.getDataLoading().getPlayerData().getConfigurationSection("players").getKeys(false)) {
+            UUID playerUUID = UUID.fromString(uuid);
+            if (!plugin.getTempPlayers().containsKey(playerUUID)) {
+                plugin.getTempPlayers().put(playerUUID, new TempPlayerData(playerUUID));
             }
         }
     }

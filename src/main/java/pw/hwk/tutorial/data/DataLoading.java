@@ -15,6 +15,8 @@ public class DataLoading {
     private YamlConfiguration data;
     private File playerDataFile;
     private YamlConfiguration playerData;
+    private File tempDataFile;
+    private YamlConfiguration tempData;
 
     public void loadData() {
         File f = new File(plugin.getDataFolder(), "data.yml");
@@ -49,12 +51,37 @@ public class DataLoading {
         playerData = YamlConfiguration.loadConfiguration(f);
     }
 
+    public void loadTempData() {
+        File f = new File(plugin.getDataFolder(), "tempdata.yml");
+        if (!f.exists()) {
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        tempDataFile = f;
+        tempData = YamlConfiguration.loadConfiguration(f);
+    }
+
     public YamlConfiguration getPlayerData() {
         return this.playerData;
     }
 
     public YamlConfiguration getData() {
         return this.data;
+    }
+
+    public YamlConfiguration getTempData() {
+        return this.tempData;
+    }
+
+    public void saveTempData() {
+        try {
+            tempData.save(tempDataFile);
+        } catch (IOException exception) {
+            plugin.getLogger().warning("Failed to save temp data :(");
+        }
     }
 
     public void saveData() {
