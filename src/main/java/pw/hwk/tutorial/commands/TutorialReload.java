@@ -28,6 +28,7 @@ public class TutorialReload implements CommandExecutor {
         Caching.getCaching().reCasheTutorials();
         Caching.getCaching().reCacheConfigs();
         Caching.getCaching().reCachePlayerData();
+        Caching.getCaching().reCacheTempPlayerData();
         sender.sendMessage(ChatColor.RED + "Server Tutorial Reloaded!");
         return true;
     }
