@@ -45,6 +45,8 @@ public class EndTutorial {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 break;
         }
+        TutorialPlayer tutorialPlayer = plugin.getTutorialPlayer(Caching.getCaching().getUUID(player));
+        tutorialPlayer.restorePlayer(player);
     }
 
     public void endTutorialPlayer(final Player player, String endMessage) {
