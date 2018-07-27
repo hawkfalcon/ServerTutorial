@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -168,6 +168,10 @@
                                 <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>pw.hwk.bstats</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.github.theluca98</pattern>
+                                    <shadedPattern>pw.hwk.theluca98.textapi</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
