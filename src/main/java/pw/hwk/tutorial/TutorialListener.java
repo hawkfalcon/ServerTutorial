@@ -56,7 +56,7 @@ public class TutorialListener implements Listener {
         if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_BLOCK) &&
                 !TutorialManager.getManager().isInTutorial(name)) {
             Block block = event.getClickedBlock();
-            if (block.getType() == Material.SIGN_POST || block.getType() == Material.WALL_SIGN) {
+            if (block.getType() == Material.SIGN || block.getType() == Material.WALL_SIGN) {
                 Sign sign = (Sign) block.getState();
                 String match = ChatColor.stripColor(TutorialUtils.color(TutorialManager.getManager().getConfigs()
                         .signSetting()));
