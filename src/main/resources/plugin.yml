@@ -5,6 +5,7 @@ description: Tutorial plugin
 authors: [hawkfalcon, Frostalf, Trojaner]
 website: hwk.pw
 softdepend: [Vault, Multiverse-Core]
+api-version: 1.13
 commands:
     tutorial:
         description: tutorial
